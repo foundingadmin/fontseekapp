@@ -35,8 +35,8 @@ export const QuizQuestion: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Fixed navigation header */}
-      <div className="fixed top-0 left-0 right-0 bg-black/95 backdrop-blur-sm z-50">
+      {/* Navigation header */}
+      <div className="sticky top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="h-16 flex items-center justify-between">
             {currentQuestion > 1 ? (
@@ -54,8 +54,8 @@ export const QuizQuestion: React.FC = () => {
         </div>
       </div>
 
-      {/* Main content with padding for fixed header */}
-      <div className="flex-1 pt-24 pb-8 px-4">
+      {/* Main content */}
+      <div className="flex-1 pb-8 px-4">
         <div className="max-w-2xl mx-auto">
           {/* Question container with fixed height */}
           <div className="min-h-[120px] flex items-center justify-center mb-8">
