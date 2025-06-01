@@ -155,38 +155,38 @@ export const QuizResults: React.FC = () => {
             <div className="space-y-8">
               <div>
                 {showLabels && <div className="text-xs text-neutral-500 mb-1">Heading • 48px • Bold</div>}
-                <h1 style={{ fontFamily: recommendations.primary.name }} className="text-5xl font-bold leading-tight text-neutral-900">
+                <h1 style={{ fontFamily: recommendations.primary.name }} className="text-5xl font-bold text-neutral-900">
                   {currentCopyPack.heading}
                 </h1>
               </div>
 
               <div>
                 {showLabels && <div className="text-xs text-neutral-500 mb-1">Subheading • 24px • Medium</div>}
-                <h2 style={{ fontFamily: recommendations.primary.name }} className="text-2xl font-medium leading-relaxed text-neutral-900">
+                <h2 style={{ fontFamily: recommendations.primary.name }} className="text-2xl font-medium text-neutral-900">
                   {currentCopyPack.subheading}
                 </h2>
               </div>
 
               <div>
                 {showLabels && <div className="text-xs text-neutral-500 mb-1">Lead Paragraph • 20px • Regular</div>}
-                <p style={{ fontFamily: recommendations.primary.name }} className="text-xl font-normal leading-relaxed text-neutral-900">
+                <p style={{ fontFamily: recommendations.primary.name }} className="text-xl text-neutral-900">
                   {currentCopyPack.leadParagraph}
                 </p>
               </div>
 
               <div className="space-y-4">
                 {showLabels && <div className="text-xs text-neutral-500 mb-1">Body Copy • 16px • Regular</div>}
-                <p style={{ fontFamily: recommendations.primary.name }} className="text-base font-normal leading-loose text-neutral-900">
+                <p style={{ fontFamily: recommendations.primary.name }} className="text-base text-neutral-900">
                   {currentCopyPack.body1}
                 </p>
-                <p style={{ fontFamily: recommendations.primary.name }} className="text-base font-normal leading-loose text-neutral-900">
+                <p style={{ fontFamily: recommendations.primary.name }} className="text-base text-neutral-900">
                   {currentCopyPack.body2}
                 </p>
               </div>
 
               <div>
                 {showLabels && <div className="text-xs text-neutral-500 mb-1">Fine Print • 12px • Light</div>}
-                <small style={{ fontFamily: recommendations.primary.name }} className="text-xs font-light text-neutral-500 block">
+                <small style={{ fontFamily: recommendations.primary.name }} className="text-xs font-light text-neutral-500">
                   {currentCopyPack.finePrint}
                 </small>
               </div>
