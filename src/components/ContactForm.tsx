@@ -33,7 +33,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
       if (result.status === 200) {
         setSubmitStatus('success');
         formRef.current.reset();
-        onDownloadReport(); // Trigger report download on successful submission
+        onDownloadReport();
       } else {
         throw new Error('Failed to send message');
       }
@@ -49,7 +49,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
     <div className="mt-24 mb-16 bg-[#1C1F26] rounded-xl overflow-hidden">
       <div className="px-8 py-12 max-w-3xl mx-auto">
         <img 
-          src="./Founding-v1-Wordmark-white.svg" 
+          src="./Founding-v1-Wordmark-white copy.svg" 
           alt="Founding" 
           className="w-[140px] mx-auto mb-8"
         />
