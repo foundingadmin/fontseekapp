@@ -1,79 +1,71 @@
 import type { UserScores, FontRecommendation, FontData } from '../types';
 import { fonts } from '../data/fonts';
-import { aestheticScoring } from '../data/aestheticScoring';
-
-// Default fallback font to use when no matches are found
-const fallbackFont: FontData = {
-  name: 'System UI',
-  googleFontsLink: '',
-  tone: 3,
-  energy: 3,
-  design: 3,
-  era: 3,
-  structure: 3,
-  aestheticStyle: 'System Default',
-  embedCode: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-  personalityTags: ['Clean', 'Universal', 'Reliable'],
-  recommendedFor: ['Any Context']
-};
-
-function isExactNeutralScore(scores: UserScores): boolean {
-  return Object.values(scores).every(score => score === 3);
-}
 
 function determineAestheticStyle(scores: UserScores): string {
-  // Return System Default only for exact neutral scores
-  if (isExactNeutralScore(scores)) {
-    return 'System Default';
+  // Apply the new scoring rules in order of priority
+  if (scores.design >= 4 && scores.energy >= 4 && scores.era <= 3) {
+    return 'Geometric Sans';
   }
-
-  // Modern Serif check (high design + high era + low structure)
-  if (scores.design >= 4 && scores.era >= 4 && scores.structure <= 2) {
+  
+  if (scores.design >= 4 && scores.energy <= 3 && scores.era >= 4) {
     return 'Modern Serif';
   }
+  
+  if (scores.design <= 3 && scores.era <= 3 && scores.structure <= 3 && scores.tone <= 3) {
+    return 'Monospace';
+  }
+  
+  if (scores.era >= 4 && scores.design >= 3 && scores.tone >= 3) {
+    return 'Classic Serif';
+  }
+  
+  if (scores.design === 3 && Object.values(scores).every(score => score === 3)) {
+    return 'Grotesque Sans';
+  }
+  
+  if (scores.tone >= 4 && scores.era <= 3) {
+    return 'Humanist Sans';
+  }
+  
+  if (scores.energy === 5 && scores.design === 5 && scores.tone === 5) {
+    return 'Display';
+  }
 
-  // Check other styles with strict matching
-  let bestMatch = '';
-  let bestMatchScore = -1;
-
-  for (const [style, ranges] of Object.entries(aestheticScoring)) {
-    let matchScore = 0;
-    let isValid = true;
-
-    for (const trait of ['tone', 'energy', 'design', 'era', 'structure'] as const) {
-      const score = scores[trait];
-      const min = ranges[`${trait}Min`];
-      const max = ranges[`${trait}Max`];
-
-      if (score < min || score > max) {
-        isValid = false;
-        break;
-      }
-
-      // Calculate how well this trait matches (closer to range center is better)
-      const center = (min + max) / 2;
-      const distance = Math.abs(score - center);
-      matchScore += 1 - (distance / 4); // Normalize to 0-1 range
-    }
-
-    if (isValid && matchScore > bestMatchScore) {
-      bestMatch = style;
-      bestMatchScore = matchScore;
+  // If no perfect match, find best match based on trait values
+  const styleCounts = new Map<string, number>();
+  
+  for (const font of fonts) {
+    let matchingTraits = 0;
+    if (Math.abs(font.tone - scores.tone) <= 1) matchingTraits++;
+    if (Math.abs(font.energy - scores.energy) <= 1) matchingTraits++;
+    if (Math.abs(font.design - scores.design) <= 1) matchingTraits++;
+    if (Math.abs(font.era - scores.era) <= 1) matchingTraits++;
+    if (Math.abs(font.structure - scores.structure) <= 1) matchingTraits++;
+    
+    if (matchingTraits >= 3) {
+      const count = styleCounts.get(font.aestheticStyle) || 0;
+      styleCounts.set(font.aestheticStyle, count + 1);
     }
   }
 
-  return bestMatch || 'Modern Serif'; // Fallback to Modern Serif if no match found
+  // Return the style with the most matching fonts
+  let bestStyle = '';
+  let maxCount = 0;
+  
+  for (const [style, count] of styleCounts) {
+    if (count > maxCount) {
+      maxCount = count;
+      bestStyle = style;
+    }
+  }
+
+  return bestStyle || 'Modern Serif'; // Fallback to Modern Serif if no clear match
 }
 
 function getMatchingFonts(aestheticStyle: string, scores: UserScores): FontData[] {
-  if (aestheticStyle === 'System Default') {
-    return [fallbackFont];
-  }
-
   const matchingFonts = fonts.filter(font => font.aestheticStyle === aestheticStyle);
 
   if (matchingFonts.length === 0) {
-    console.warn(`No fonts found for style '${aestheticStyle}'. Falling back to Modern Serif.`);
     return fonts.filter(font => font.aestheticStyle === 'Modern Serif');
   }
 
@@ -88,16 +80,16 @@ function getMatchingFonts(aestheticStyle: string, scores: UserScores): FontData[
 function calculateFontMatchScore(font: FontData, scores: UserScores): number {
   let totalScore = 0;
   const weights = {
-    tone: 1,
-    energy: 1,
-    design: 1.5,
-    era: 1.5,
-    structure: 2
+    tone: 1.5,
+    energy: 1.5,
+    design: 2,
+    era: 2,
+    structure: 1.5
   };
 
   for (const trait of Object.keys(scores) as Array<keyof UserScores>) {
     const diff = Math.abs(font[trait] - scores[trait]);
-    totalScore += (4 - diff) * weights[trait]; // 4 is max possible difference
+    totalScore += (4 - diff) * weights[trait];
   }
 
   return totalScore;
@@ -105,28 +97,22 @@ function calculateFontMatchScore(font: FontData, scores: UserScores): number {
 
 export function calculateFontRecommendations(scores: UserScores): FontRecommendation {
   const aestheticStyle = determineAestheticStyle(scores);
-  
-  if (aestheticStyle === 'System Default') {
+  const matchingFonts = getMatchingFonts(aestheticStyle, scores);
+
+  // Ensure we have enough fonts by falling back to Modern Serif if needed
+  if (matchingFonts.length < 3) {
+    const modernSerifFonts = fonts.filter(font => font.aestheticStyle === 'Modern Serif');
+    const availableFonts = [...matchingFonts, ...modernSerifFonts];
+    
     return {
-      primary: fallbackFont,
-      secondary: fallbackFont,
-      tertiary: fallbackFont,
+      primary: availableFonts[0],
+      secondary: availableFonts[1] || availableFonts[0],
+      tertiary: availableFonts[2] || availableFonts[1],
       aestheticStyle
     };
   }
 
-  const matchingFonts = getMatchingFonts(aestheticStyle, scores);
-
-  if (matchingFonts.length < 3) {
-    const modernSerifFonts = fonts.filter(font => font.aestheticStyle === 'Modern Serif');
-    return {
-      primary: matchingFonts[0] || modernSerifFonts[0] || fallbackFont,
-      secondary: matchingFonts[1] || modernSerifFonts[1] || fallbackFont,
-      tertiary: matchingFonts[2] || modernSerifFonts[2] || fallbackFont,
-      aestheticStyle: matchingFonts.length > 0 ? aestheticStyle : 'Modern Serif'
-    };
-  }
-
+  // Return three unique fonts
   return {
     primary: matchingFonts[0],
     secondary: matchingFonts[1],
