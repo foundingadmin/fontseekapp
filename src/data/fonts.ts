@@ -122,5 +122,46 @@ export const fonts: FontData[] = [
     embedCode: "Barlow Condensed', sans-serif",
     personalityTags: ['Clean', 'Efficient', 'Versatile'],
     recommendedFor: ['UI', 'Editorial', 'Technical']
+  },
+
+  // Grotesque Sans fonts
+  {
+    name: 'Barlow',
+    googleFontsLink: 'https://fonts.google.com/specimen/Barlow',
+    tone: 2,
+    energy: 2,
+    design: 3,
+    era: 4,
+    structure: 4,
+    aestheticStyle: 'Grotesque Sans',
+    embedCode: "Barlow', sans-serif",
+    personalityTags: ['Modern', 'Clean', 'Versatile'],
+    recommendedFor: ['Corporate', 'UI', 'Editorial']
+  },
+  {
+    name: 'Work Sans',
+    googleFontsLink: 'https://fonts.google.com/specimen/Work+Sans',
+    tone: 2,
+    energy: 2,
+    design: 3,
+    era: 4,
+    structure: 4,
+    aestheticStyle: 'Grotesque Sans',
+    embedCode: "Work Sans', sans-serif",
+    personalityTags: ['Professional', 'Modern', 'Balanced'],
+    recommendedFor: ['Business', 'Web Design', 'Branding']
+  },
+  {
+    name: 'Chivo',
+    googleFontsLink: 'https://fonts.google.com/specimen/Chivo',
+    tone: 2,
+    energy: 3,
+    design: 3,
+    era: 4,
+    structure: 4,
+    aestheticStyle: 'Grotesque Sans',
+    embedCode: "Chivo', sans-serif",
+    personalityTags: ['Contemporary', 'Geometric', 'Professional'],
+    recommendedFor: ['Corporate', 'Digital', 'Editorial']
   }
 ];
