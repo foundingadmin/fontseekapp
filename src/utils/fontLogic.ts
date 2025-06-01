@@ -18,7 +18,7 @@ const fallbackFont: FontData = {
 };
 
 export function calculateFontRecommendations(scores: UserScores): FontRecommendation {
-  // First, determine the aesthetic style based on the user's scores
+  // First, determine the aesthetic style based on trait ranges
   const primaryStyle = determineAestheticStyle(scores);
   
   // Strictly filter fonts to ONLY those matching the primary aesthetic style
@@ -34,10 +34,10 @@ export function calculateFontRecommendations(scores: UserScores): FontRecommenda
     };
   }
 
-  // Calculate distance scores for each matching font
+  // Calculate weighted distance scores for each matching font
   const fontScores = matchingFonts.map(font => ({
     font,
-    distance: calculateDistance(scores, font)
+    distance: calculateWeightedDistance(scores, font, primaryStyle)
   }));
 
   // Sort by distance (lower is better)
@@ -46,9 +46,9 @@ export function calculateFontRecommendations(scores: UserScores): FontRecommenda
   // Get unique fonts (no duplicates)
   const uniqueFonts = getUniqueFonts(fontScores);
 
-  // If we don't have enough fonts, repeat the last one
+  // If we don't have enough fonts, use fallback
   while (uniqueFonts.length < 3) {
-    uniqueFonts.push(uniqueFonts[uniqueFonts.length - 1] || fallbackFont);
+    uniqueFonts.push(fallbackFont);
   }
 
   return {
@@ -61,12 +61,14 @@ export function calculateFontRecommendations(scores: UserScores): FontRecommenda
 
 function determineAestheticStyle(scores: UserScores): string {
   let bestMatch = '';
-  let bestScore = -Infinity;
+  let highestScore = -Infinity;
 
+  // Calculate match score for each aesthetic style
   for (const [style, ranges] of Object.entries(aestheticScoring)) {
     const score = calculateStyleMatchScore(scores, ranges);
-    if (score > bestScore) {
-      bestScore = score;
+    
+    if (score > highestScore) {
+      highestScore = score;
       bestMatch = style;
     }
   }
@@ -74,43 +76,78 @@ function determineAestheticStyle(scores: UserScores): string {
   return bestMatch;
 }
 
-function calculateStyleMatchScore(scores: UserScores, ranges: any): number {
-  let totalScore = 0;
+function calculateStyleMatchScore(scores: UserScores, ranges: AestheticRange): number {
+  let score = 0;
+  const traits: Array<keyof UserScores> = ['tone', 'energy', 'design', 'era', 'structure'];
 
-  // Calculate score for each trait
-  const traits = [
-    { trait: 'tone', min: ranges.toneMin, max: ranges.toneMax },
-    { trait: 'energy', min: ranges.energyMin, max: ranges.energyMax },
-    { trait: 'design', min: ranges.designMin, max: ranges.designMax },
-    { trait: 'era', min: ranges.eraMin, max: ranges.eraMax },
-    { trait: 'structure', min: ranges.structureMin, max: ranges.structureMax }
-  ];
+  for (const trait of traits) {
+    const userScore = scores[trait];
+    const min = ranges[`${trait}Min`];
+    const max = ranges[`${trait}Max`];
 
-  for (const { trait, min, max } of traits) {
-    const score = scores[trait as keyof UserScores];
-    if (score >= min && score <= max) {
-      totalScore += 2; // Bonus for being in range
+    // Perfect match within range
+    if (userScore >= min && userScore <= max) {
+      score += 10;
     } else {
-      // Exponential penalty for being outside the range
-      const distance = Math.min(Math.abs(score - min), Math.abs(score - max));
-      totalScore -= distance * distance;
+      // Penalty for being outside range
+      const distance = Math.min(
+        Math.abs(userScore - min),
+        Math.abs(userScore - max)
+      );
+      score -= distance * distance;
     }
   }
 
-  return totalScore;
+  return score;
 }
 
-function calculateDistance(scores: UserScores, font: FontData): number {
-  let totalDistance = 0;
-  const traits: (keyof UserScores)[] = ['tone', 'energy', 'design', 'era', 'structure'];
+function calculateWeightedDistance(scores: UserScores, font: FontData, style: string): number {
+  let distance = 0;
+  const weights = getTraitWeights(style);
 
-  for (const trait of traits) {
-    const diff = Math.abs(scores[trait] - font[trait]);
-    // Exponential penalty for larger differences
-    totalDistance += diff * diff;
+  for (const [trait, weight] of Object.entries(weights)) {
+    const diff = Math.abs(scores[trait as keyof UserScores] - font[trait as keyof FontData]);
+    distance += diff * diff * weight;
   }
 
-  return totalDistance;
+  return distance;
+}
+
+function getTraitWeights(style: string): Record<keyof UserScores, number> {
+  // Default weights
+  const weights = {
+    tone: 1,
+    energy: 1,
+    design: 1,
+    era: 1,
+    structure: 1
+  };
+
+  // Apply style-specific weight adjustments
+  switch (style) {
+    case 'Monospace':
+      weights.structure = 1.5;
+      weights.era = 1.25;
+      break;
+    case 'Rounded Sans':
+      weights.tone = 1.5;
+      weights.energy = 1.25;
+      break;
+    case 'Geometric Sans':
+      weights.design = 1.5;
+      weights.structure = 1.25;
+      break;
+    case 'Serif Old Style':
+      weights.tone = 1.5;
+      weights.era = 1.25;
+      break;
+    case 'Display / Bubbly':
+      weights.energy = 1.5;
+      weights.design = 1.25;
+      break;
+  }
+
+  return weights;
 }
 
 function getUniqueFonts(fontScores: { font: FontData; distance: number }[]): FontData[] {
