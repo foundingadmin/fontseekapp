@@ -97,7 +97,44 @@ export const QuizResults: React.FC = () => {
           isDarkMode ? 'bg-neutral-900' : 'bg-white'
         }`}>
           <div className="flex flex-col">
-            <div className="space-y-8 mb-8">
+            <div className="flex flex-col md:flex-row gap-2 mb-8">
+              <button
+                onClick={shuffleCopyPack}
+                disabled={isShuffling}
+                className={`flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed ${
+                  isDarkMode 
+                    ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
+                }`}
+              >
+                <Shuffle className="w-4 h-4" />
+                Shuffle copy
+              </button>
+              <button
+                onClick={() => setShowLabels(!showLabels)}
+                className={`flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm ${
+                  isDarkMode 
+                    ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
+                }`}
+              >
+                {showLabels ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {showLabels ? 'Hide specs' : 'Show specs'}
+              </button>
+              <button
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                className={`flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm ${
+                  isDarkMode 
+                    ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
+                }`}
+              >
+                {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                {isDarkMode ? 'Light mode' : 'Dark mode'}
+              </button>
+            </div>
+
+            <div className="space-y-8">
               <div>
                 {showLabels && <div className={`text-xs mb-1 ${
                   isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
@@ -175,43 +212,6 @@ export const QuizResults: React.FC = () => {
                   {currentCopyPack.finePrint}
                 </small>
               </div>
-            </div>
-
-            <div className="flex flex-col gap-2 mt-8">
-              <button
-                onClick={shuffleCopyPack}
-                disabled={isShuffling}
-                className={`flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed ${
-                  isDarkMode 
-                    ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
-                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
-                }`}
-              >
-                <Shuffle className="w-4 h-4" />
-                Shuffle copy
-              </button>
-              <button
-                onClick={() => setShowLabels(!showLabels)}
-                className={`flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm ${
-                  isDarkMode 
-                    ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
-                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
-                }`}
-              >
-                {showLabels ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                {showLabels ? 'Hide specs' : 'Show specs'}
-              </button>
-              <button
-                onClick={() => setIsDarkMode(!isDarkMode)}
-                className={`flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm ${
-                  isDarkMode 
-                    ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
-                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
-                }`}
-              >
-                {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                {isDarkMode ? 'Light mode' : 'Dark mode'}
-              </button>
             </div>
           </div>
         </div>
