@@ -33,6 +33,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
       if (result.status === 200) {
         setSubmitStatus('success');
         formRef.current.reset();
+        onDownloadReport(); // Trigger report download on successful submission
       } else {
         throw new Error('Failed to send message');
       }
@@ -48,7 +49,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
     <div className="mt-24 mb-16 bg-[#1C1F26] rounded-xl overflow-hidden">
       <div className="px-8 py-12 max-w-3xl mx-auto">
         <img 
-          src="/Founding-v1-Wordmark-white.svg" 
+          src="./Founding-v1-Wordmark-white.svg" 
           alt="Founding" 
           className="w-[140px] mx-auto mb-8"
         />
@@ -65,7 +66,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
           onSubmit={handleSubmit} 
           className="space-y-6"
         >
-          <input type="hidden" name="subject" value="I Found My Font!" />
+          <input type="hidden" name="subject" value="FontSeek Consultation Request" />
           <input type="hidden" name="email" value={email || ''} />
           <input type="hidden" name="aesthetic" value={recommendations?.aestheticStyle || ''} />
           <input type="hidden" name="option1" value={recommendations?.primary.name || ''} />
@@ -108,12 +109,12 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
             disabled={isSubmitting}
             className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-500 text-black font-semibold rounded-lg hover:bg-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Send Message
+            {isSubmitting ? 'Sending...' : 'Send Message'}
             <ArrowRight className="w-5 h-5" />
           </button>
 
           {submitStatus === 'success' && (
-            <p className="text-emerald-500 text-center">Message sent successfully!</p>
+            <p className="text-emerald-500 text-center">Message sent successfully! We'll be in touch soon.</p>
           )}
           {submitStatus === 'error' && (
             <p className="text-red-500 text-center">Failed to send message. Please try again.</p>
