@@ -3,7 +3,6 @@ import { useQuizStore } from '../store/quizStore';
 import { quizQuestions } from '../data/quiz';
 import { ArrowDown, ArrowUp, Check, ChevronLeft } from 'lucide-react';
 import clsx from 'clsx';
-import { QuizProgress } from './QuizProgress';
 
 export const QuizQuestion: React.FC = () => {
   const { currentQuestion, answers, setAnswer, previousQuestion } = useQuizStore();
@@ -45,9 +44,8 @@ export const QuizQuestion: React.FC = () => {
             Back
           </button>
         ) : (
-          <div />
+          <div></div>
         )}
-        <QuizProgress />
       </div>
       
       <h2 className="text-2xl md:text-3xl font-semibold text-white mb-8 text-center">
