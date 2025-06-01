@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
-import emailjs from '@emailjs/browser';
 import { useQuizStore } from '../store/quizStore';
 
 interface ContactFormProps {
@@ -8,34 +7,33 @@ interface ContactFormProps {
 }
 
 export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) => {
-  const [name, setName] = useState('');
-  const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const email = useQuizStore(state => state.email);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
     try {
-      await emailjs.send(
-        'service_fontseek', // Service ID
-        'template_fontseek', // Template ID
-        {
-          from_name: name,
-          from_email: email,
-          message: message,
-          to_email: 'admin@foundingcreative.com'
-        },
-        'YOUR_PUBLIC_KEY' // Public Key
-      );
+      const form = e.target as HTMLFormElement;
+      const data = new FormData(form);
+      
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(data as any).toString()
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
       setSubmitStatus('success');
-      setName('');
-      setMessage('');
+      form.reset();
     } catch (error) {
-      console.error('Failed to send email:', error);
+      console.error('Failed to submit form:', error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -48,7 +46,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
         <img 
           src="/src/assets/Founding-v1-Wordmark-white.svg" 
           alt="Founding" 
-          className="h-8 mx-auto mb-8"
+          className="w-[140px] mx-auto mb-8"
         />
         
         <h2 className="text-3xl font-bold text-white mb-4 text-center">
@@ -58,13 +56,26 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
           Let's discuss how we can help you implement your font recommendations across your brand, marketing, and web presence.
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form 
+          onSubmit={handleSubmit} 
+          className="space-y-6"
+          name="contact"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+        >
+          <input type="hidden" name="form-name" value="contact" />
+          <p className="hidden">
+            <label>
+              Don't fill this out if you're human: <input name="bot-field" />
+            </label>
+          </p>
+
           <div>
             <input
               type="text"
+              name="name"
               placeholder="Your Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
               required
               className="w-full px-4 py-3 bg-[#2A2D36] border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
             />
@@ -73,6 +84,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
           <div>
             <input
               type="email"
+              name="email"
               placeholder="Email Address"
               value={email || ''}
               readOnly
@@ -82,9 +94,8 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
 
           <div>
             <textarea
+              name="message"
               placeholder="Tell us about your brand and what you'd like help with..."
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
               required
               rows={4}
               className="w-full px-4 py-3 bg-[#2A2D36] border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 resize-none"
