@@ -51,7 +51,7 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
     <div className="space-y-8">
       <div>
         <h2 className="text-xl font-semibold mb-2 text-center">Your Brand's Font Personality Profile</h2>
-        <p className="text-white/60">
+        <p className="text-white/60 text-left">
           Based on your answers, these scales show how your brand expresses itself across five strategic traits.
         </p>
       </div>
@@ -104,7 +104,7 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
       </div>
 
       <div>
-        <p className="text-sm text-white/60">
+        <p className="text-sm text-white/60 text-left">
           The position of each marker shows where your brand falls between two style extremes.
         </p>
       </div>
