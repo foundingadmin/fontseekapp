@@ -96,86 +96,88 @@ export const QuizResults: React.FC = () => {
         <div className={`rounded-lg shadow-lg p-8 transition-colors duration-300 ${
           isDarkMode ? 'bg-neutral-900' : 'bg-white'
         }`}>
-          <div className="space-y-8 min-h-[600px]">
-            <div>
-              {showLabels && <div className={`text-xs mb-1 ${
-                isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-              }`}>Heading • 48px • Bold</div>}
-              <h1 
-                style={{ fontFamily: font.name }} 
-                className={`text-5xl font-bold transition-colors ${
-                  isDarkMode ? 'text-white' : 'text-neutral-900'
-                }`}
-              >
-                {currentCopyPack.heading}
-              </h1>
-            </div>
-
-            <div>
-              {showLabels && <div className={`text-xs mb-1 ${
-                isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-              }`}>Subheading • 24px • Medium</div>}
-              <h2 
-                style={{ fontFamily: font.name }} 
-                className={`text-2xl font-medium transition-colors ${
-                  isDarkMode ? 'text-white' : 'text-neutral-900'
-                }`}
-              >
-                {currentCopyPack.subheading}
-              </h2>
-            </div>
-
-            <div>
-              {showLabels && <div className={`text-xs mb-1 ${
-                isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-              }`}>Lead Paragraph • 20px • Regular</div>}
-              <p 
-                style={{ fontFamily: font.name }} 
-                className={`text-xl transition-colors ${
-                  isDarkMode ? 'text-white' : 'text-neutral-900'
-                }`}
-              >
-                {currentCopyPack.leadParagraph}
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              {showLabels && <div className={`text-xs mb-1 ${
-                isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-              }`}>Body Copy • 16px • Regular</div>}
-              <p 
-                style={{ fontFamily: font.name }} 
-                className={`text-base transition-colors ${
-                  isDarkMode ? 'text-white' : 'text-neutral-900'
-                }`}
-              >
-                {currentCopyPack.body1}
-              </p>
-              <p 
-                style={{ fontFamily: font.name }} 
-                className={`text-base transition-colors ${
-                  isDarkMode ? 'text-white' : 'text-neutral-900'
-                }`}
-              >
-                {currentCopyPack.body2}
-              </p>
-            </div>
-
-            <div>
-              {showLabels && <div className={`text-xs mb-1 ${
-                isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-              }`}>Fine Print • 12px • Light</div>}
-              <small 
-                style={{ fontFamily: font.name }} 
-                className={`text-xs font-light block transition-colors ${
+          <div className="relative min-h-[600px]">
+            <div className="space-y-8 mb-16">
+              <div>
+                {showLabels && <div className={`text-xs mb-1 ${
                   isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                }`}
-              >
-                {currentCopyPack.finePrint}
-              </small>
+                }`}>Heading • 36px/48px • Bold</div>}
+                <h1 
+                  style={{ fontFamily: font.name }} 
+                  className={`text-3xl md:text-5xl font-bold transition-colors ${
+                    isDarkMode ? 'text-white' : 'text-neutral-900'
+                  }`}
+                >
+                  {currentCopyPack.heading}
+                </h1>
+              </div>
+
+              <div>
+                {showLabels && <div className={`text-xs mb-1 ${
+                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+                }`}>Subheading • 20px/24px • Medium</div>}
+                <h2 
+                  style={{ fontFamily: font.name }} 
+                  className={`text-xl md:text-2xl font-medium transition-colors ${
+                    isDarkMode ? 'text-white' : 'text-neutral-900'
+                  }`}
+                >
+                  {currentCopyPack.subheading}
+                </h2>
+              </div>
+
+              <div>
+                {showLabels && <div className={`text-xs mb-1 ${
+                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+                }`}>Lead Paragraph • 18px/20px • Regular</div>}
+                <p 
+                  style={{ fontFamily: font.name }} 
+                  className={`text-lg md:text-xl transition-colors ${
+                    isDarkMode ? 'text-white' : 'text-neutral-900'
+                  }`}
+                >
+                  {currentCopyPack.leadParagraph}
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                {showLabels && <div className={`text-xs mb-1 ${
+                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+                }`}>Body Copy • 14px/16px • Regular</div>}
+                <p 
+                  style={{ fontFamily: font.name }} 
+                  className={`text-sm md:text-base transition-colors ${
+                    isDarkMode ? 'text-white' : 'text-neutral-900'
+                  }`}
+                >
+                  {currentCopyPack.body1}
+                </p>
+                <p 
+                  style={{ fontFamily: font.name }} 
+                  className={`text-sm md:text-base transition-colors ${
+                    isDarkMode ? 'text-white' : 'text-neutral-900'
+                  }`}
+                >
+                  {currentCopyPack.body2}
+                </p>
+              </div>
+
+              <div>
+                {showLabels && <div className={`text-xs mb-1 ${
+                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+                }`}>Fine Print • 11px/12px • Light</div>}
+                <small 
+                  style={{ fontFamily: font.name }} 
+                  className={`text-[11px] md:text-xs font-light block transition-colors ${
+                    isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+                  }`}
+                >
+                  {currentCopyPack.finePrint}
+                </small>
+              </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-2">
+            <div className="absolute bottom-0 left-0 right-0 grid grid-cols-3 gap-2">
               <button
                 onClick={shuffleCopyPack}
                 disabled={isShuffling}
