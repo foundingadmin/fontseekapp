@@ -5,52 +5,85 @@ import { aestheticScoring } from '../data/aestheticScoring';
 // Default fallback font to use when no matches are found
 const fallbackFont: FontData = {
   name: 'System UI',
-  family: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-  aestheticStyle: 'Modern Sans',
-  tone: 5,
-  energy: 5,
-  design: 5,
-  era: 5,
-  structure: 5,
-  category: 'sans-serif',
-  weight: 400,
   googleFontsLink: '',
-  embedCode: '',
-  personalityTags: [],
-  recommendedFor: []
+  tone: 3,
+  energy: 3,
+  design: 3,
+  era: 3,
+  structure: 3,
+  aestheticStyle: 'System Default',
+  embedCode: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  personalityTags: ['Clean', 'Universal', 'Reliable'],
+  recommendedFor: ['Any Context']
 };
 
 export function calculateFontRecommendations(scores: UserScores): FontRecommendation {
   // First, determine the aesthetic style based on the user's scores
   const matchingStyle = determineAestheticStyle(scores);
   
-  // Filter fonts by the matching aesthetic style
-  const matchingFonts = fonts.filter(font => font.aestheticStyle === matchingStyle);
+  // Get fonts matching the primary aesthetic style
+  let matchingFonts = fonts.filter(font => font.aestheticStyle === matchingStyle);
   
+  // If we don't have enough fonts in the primary style, get fonts from similar styles
+  if (matchingFonts.length < 3) {
+    const similarStyles = getSimilarStyles(matchingStyle, scores);
+    matchingFonts = [
+      ...matchingFonts,
+      ...fonts.filter(font => 
+        similarStyles.includes(font.aestheticStyle) && 
+        !matchingFonts.some(f => f.name === font.name)
+      )
+    ];
+  }
+
   // Calculate distance scores for each matching font
   const fontScores = matchingFonts.map(font => ({
     font,
     distance: calculateDistance(scores, font)
   }));
-  
+
   // Sort by distance (lower is better)
   fontScores.sort((a, b) => a.distance - b.distance);
 
-  // Get primary font or fall back to default
-  const primary = fontScores[0]?.font || fallbackFont;
-  
-  // Get secondary font or fall back to primary
-  const secondary = fontScores[1]?.font || primary;
-  
-  // Get tertiary font or fall back to secondary
-  const tertiary = fontScores[2]?.font || secondary;
-  
+  // Get unique fonts by selecting the best scoring fonts with different names
+  const uniqueFonts = getUniqueFonts(fontScores);
+
   return {
-    primary,
-    secondary,
-    tertiary,
+    primary: uniqueFonts[0] || fallbackFont,
+    secondary: uniqueFonts[1] || uniqueFonts[0] || fallbackFont,
+    tertiary: uniqueFonts[2] || uniqueFonts[1] || fallbackFont,
     aestheticStyle: matchingStyle
   };
+}
+
+function getUniqueFonts(fontScores: { font: FontData; distance: number }[]): FontData[] {
+  const uniqueFonts: FontData[] = [];
+  const seenNames = new Set<string>();
+
+  for (const { font } of fontScores) {
+    if (!seenNames.has(font.name)) {
+      uniqueFonts.push(font);
+      seenNames.add(font.name);
+      if (uniqueFonts.length === 3) break;
+    }
+  }
+
+  return uniqueFonts;
+}
+
+function getSimilarStyles(primaryStyle: string, scores: UserScores): string[] {
+  // Calculate style match scores for all styles
+  const styleScores = Object.entries(aestheticScoring).map(([style, ranges]) => ({
+    style,
+    deviation: calculateStyleDeviation(scores, ranges)
+  }));
+
+  // Sort by deviation (lower is better) and filter out the primary style
+  return styleScores
+    .filter(score => score.style !== primaryStyle)
+    .sort((a, b) => a.deviation - b.deviation)
+    .slice(0, 2) // Get top 2 similar styles
+    .map(score => score.style);
 }
 
 function determineAestheticStyle(scores: UserScores): string {
