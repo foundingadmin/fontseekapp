@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQuizStore } from '../store/quizStore';
 import { ArrowRight, RefreshCw, Share2 } from 'lucide-react';
 import { RadarChart } from './RadarChart';
@@ -6,7 +6,7 @@ import { RadarChart } from './RadarChart';
 export const QuizResults: React.FC = () => {
   const { scores, recommendations, calculateResults, resetQuiz } = useQuizStore();
   
-  React.useEffect(() => {
+  useEffect(() => {
     if (!scores && !recommendations) {
       calculateResults();
     }
@@ -19,6 +19,23 @@ export const QuizResults: React.FC = () => {
       </div>
     );
   }
+
+  const loadGoogleFont = (fontName: string) => {
+    const link = document.createElement('link');
+    const formattedName = fontName.replace(/ /g, '+');
+    link.href = `https://fonts.googleapis.com/css2?family=${formattedName}:wght@400;500;700&display=swap`;
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+  };
+
+  useEffect(() => {
+    if (recommendations) {
+      // Load fonts dynamically
+      loadGoogleFont(recommendations.primary.name);
+      loadGoogleFont(recommendations.secondary.name);
+      loadGoogleFont(recommendations.tertiary.name);
+    }
+  }, [recommendations]);
 
   return (
     <div className="w-full max-w-3xl mx-auto">
@@ -96,7 +113,7 @@ export const QuizResults: React.FC = () => {
         ].map(({ title, font }) => (
           <div key={font.name} className="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">{title}</h3>
+              <h3 className="text-lg font-semibold text-white">{title}: {font.name}</h3>
               <a
                 href={font.googleFontsLink}
                 target="_blank"
@@ -107,8 +124,8 @@ export const QuizResults: React.FC = () => {
               </a>
             </div>
             <div style={{ fontFamily: font.embedCode }}>
-              <p className="text-2xl text-white mb-2">{font.name}</p>
-              <p className="text-base mb-1">The quick brown fox jumps over the lazy dog</p>
+              <p className="text-2xl mb-4">The quick brown fox jumps over the lazy dog</p>
+              <p className="text-base mb-1">Pack my box with five dozen liquor jugs</p>
               <p className="text-sm text-white/60">{font.personalityTags.join(' • ')}</p>
               <p className="mt-2 text-sm text-white/60">Recommended for: {font.recommendedFor.join(', ')}</p>
             </div>
