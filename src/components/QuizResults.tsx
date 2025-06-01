@@ -109,13 +109,6 @@ export const QuizResults: React.FC = () => {
         
         <div className="space-y-8">
           <div>
-            {showLabels && <div className="text-xs text-white/40 mb-1">Eyebrow • 12px • Semibold • Uppercase</div>}
-            <p style={{ fontFamily: recommendations.primary.name }} className="text-sm font-semibold uppercase tracking-wide text-white/90">
-              {currentCopyPack.eyebrow}
-            </p>
-          </div>
-
-          <div>
             {showLabels && <div className="text-xs text-white/40 mb-1">Heading • 48px • Bold</div>}
             <h1 style={{ fontFamily: recommendations.primary.name }} className="text-5xl font-bold leading-tight">
               {currentCopyPack.heading}
