@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useQuizStore } from '../store/quizStore';
 import { quizQuestions } from '../data/quiz';
 import { ArrowDown, ArrowUp, Check, ChevronLeft } from 'lucide-react';
@@ -46,7 +45,6 @@ export const QuizQuestion: React.FC = () => {
             Back
           </button>
         ) : (
-          /* Empty div to maintain flex layout */
           <div />
         )}
         <QuizProgress />
