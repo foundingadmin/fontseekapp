@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQuizStore } from '../store/quizStore';
-import brandmarkLogo from '/Founding-v1-Brandmark-white.svg';
+import wordmarkLogo from '/Founding-v1-Wordmark-white.svg';
 
 export const IntroScreen: React.FC = () => {
   const { startQuiz } = useQuizStore();
@@ -83,7 +83,7 @@ export const IntroScreen: React.FC = () => {
         <div className="max-w-3xl mx-auto px-4 py-16 text-center">
           <a href="/" className="inline-block mb-12">
             <img 
-              src={brandmarkLogo}
+              src={wordmarkLogo}
               alt="FontSeek - Strategy-Driven Font Recommendations" 
               className="w-[140px] h-auto"
               onError={(e) => {
