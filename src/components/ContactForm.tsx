@@ -10,6 +10,8 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const email = useQuizStore(state => state.email);
+  const scores = useQuizStore(state => state.scores);
+  const recommendations = useQuizStore(state => state.recommendations);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -63,8 +65,49 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
           method="POST"
           data-netlify="true"
           netlify-honeypot="bot-field"
+          data-netlify-email="admin@foundingcreative.com"
+          data-netlify-subject="I Found My Font!"
         >
           <input type="hidden" name="form-name" value="contact" />
+          <input type="hidden" name="subject" value="I Found My Font!" />
+          
+          {/* Hidden fields for font results */}
+          <input 
+            type="hidden" 
+            name="primary-font" 
+            value={recommendations?.primary.name || ''}
+          />
+          <input 
+            type="hidden" 
+            name="aesthetic-style" 
+            value={recommendations?.aestheticStyle || ''}
+          />
+          <input 
+            type="hidden" 
+            name="tone-score" 
+            value={scores?.tone.toString() || ''}
+          />
+          <input 
+            type="hidden" 
+            name="energy-score" 
+            value={scores?.energy.toString() || ''}
+          />
+          <input 
+            type="hidden" 
+            name="design-score" 
+            value={scores?.design.toString() || ''}
+          />
+          <input 
+            type="hidden" 
+            name="era-score" 
+            value={scores?.era.toString() || ''}
+          />
+          <input 
+            type="hidden" 
+            name="structure-score" 
+            value={scores?.structure.toString() || ''}
+          />
+
           <p className="hidden">
             <label>
               Don't fill this out if you're human: <input name="bot-field" />
