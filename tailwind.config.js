@@ -5,8 +5,8 @@ export default {
     extend: {
       colors: {
         emerald: {
-          400: '#34d399',
-          500: '#10b981',
+          400: '#43da7a',
+          500: '#43da7a',
         },
       },
     },
