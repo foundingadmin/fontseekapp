@@ -258,8 +258,13 @@ export const QuizResults: React.FC = () => {
       </div>
 
       <div className="mb-12">
-        <p className="text-white/60 uppercase tracking-wider mb-2 text-left">Your Brand's Aesthetic Style</p>
-        <h1 className="text-4xl font-bold text-white mb-4 text-left tracking-[-0.02em]">{recommendations.aestheticStyle}</h1>
+        <h1 className="text-4xl font-bold text-white mb-4 tracking-[-0.02em]">{recommendations.aestheticStyle}</h1>
+        <p className="text-white/60 text-lg mb-8">
+          Based on your answers, your brand's font personality aligns with the {recommendations.aestheticStyle.toLowerCase()} style.
+          This aesthetic combines {getTopTraits(recommendations.primary).map((trait, i, arr) => 
+            i === arr.length - 1 ? `and ${trait.toLowerCase()}` : `${trait.toLowerCase()}, `
+          )} to create a distinctive visual voice.
+        </p>
         
         <div className="flex flex-wrap gap-2 mb-8">
           {getTopTraits(recommendations.primary).map((trait) => (
