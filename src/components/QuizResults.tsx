@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useQuizStore } from '../store/quizStore';
-import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle } from 'lucide-react';
+import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon } from 'lucide-react';
 import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
@@ -18,6 +18,7 @@ export const QuizResults: React.FC = () => {
   const [showLabels, setShowLabels] = useState(false);
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
   const [isShuffling, setIsShuffling] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     if (!scores && !recommendations) {
@@ -133,60 +134,121 @@ export const QuizResults: React.FC = () => {
         </div>
 
         <div className="p-8">
-          <div className="bg-white rounded-lg shadow-lg p-8">
+          <div className={`rounded-lg shadow-lg p-8 transition-colors duration-300 ${
+            isDarkMode ? 'bg-neutral-900' : 'bg-white'
+          }`}>
             <div className="flex gap-2 mb-8">
               <button
                 onClick={shuffleCopyPack}
                 disabled={isShuffling}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-neutral-100 text-neutral-900 hover:bg-neutral-200 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed ${
+                  isDarkMode 
+                    ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
+                }`}
               >
                 <Shuffle className="w-4 h-4" />
                 Shuffle Copy Style
               </button>
               <button
                 onClick={() => setShowLabels(!showLabels)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-neutral-100 text-neutral-900 hover:bg-neutral-200 transition-colors text-sm"
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm ${
+                  isDarkMode 
+                    ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
+                }`}
               >
                 {showLabels ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 {showLabels ? 'Hide specs' : 'Show specs'}
+              </button>
+              <button
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm ${
+                  isDarkMode 
+                    ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
+                }`}
+              >
+                {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                {isDarkMode ? 'Light mode' : 'Dark mode'}
               </button>
             </div>
             
             <div className="space-y-8">
               <div>
-                {showLabels && <div className="text-xs text-neutral-500 mb-1">Heading • 48px • Bold</div>}
-                <h1 style={{ fontFamily: recommendations.primary.name }} className="text-5xl font-bold text-neutral-900">
+                {showLabels && <div className={`text-xs mb-1 ${
+                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+                }`}>Heading • 48px • Bold</div>}
+                <h1 
+                  style={{ fontFamily: recommendations.primary.name }} 
+                  className={`text-5xl font-bold transition-colors ${
+                    isDarkMode ? 'text-white' : 'text-neutral-900'
+                  }`}
+                >
                   {currentCopyPack.heading}
                 </h1>
               </div>
 
               <div>
-                {showLabels && <div className="text-xs text-neutral-500 mb-1">Subheading • 24px • Medium</div>}
-                <h2 style={{ fontFamily: recommendations.primary.name }} className="text-2xl font-medium text-neutral-900">
+                {showLabels && <div className={`text-xs mb-1 ${
+                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+                }`}>Subheading • 24px • Medium</div>}
+                <h2 
+                  style={{ fontFamily: recommendations.primary.name }} 
+                  className={`text-2xl font-medium transition-colors ${
+                    isDarkMode ? 'text-white' : 'text-neutral-900'
+                  }`}
+                >
                   {currentCopyPack.subheading}
                 </h2>
               </div>
 
               <div>
-                {showLabels && <div className="text-xs text-neutral-500 mb-1">Lead Paragraph • 20px • Regular</div>}
-                <p style={{ fontFamily: recommendations.primary.name }} className="text-xl text-neutral-900">
+                {showLabels && <div className={`text-xs mb-1 ${
+                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+                }`}>Lead Paragraph • 20px • Regular</div>}
+                <p 
+                  style={{ fontFamily: recommendations.primary.name }} 
+                  className={`text-xl transition-colors ${
+                    isDarkMode ? 'text-white' : 'text-neutral-900'
+                  }`}
+                >
                   {currentCopyPack.leadParagraph}
                 </p>
               </div>
 
               <div className="space-y-4">
-                {showLabels && <div className="text-xs text-neutral-500 mb-1">Body Copy • 16px • Regular</div>}
-                <p style={{ fontFamily: recommendations.primary.name }} className="text-base text-neutral-900">
+                {showLabels && <div className={`text-xs mb-1 ${
+                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+                }`}>Body Copy • 16px • Regular</div>}
+                <p 
+                  style={{ fontFamily: recommendations.primary.name }} 
+                  className={`text-base transition-colors ${
+                    isDarkMode ? 'text-white' : 'text-neutral-900'
+                  }`}
+                >
                   {currentCopyPack.body1}
                 </p>
-                <p style={{ fontFamily: recommendations.primary.name }} className="text-base text-neutral-900">
+                <p 
+                  style={{ fontFamily: recommendations.primary.name }} 
+                  className={`text-base transition-colors ${
+                    isDarkMode ? 'text-white' : 'text-neutral-900'
+                  }`}
+                >
                   {currentCopyPack.body2}
                 </p>
               </div>
 
               <div>
-                {showLabels && <div className="text-xs text-neutral-500 mb-1">Fine Print • 12px • Light</div>}
-                <small style={{ fontFamily: recommendations.primary.name }} className="text-xs font-light text-neutral-500">
+                {showLabels && <div className={`text-xs mb-1 ${
+                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+                }`}>Fine Print • 12px • Light</div>}
+                <small 
+                  style={{ fontFamily: recommendations.primary.name }} 
+                  className={`text-xs font-light block transition-colors ${
+                    isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+                  }`}
+                >
                   {currentCopyPack.finePrint}
                 </small>
               </div>
