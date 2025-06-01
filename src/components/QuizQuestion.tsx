@@ -46,7 +46,8 @@ export const QuizQuestion: React.FC = () => {
             Back
           </button>
         ) : (
-          <div /> {/* Empty div to maintain flex layout */}
+          /* Empty div to maintain flex layout */
+          <div />
         )}
         <QuizProgress />
       </div>
