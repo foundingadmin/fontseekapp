@@ -83,31 +83,28 @@ export const QuizResults: React.FC = () => {
 
       {/* Primary Font */}
       <div className="mb-16 bg-white/10 rounded-xl p-8 backdrop-blur-sm">
-        <div className="flex justify-between items-start mb-8">
-          <div>
-            <h2 className="text-xl font-semibold text-white mb-2">Your Top Font Recommendation</h2>
-            <p className="text-2xl font-bold text-white">{recommendations.primary.name}</p>
-            <p className="text-sm text-white/60 mt-2">Based on your answers, this Google Web Font is the best match for your brand. It's free to use and ready to download or embed today.</p>
-          </div>
-          <div className="flex flex-col items-end gap-4">
-            <div className="flex items-center gap-2">
-              <button
-                onClick={shuffleCopyPack}
-                disabled={isShuffling}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Shuffle className="w-4 h-4" />
-                Shuffle Copy Style
-              </button>
-              <button
-                onClick={() => setShowLabels(!showLabels)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors text-sm"
-              >
-                {showLabels ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                {showLabels ? 'Hide specs' : 'Show specs'}
-              </button>
-            </div>
-          </div>
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold text-white mb-2">Your Top Font Recommendation</h2>
+          <p className="text-2xl font-bold text-white">{recommendations.primary.name}</p>
+          <p className="text-sm text-white/60 mt-2">Based on your answers, this Google Web Font is the best match for your brand. It's free to use and ready to download or embed today.</p>
+        </div>
+
+        <div className="flex gap-2 mb-8">
+          <button
+            onClick={shuffleCopyPack}
+            disabled={isShuffling}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Shuffle className="w-4 h-4" />
+            Shuffle Copy Style
+          </button>
+          <button
+            onClick={() => setShowLabels(!showLabels)}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors text-sm"
+          >
+            {showLabels ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            {showLabels ? 'Hide specs' : 'Show specs'}
+          </button>
         </div>
         
         <div className="space-y-8">
@@ -115,44 +112,24 @@ export const QuizResults: React.FC = () => {
             <p style={{ fontFamily: recommendations.primary.name }} className="text-sm font-semibold uppercase tracking-wide text-white/90">
               {currentCopyPack.eyebrow}
             </p>
-            {showLabels && (
-              <p className="font-sans text-xs text-white/40 mt-1">
-                Font size: Small (14px) • Weight: Semibold • Usage: Section label
-              </p>
-            )}
           </div>
 
           <div>
             <h1 style={{ fontFamily: recommendations.primary.name }} className="text-5xl font-bold leading-tight">
               {currentCopyPack.heading}
             </h1>
-            {showLabels && (
-              <p className="font-sans text-xs text-white/40 mt-1">
-                Font size: Extra Large (48px) • Weight: Bold • Usage: Main heading
-              </p>
-            )}
           </div>
 
           <div>
             <h2 style={{ fontFamily: recommendations.primary.name }} className="text-2xl font-medium leading-relaxed">
               {currentCopyPack.subheading}
             </h2>
-            {showLabels && (
-              <p className="font-sans text-xs text-white/40 mt-1">
-                Font size: Large (24px) • Weight: Medium • Usage: Subheading
-              </p>
-            )}
           </div>
 
           <div>
             <p style={{ fontFamily: recommendations.primary.name }} className="text-xl font-normal leading-relaxed">
               {currentCopyPack.leadParagraph}
             </p>
-            {showLabels && (
-              <p className="font-sans text-xs text-white/40 mt-1">
-                Font size: Medium (20px) • Weight: Regular • Usage: Lead paragraph
-              </p>
-            )}
           </div>
 
           <div className="space-y-4">
@@ -162,22 +139,12 @@ export const QuizResults: React.FC = () => {
             <p style={{ fontFamily: recommendations.primary.name }} className="text-base font-normal leading-loose">
               {currentCopyPack.body2}
             </p>
-            {showLabels && (
-              <p className="font-sans text-xs text-white/40 mt-1">
-                Font size: Normal (16px) • Weight: Regular • Usage: Body copy
-              </p>
-            )}
           </div>
 
           <div>
             <small style={{ fontFamily: recommendations.primary.name }} className="text-xs font-light text-white/60 block">
               {currentCopyPack.finePrint}
             </small>
-            {showLabels && (
-              <p className="font-sans text-xs text-white/40 mt-1">
-                Font size: Extra Small (12px) • Weight: Light • Usage: Fine print
-              </p>
-            )}
           </div>
         </div>
 
