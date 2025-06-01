@@ -83,12 +83,11 @@ export const IntroScreen: React.FC = () => {
           <img src="/src/assets/Founding-v1-Wordmark-white.svg" alt="FontSeek" className="w-[145px] mx-auto mb-12" />
           
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Don't choose fonts based on how they look.<br />
-            Choose them based on what they say.
+            Choose fonts on what they say. Not how they look.
           </h1>
           
           <p className="text-xl text-white/80 mb-12">
-            FontSeek helps you discover the Google Web Font that best fits your brand's personality — not just its style. Get instant recommendations, usage previews, and dev-ready code.
+            FontSeek helps you discover the Google Web Font that best fits your brand's personality—not just its style. Get instant recommendations, usage previews, and dev-ready code in under 3 minutes.
           </p>
 
           <form onSubmit={handleSubmit} className="max-w-[400px] mx-auto">
