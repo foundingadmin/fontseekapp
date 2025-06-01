@@ -27,7 +27,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
         'service_wxwzny7',
         'template_bpieskn',
         formRef.current,
-        'YOUR_PUBLIC_KEY' // You'll need to provide your public key
+        'EzMx5EhE7iYubMY-i'
       );
 
       if (result.status === 200) {
