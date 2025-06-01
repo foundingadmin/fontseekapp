@@ -14,6 +14,17 @@ export function calculateFontRecommendations(scores: UserScores): FontRecommenda
     };
   }
 
+  // Special case for neutral scores (all 3s)
+  if (Object.values(scores).every(score => score === 3)) {
+    const grotesqueSansFonts = fonts.filter(font => font.aestheticStyle === 'Grotesque Sans');
+    return {
+      primary: grotesqueSansFonts[0],
+      secondary: grotesqueSansFonts[1],
+      tertiary: grotesqueSansFonts[2],
+      aestheticStyle: 'Grotesque Sans'
+    };
+  }
+
   // Determine aesthetic style based on trait ranges
   const aestheticStyle = determineAestheticStyle(scores);
   

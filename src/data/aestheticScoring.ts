@@ -28,8 +28,20 @@ export const aestheticScoring: AestheticScoring = {
     structureMin: 1,
     structureMax: 3
   },
+  'Grotesque Sans': {
+    toneMin: 2,
+    toneMax: 4,
+    energyMin: 2,
+    energyMax: 4,
+    designMin: 2,
+    designMax: 4,
+    eraMin: 3,
+    eraMax: 4,
+    structureMin: 3,
+    structureMax: 4
+  },
   'Humanist Sans': {
-    toneMin: 3,
+    toneMin: 4,
     toneMax: 5,
     energyMin: 2,
     energyMax: 4,
