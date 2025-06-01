@@ -1,18 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useQuizStore } from '../store/quizStore';
 
 export const IntroScreen: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const { startQuiz, skipToResults } = useQuizStore();
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      startQuiz(email);
-    }
-  };
+  const { skipToResults } = useQuizStore();
 
   useEffect(() => {
+    // Load HubSpot form script
+    const script = document.createElement('script');
+    script.src = 'https://js.hsforms.net/forms/embed/v2.js';
+    script.charset = 'utf-8';
+    script.type = 'text/javascript';
+    document.body.appendChild(script);
+
+    script.onload = () => {
+      // @ts-ignore
+      if (window.hbspt) {
+        // @ts-ignore
+        window.hbspt.forms.create({
+          region: "na2",
+          portalId: "242336861",
+          formId: "5d375dfe-3d01-4816-9192-93063d111929",
+          target: "#fontseek-email-form"
+        });
+      }
+    };
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.altKey && e.key === 'Enter') {
         skipToResults();
@@ -20,7 +32,10 @@ export const IntroScreen: React.FC = () => {
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.removeChild(script);
+    };
   }, [skipToResults]);
 
   return (
@@ -46,23 +61,9 @@ export const IntroScreen: React.FC = () => {
             Take our interactive quiz to discover the Google Web Font that best matches your brand's personality — with instant recommendations and usage guides.
           </p>
 
-          <form onSubmit={handleSubmit} className="max-w-[400px] mx-auto space-y-4">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email to start"
-              className="w-full rounded-full bg-[#0F111A] border border-[#2C2F3B] text-white px-6 py-3 text-sm placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-green-400"
-              required
-            />
-            
-            <button
-              type="submit"
-              className="w-full rounded-full bg-green-400 text-black font-semibold px-6 py-3 text-sm hover:bg-green-300 transition-colors"
-            >
-              Start Quiz
-            </button>
-          </form>
+          <div className="max-w-[400px] mx-auto">
+            <div id="fontseek-email-form"></div>
+          </div>
         </div>
       </div>
     </div>
