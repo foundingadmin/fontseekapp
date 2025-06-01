@@ -72,12 +72,29 @@ export const QuizResults: React.FC = () => {
         format: 'a4'
       });
 
-      // Load and add logo with proper image handling
+      // Load and add logo with proper SVG to PNG conversion
       await new Promise((resolve, reject) => {
         const logo = new Image();
         logo.onload = () => {
           try {
-            doc.addImage(logo, 'PNG', 150, 15, 40, 12);
+            // Create a canvas element to draw the SVG
+            const canvas = document.createElement('canvas');
+            canvas.width = logo.width;
+            canvas.height = logo.height;
+            const ctx = canvas.getContext('2d');
+            
+            if (!ctx) {
+              throw new Error('Failed to get canvas context');
+            }
+
+            // Draw the SVG image onto the canvas
+            ctx.drawImage(logo, 0, 0);
+            
+            // Convert canvas to PNG data URL
+            const pngDataUrl = canvas.toDataURL('image/png');
+            
+            // Add the PNG image to the PDF
+            doc.addImage(pngDataUrl, 'PNG', 150, 15, 40, 12);
             resolve(null);
           } catch (error) {
             reject(error);
