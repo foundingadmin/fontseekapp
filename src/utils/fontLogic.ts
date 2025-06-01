@@ -1,6 +1,31 @@
 import type { UserScores, FontRecommendation, FontData } from '../types';
 import { fonts } from '../data/fonts';
 
+function calculateFontMatchScore(font: FontData, scores: UserScores): number {
+  // Calculate how well a font matches the user's preferences
+  const traits = ['tone', 'energy', 'design', 'era', 'structure'] as const;
+  
+  return traits.reduce((score, trait) => {
+    // Lower difference means better match
+    const difference = Math.abs(font[trait] - scores[trait]);
+    // Invert the difference so higher is better, max difference is 5
+    return score + (5 - difference);
+  }, 0);
+}
+
+function getSimilarStyles(aestheticStyle: string, scores: UserScores): string[] {
+  // Map of related aesthetic styles
+  const styleMap: Record<string, string[]> = {
+    'Geometric Sans': ['Humanist Sans', 'Neo-Grotesque'],
+    'Humanist Sans': ['Geometric Sans', 'Neo-Grotesque'],
+    'Neo-Grotesque': ['Geometric Sans', 'Humanist Sans'],
+    'Display / Bubbly': ['Geometric Sans'], // Fallback only if absolutely necessary
+    'Serif': ['Humanist Sans', 'Neo-Grotesque'],
+  };
+
+  return styleMap[aestheticStyle] || ['Geometric Sans']; // Default fallback
+}
+
 function determineAestheticStyle(scores: UserScores): string {
   // Display / Bubbly specific rules
   if (scores.tone <= 2 && scores.energy >= 5 && scores.design >= 5 && scores.era >= 3 && scores.structure >= 3) {
@@ -44,8 +69,6 @@ function getMatchingFonts(aestheticStyle: string, scores: UserScores): FontData[
 
   return matchingFonts.sort((a, b) => calculateFontMatchScore(b, scores) - calculateFontMatchScore(a, scores));
 }
-
-// ... (rest of the existing functions)
 
 export function calculateFontRecommendations(scores: UserScores): FontRecommendation {
   if (!scores) {
