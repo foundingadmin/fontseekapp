@@ -4,6 +4,7 @@
   functions = "netlify/functions"
 
 [dev]
+  command = "vite"
   framework = "vite"
   targetPort = 5173
   port = 8888
