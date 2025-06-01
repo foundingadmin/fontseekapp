@@ -37,9 +37,9 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
 
     // If this was the last question, calculate results immediately
     if (questionNumber === quizQuestions.length) {
-      setTimeout(() => get().calculateResults(), 500);
+      get().calculateResults();
     } else {
-      setTimeout(() => get().nextQuestion(), 500);
+      get().nextQuestion();
     }
   },
 
