@@ -2,6 +2,7 @@ import React from 'react';
 import { Header } from './components/Header';
 import { QuizQuestion } from './components/QuizQuestion';
 import { QuizResults } from './components/QuizResults';
+import { QuizProgress } from './components/QuizProgress';
 import { useQuizStore } from './store/quizStore';
 
 function App() {
