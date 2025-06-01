@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useQuizStore } from '../store/quizStore';
 import { quizQuestions } from '../data/quiz';
-import { ArrowDown, ArrowUp } from 'lucide-react';
+import { ArrowDown, ArrowUp, Check } from 'lucide-react';
 import clsx from 'clsx';
 
 export const QuizQuestion: React.FC = () => {
@@ -49,24 +49,24 @@ export const QuizQuestion: React.FC = () => {
             onClick={() => handleSelect(option.value)}
             className={clsx(
               'w-full p-6 rounded-xl border-2 transition-all duration-200',
-              'text-left text-lg font-medium',
+              'text-left text-lg font-medium group',
               'focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75',
               currentAnswer === option.value
-                ? 'bg-white text-black border-white'
-                : 'bg-white/5 text-white border-white/20 hover:bg-white/10'
+                ? 'bg-emerald-500/10 text-white border-emerald-500'
+                : 'bg-white/5 text-white border-white/20 hover:bg-white/10 hover:border-white/40'
             )}
           >
             <div className="flex items-center gap-4">
               <div
                 className={clsx(
-                  'w-6 h-6 rounded-full border-2 flex items-center justify-center',
+                  'w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors',
                   currentAnswer === option.value
-                    ? 'border-black bg-black'
-                    : 'border-white'
+                    ? 'border-emerald-500 bg-emerald-500'
+                    : 'border-white group-hover:border-white/60'
                 )}
               >
                 {currentAnswer === option.value && (
-                  <div className="w-3 h-3 bg-white rounded-full" />
+                  <Check className="w-3 h-3 text-black" />
                 )}
               </div>
               <span>{option.label}</span>
