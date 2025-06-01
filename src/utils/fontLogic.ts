@@ -67,8 +67,40 @@ function determineAestheticStyle(scores: UserScores): string {
   return 'Grotesque Sans';
 }
 
+// Default fallback fonts to ensure we always have valid FontData objects
+const fallbackFonts: FontData[] = [
+  {
+    name: 'Inter',
+    aestheticStyle: 'Grotesque Sans',
+    url: 'https://fonts.google.com/specimen/Inter',
+    description: 'A versatile sans-serif font designed for screen interfaces'
+  },
+  {
+    name: 'Roboto',
+    aestheticStyle: 'Neo-Grotesque Sans',
+    url: 'https://fonts.google.com/specimen/Roboto',
+    description: 'A clean and modern sans-serif font'
+  },
+  {
+    name: 'Open Sans',
+    aestheticStyle: 'Humanist Sans',
+    url: 'https://fonts.google.com/specimen/Open+Sans',
+    description: 'A humanist sans-serif font optimized for legibility'
+  }
+];
+
 function getRandomFonts(aestheticStyle: string): FontData[] {
-  const styleFonts = fonts.filter(font => font.aestheticStyle === aestheticStyle);
+  let styleFonts = fonts.filter(font => font.aestheticStyle === aestheticStyle);
+  
+  // If no fonts found for the aesthetic style, try Grotesque Sans as fallback
+  if (styleFonts.length === 0) {
+    styleFonts = fonts.filter(font => font.aestheticStyle === 'Grotesque Sans');
+  }
+  
+  // If still no fonts found, use our hardcoded fallback fonts
+  if (styleFonts.length === 0) {
+    return fallbackFonts;
+  }
   
   // If we have exactly 3 fonts, return them in random order
   if (styleFonts.length === 3) {
@@ -80,12 +112,10 @@ function getRandomFonts(aestheticStyle: string): FontData[] {
     return shuffleArray([...styleFonts]).slice(0, 3);
   }
   
-  // If we have fewer than 3 fonts, duplicate the last one
+  // If we have fewer than 3 fonts, use the available ones and fill the rest with fallbacks
   const result = [...styleFonts];
-  while (result.length < 3) {
-    result.push(result[result.length - 1]);
-  }
-  return result;
+  const remainingCount = 3 - result.length;
+  return [...result, ...fallbackFonts.slice(0, remainingCount)];
 }
 
 function shuffleArray<T>(array: T[]): T[] {
