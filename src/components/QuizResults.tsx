@@ -77,24 +77,60 @@ export const QuizResults: React.FC = () => {
           </a>
         </div>
         
-        <div style={{ fontFamily: recommendations.primary.name }}>
-          <div className="mb-8">
-            <h1 style={{ fontWeight: 700 }} className="text-5xl">
+        <div style={{ fontFamily: recommendations.primary.name }} className="space-y-8">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-wide text-white/90">
+              Brand Typography System
+            </p>
+            <p className="text-xs text-white/40 mt-1">
+              sm / Semibold / &lt;p&gt; / text-sm font-semibold uppercase tracking-wide
+            </p>
+          </div>
+
+          <div>
+            <h1 className="text-5xl font-bold leading-tight">
               The quick brown fox jumps over the lazy dog
             </h1>
-            <div className="mt-1 text-white/40 text-sm">5xl / Bold (700)</div>
+            <p className="text-xs text-white/40 mt-1">
+              5xl / Bold / &lt;h1&gt; / text-5xl font-bold leading-tight
+            </p>
           </div>
-          <div className="mb-8">
-            <h2 style={{ fontWeight: 500 }} className="text-4xl">
+
+          <div>
+            <h2 className="text-2xl font-medium leading-relaxed">
               Pack my box with five dozen liquor jugs
             </h2>
-            <div className="mt-1 text-white/40 text-sm">4xl / Medium (500)</div>
-          </div>
-          <div className="mb-8">
-            <p style={{ fontWeight: 400 }} className="text-2xl">
-              How vexingly quick daft zebras jump
+            <p className="text-xs text-white/40 mt-1">
+              2xl / Medium / &lt;h2&gt; / text-2xl font-medium leading-relaxed
             </p>
-            <div className="mt-1 text-white/40 text-sm">2xl / Regular (400)</div>
+          </div>
+
+          <div>
+            <p className="text-xl font-normal leading-relaxed">
+              How vexingly quick daft zebras jump! The five boxing wizards jump quickly.
+            </p>
+            <p className="text-xs text-white/40 mt-1">
+              xl / Regular / &lt;p&gt; / text-xl font-normal leading-relaxed
+            </p>
+          </div>
+
+          <div>
+            <p className="text-base font-normal leading-loose">
+              The quick brown fox jumps over the lazy dog. A wizard's job is to vex chumps quickly in fog.
+              Pack my box with five dozen liquor jugs. How vexingly quick daft zebras jump!
+            </p>
+            <p className="text-xs text-white/40 mt-1">
+              base / Regular / &lt;p&gt; / text-base font-normal leading-loose
+            </p>
+          </div>
+
+          <div>
+            <small className="text-xs font-light text-white/60 block">
+              © 2025 FontSeek. All rights reserved. The quick brown fox jumps over the lazy dog.
+            </small>
+            <p className="text-xs text-white/40 mt-1">
+              xs / Light / &lt;small&gt; / text-xs font-light text-white/60
+            </p>
           </div>
         </div>
       </div>
