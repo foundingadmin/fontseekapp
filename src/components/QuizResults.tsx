@@ -85,19 +85,10 @@ export const QuizResults: React.FC = () => {
   }) => (
     <div className="mb-8 bg-[#1C1F26] rounded-xl overflow-hidden shadow-xl">
       <div className="px-6 py-5 border-b border-[#2A2D36]">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <h2 className="text-xl font-semibold text-white mb-2">{title}</h2>
-            <p className="text-2xl font-bold text-white">{font.name}</p>
-            <p className="text-sm text-white/60 mt-2 max-w-xl">{description}</p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {getTopTraits(font).map((trait) => (
-              <span key={trait} className="bg-emerald-500/10 text-emerald-400 text-xs font-medium px-3 py-1 rounded-full">
-                {trait}
-              </span>
-            ))}
-          </div>
+        <div>
+          <h2 className="text-xl font-semibold text-white mb-2">{title}</h2>
+          <p className="text-2xl font-bold text-white">{font.name}</p>
+          <p className="text-sm text-white/60 mt-2 max-w-xl">{description}</p>
         </div>
       </div>
 
@@ -270,7 +261,15 @@ export const QuizResults: React.FC = () => {
 
       <div className="mb-12">
         <p className="text-white/60 uppercase tracking-wider mb-2 text-left">Your Brand's Aesthetic Style</p>
-        <h1 className="text-4xl font-bold text-white mb-8 text-left">{recommendations.aestheticStyle}</h1>
+        <h1 className="text-4xl font-bold text-white mb-4 text-left">{recommendations.aestheticStyle}</h1>
+        
+        <div className="flex flex-wrap gap-2 mb-8">
+          {getTopTraits(recommendations.primary).map((trait) => (
+            <span key={trait} className="bg-emerald-500/10 text-emerald-400 text-xs font-medium px-3 py-1 rounded-full">
+              {trait}
+            </span>
+          ))}
+        </div>
         
         {scores && <TraitScales scores={scores} />}
       </div>
