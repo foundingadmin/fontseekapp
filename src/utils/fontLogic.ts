@@ -2,7 +2,12 @@ import type { UserScores, FontRecommendation, FontData } from '../types';
 import { fonts } from '../data/fonts';
 
 function determineAestheticStyle(scores: UserScores): string {
-  // Apply the new scoring rules in order of priority
+  // New Display / Bubbly rule
+  if (scores.tone <= 2 && scores.energy >= 5 && scores.design >= 5 && scores.era >= 3 && scores.structure >= 3) {
+    return 'Display / Bubbly';
+  }
+  
+  // Existing rules
   if (scores.design >= 4 && scores.energy >= 4 && scores.era <= 3) {
     return 'Geometric Sans';
   }
@@ -28,7 +33,7 @@ function determineAestheticStyle(scores: UserScores): string {
   }
   
   if (scores.energy === 5 && scores.design === 5 && scores.tone === 5) {
-    return 'Display';
+    return 'Display / Bubbly';
   }
 
   // If no perfect match, find best match based on trait values
