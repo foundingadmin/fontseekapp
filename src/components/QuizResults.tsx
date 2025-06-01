@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useQuizStore } from '../store/quizStore';
+import { quizQuestions } from '../data/quiz';
 import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon } from 'lucide-react';
 import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
@@ -17,7 +18,6 @@ export const QuizResults: React.FC = () => {
   const { scores, recommendations, calculateResults, resetQuiz } = useQuizStore();
   const [showLabels, setShowLabels] = useState(false);
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
-  const [isShuffling, setIsShuffling] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
@@ -35,9 +35,6 @@ export const QuizResults: React.FC = () => {
   }, [recommendations]);
 
   const shuffleCopyPack = () => {
-    if (isShuffling) return;
-    
-    setIsShuffling(true);
     const currentIndex = copyPacks.findIndex(pack => pack.styleId === currentCopyPack.styleId);
     let nextIndex = currentIndex;
     
@@ -46,7 +43,6 @@ export const QuizResults: React.FC = () => {
     }
     
     setCurrentCopyPack(copyPacks[nextIndex]);
-    setTimeout(() => setIsShuffling(false), 500);
   };
 
   const getTopTraits = (font: typeof recommendations.primary) => {
@@ -100,8 +96,7 @@ export const QuizResults: React.FC = () => {
             <div className="flex flex-col md:flex-row gap-2 mb-8">
               <button
                 onClick={shuffleCopyPack}
-                disabled={isShuffling}
-                className={`flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed ${
+                className={`flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm ${
                   isDarkMode 
                     ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
                     : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
