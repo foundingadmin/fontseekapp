@@ -52,13 +52,13 @@ export const IntroScreen: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email to start"
-              className="w-full px-6 py-4 rounded-full bg-[#1C2127] text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="w-full rounded-full bg-[#0F111A] border border-[#2C2F3B] text-white px-6 py-3 text-sm placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-green-400"
               required
             />
             
             <button
               type="submit"
-              className="w-full px-6 py-4 rounded-full bg-emerald-500 text-black font-semibold hover:bg-emerald-400 transition-colors"
+              className="w-full rounded-full bg-green-400 text-black font-semibold px-6 py-3 text-sm hover:bg-green-300 transition-colors"
             >
               Start Quiz
             </button>
