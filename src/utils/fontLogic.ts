@@ -1,24 +1,58 @@
 import type { UserScores, FontRecommendation, FontData } from '../types';
 import { fonts } from '../data/fonts';
 
+// Default fallback fonts for each category
+const fallbackFonts: Record<string, FontData[]> = {
+  'Transitional Serif': [
+    {
+      name: 'Georgia',
+      googleFontsLink: '',
+      tone: 2,
+      energy: 2,
+      design: 3,
+      era: 3,
+      structure: 2,
+      aestheticStyle: 'Transitional Serif',
+      embedCode: 'Georgia, serif',
+      personalityTags: ['Classic', 'Readable', 'Professional'],
+      recommendedFor: ['General Use', 'Editorial']
+    }
+  ],
+  'System': [
+    {
+      name: 'System UI',
+      googleFontsLink: '',
+      tone: 3,
+      energy: 3,
+      design: 3,
+      era: 4,
+      structure: 3,
+      aestheticStyle: 'System',
+      embedCode: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      personalityTags: ['Clean', 'Universal', 'Reliable'],
+      recommendedFor: ['Any Context']
+    }
+  ]
+};
+
 function determineAestheticStyle(scores: UserScores): string {
+  // Transitional Serif: balanced scores with traditional lean
+  if (scores.tone <= 3 && scores.energy <= 3 && scores.design === 3) {
+    return 'Transitional Serif';
+  }
+  
   // Display / Bubbly: high energy, design, and tone with low structure
   if (scores.energy >= 4 && scores.design >= 4 && scores.tone >= 4 && scores.structure <= 2) {
     return 'Display / Bubbly';
   }
   
-  // Monospace: high structure and low design
+  // Rest of existing style determinations...
   if (scores.structure === 5 && scores.design <= 2) {
     return 'Monospace';
   }
   
-  // Other aesthetic style determinations...
   if (scores.tone <= 2 && scores.energy <= 2 && scores.era <= 2) {
     return 'Classic Serif';
-  }
-  
-  if (scores.tone <= 2 && scores.era >= 3 && scores.design >= 3) {
-    return 'Transitional Serif';
   }
   
   if (scores.structure >= 4 && scores.tone <= 3) {
@@ -51,12 +85,23 @@ function shuffleArray<T>(array: T[]): T[] {
   return result;
 }
 
+function getFallbackFonts(aestheticStyle: string): FontData[] {
+  // Return specific fallbacks for the style if available
+  if (fallbackFonts[aestheticStyle]) {
+    return fallbackFonts[aestheticStyle];
+  }
+  // Otherwise return system fonts
+  return fallbackFonts['System'];
+}
+
 function getRandomFonts(aestheticStyle: string): FontData[] {
   // Get all fonts matching the aesthetic style
   const matchingFonts = fonts.filter(font => font.aestheticStyle === aestheticStyle);
   
+  // If no matching fonts found, use fallbacks
   if (matchingFonts.length === 0) {
-    throw new Error(`No fonts found for aesthetic style: ${aestheticStyle}`);
+    console.warn(`No fonts found for aesthetic style: ${aestheticStyle}. Using fallbacks.`);
+    return getFallbackFonts(aestheticStyle);
   }
   
   // If we have exactly 3 fonts, shuffle them
@@ -69,18 +114,25 @@ function getRandomFonts(aestheticStyle: string): FontData[] {
     return shuffleArray([...matchingFonts]).slice(0, 3);
   }
   
-  // If we have fewer than 3 fonts, fill with alternatives from similar styles
+  // If we have fewer than 3 fonts, fill with alternatives
   const result = [...matchingFonts];
   const remainingCount = 3 - result.length;
   
   if (remainingCount > 0) {
-    const otherFonts = fonts.filter(font => 
-      font.aestheticStyle !== aestheticStyle &&
-      !result.includes(font)
-    );
+    // First try to fill with fallbacks for this style
+    const styleFallbacks = getFallbackFonts(aestheticStyle);
+    result.push(...styleFallbacks.slice(0, remainingCount));
     
-    const alternatives = shuffleArray(otherFonts).slice(0, remainingCount);
-    result.push(...alternatives);
+    // If we still need more, use fonts from other styles
+    if (result.length < 3) {
+      const otherFonts = fonts.filter(font => 
+        font.aestheticStyle !== aestheticStyle &&
+        !result.some(r => r.name === font.name)
+      );
+      
+      const alternatives = shuffleArray(otherFonts).slice(0, 3 - result.length);
+      result.push(...alternatives);
+    }
   }
   
   return result;
