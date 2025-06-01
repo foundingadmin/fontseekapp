@@ -52,7 +52,7 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
       <div>
         <h2 className="text-xl font-semibold mb-2">Your Brand's Font Personality Profile</h2>
         <p className="text-white/60">
-          These five sliders show how your brand expresses itself across key personality traits, based on your quiz answers. Each marker represents where your brand falls on a spectrum—from formal to casual, calm to energetic, and more.
+          This chart shows how your brand expresses itself across 5 key personality traits based on your answers.
         </p>
       </div>
 
