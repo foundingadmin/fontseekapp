@@ -163,5 +163,46 @@ export const fonts: FontData[] = [
     embedCode: "Chivo', sans-serif",
     personalityTags: ['Contemporary', 'Geometric', 'Professional'],
     recommendedFor: ['Corporate', 'Digital', 'Editorial']
+  },
+
+  // Humanist Sans fonts
+  {
+    name: 'Karla',
+    googleFontsLink: 'https://fonts.google.com/specimen/Karla',
+    tone: 3,
+    energy: 3,
+    design: 3,
+    era: 4,
+    structure: 3,
+    aestheticStyle: 'Humanist Sans',
+    embedCode: "Karla', sans-serif",
+    personalityTags: ['Friendly', 'Modern', 'Approachable'],
+    recommendedFor: ['Digital Products', 'Editorial', 'Branding']
+  },
+  {
+    name: 'Cabin',
+    googleFontsLink: 'https://fonts.google.com/specimen/Cabin',
+    tone: 2,
+    energy: 2,
+    design: 3,
+    era: 4,
+    structure: 3,
+    aestheticStyle: 'Humanist Sans',
+    embedCode: "Cabin', sans-serif",
+    personalityTags: ['Versatile', 'Balanced', 'Professional'],
+    recommendedFor: ['Corporate', 'UI/UX', 'Editorial']
+  },
+  {
+    name: 'PT Sans',
+    googleFontsLink: 'https://fonts.google.com/specimen/PT+Sans',
+    tone: 2,
+    energy: 2,
+    design: 3,
+    era: 4,
+    structure: 3,
+    aestheticStyle: 'Humanist Sans',
+    embedCode: "PT Sans', sans-serif",
+    personalityTags: ['Clear', 'Professional', 'Universal'],
+    recommendedFor: ['Business', 'Documentation', 'Web Design']
   }
 ];
