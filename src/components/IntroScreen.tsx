@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQuizStore } from '../store/quizStore';
-import wordmarkLogo from '/Founding-v1-Wordmark-white.svg';
+import wordmarkLogo from '../assets/Founding-v1-Wordmark-white.svg';
 
 export const IntroScreen: React.FC = () => {
   const { startQuiz } = useQuizStore();
