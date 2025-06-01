@@ -4,7 +4,6 @@ import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle } from 'lucide-reac
 import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { jsPDF } from "jspdf";
-import logoWhite from "../assets/Founding-v1-Wordmark-white.svg";
 
 function loadGoogleFont(fontName: string) {
   const formatted = fontName.replace(/ /g, '+');
@@ -57,89 +56,15 @@ export const QuizResults: React.FC = () => {
     const margin = 20;
     const contentWidth = pageWidth - (margin * 2);
 
-    // Load logo
-    const img = new Image();
-    img.src = logoWhite;
-
-    await new Promise((resolve, reject) => {
-      img.onload = resolve;
-      img.onerror = reject;
-    });
-
-    // Convert SVG to PNG using canvas
-    const canvas = document.createElement('canvas');
-    canvas.width = img.width;
-    canvas.height = img.height;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0);
-    const pngDataUrl = canvas.toDataURL('image/png');
-
-    // Add logo
-    const logoWidth = 60;
-    const logoHeight = (img.height / img.width) * logoWidth;
-    doc.addImage(pngDataUrl, 'PNG', margin, margin, logoWidth, logoHeight);
-
     // Title
     doc.setFontSize(24);
-    doc.text('Your Font Recommendation Report', margin, margin + logoHeight + 20);
+    doc.text('FontSeek Report', margin, margin);
 
-    // Aesthetic Style
-    doc.setFontSize(16);
-    doc.text('Brand Aesthetic Style:', margin, margin + logoHeight + 40);
-    doc.setFontSize(20);
-    doc.text(recommendations.aestheticStyle, margin, margin + logoHeight + 50);
+    // Font Personality Profile
+    doc.setFontSize(18);
+    doc.text('Font Personality Profile', margin, margin + 30);
 
-    // Primary Font Recommendation
-    doc.setFontSize(16);
-    doc.text('Your Recommended Font:', margin, margin + logoHeight + 70);
-    doc.setFontSize(20);
-    const fontName = recommendations.primary.name;
-    doc.text(fontName, margin, margin + logoHeight + 80);
-
-    // Font Details
-    doc.setFontSize(12);
-    doc.text('Personality:', margin, margin + logoHeight + 95);
-    doc.setFontSize(10);
-    doc.text(recommendations.primary.personalityTags.join(' • '), margin, margin + logoHeight + 105);
-
-    doc.setFontSize(12);
-    doc.text('Recommended For:', margin, margin + logoHeight + 120);
-    doc.setFontSize(10);
-    doc.text(recommendations.primary.recommendedFor.join(', '), margin, margin + logoHeight + 130);
-
-    // Implementation Code
-    doc.setFontSize(12);
-    doc.text('How to Use This Font:', margin, margin + logoHeight + 145);
-    
-    // HTML Link tag
-    const htmlCode = `<link href="https://fonts.googleapis.com/css2?family=${fontName.replace(/ /g, '+')}:wght@400;500;700&display=swap" rel="stylesheet">`;
-    doc.setFontSize(8);
-    doc.text('HTML:', margin, margin + logoHeight + 155);
-    doc.setFillColor(240, 240, 240);
-    doc.rect(margin, margin + logoHeight + 158, contentWidth, 10, 'F');
-    doc.setTextColor(60, 60, 60);
-    doc.text(htmlCode, margin + 2, margin + logoHeight + 165);
-    doc.setTextColor(0, 0, 0);
-
-    // CSS font-family
-    const cssCode = `font-family: '${fontName}', ${recommendations.primary.embedCode.split(',').slice(1).join(',')};`;
-    doc.setFontSize(8);
-    doc.text('CSS:', margin, margin + logoHeight + 175);
-    doc.setFillColor(240, 240, 240);
-    doc.rect(margin, margin + logoHeight + 178, contentWidth, 10, 'F');
-    doc.setTextColor(60, 60, 60);
-    doc.text(cssCode, margin + 2, margin + logoHeight + 185);
-    doc.setTextColor(0, 0, 0);
-
-    // Brand Personality Traits
-    doc.setFontSize(16);
-    doc.text('Brand Personality Traits', margin, margin + logoHeight + 205);
-
-    // Draw trait bars
+    // Trait bars
     const traits = [
       { name: 'Tone', value: scores.tone, left: 'Formal', right: 'Casual' },
       { name: 'Energy', value: scores.energy, left: 'Calm', right: 'Energetic' },
@@ -148,37 +73,60 @@ export const QuizResults: React.FC = () => {
       { name: 'Structure', value: scores.structure, left: 'Organic', right: 'Geometric' }
     ];
 
-    let yOffset = margin + logoHeight + 220;
+    let yOffset = margin + 50;
     traits.forEach((trait, index) => {
       // Trait name
-      doc.setFontSize(10);
-      doc.text(trait.name, margin, yOffset + (index * 20));
+      doc.setFontSize(12);
+      doc.text(`${trait.name}: ${trait.left} → ${trait.right}`, margin, yOffset + (index * 20));
 
       // Bar background
-      doc.setFillColor(220, 220, 220);
+      doc.setFillColor(240, 240, 240);
       doc.rect(margin + 50, yOffset - 4 + (index * 20), 100, 4, 'F');
 
       // Bar value
       doc.setFillColor(67, 218, 122); // emerald-500
       doc.rect(margin + 50, yOffset - 4 + (index * 20), (trait.value / 5) * 100, 4, 'F');
-
-      // Labels
-      doc.setFontSize(8);
-      doc.setTextColor(120, 120, 120);
-      doc.text(trait.left, margin + 50, yOffset + 5 + (index * 20));
-      doc.text(trait.right, margin + 150 - doc.getTextWidth(trait.right), yOffset + 5 + (index * 20));
-      doc.setTextColor(0, 0, 0);
     });
+
+    // Font Recommendation
+    yOffset = margin + 160;
+    doc.setFontSize(18);
+    doc.text('Your Recommended Font', margin, yOffset);
+
+    doc.setFontSize(24);
+    doc.text(recommendations.primary.name, margin, yOffset + 15);
+
+    // Font Preview
+    doc.setFontSize(12);
+    doc.text('What Your Font Looks Like:', margin, yOffset + 35);
+
+    // Code blocks
+    yOffset = yOffset + 80;
+    doc.setFontSize(14);
+    doc.text('How to Use This Font:', margin, yOffset);
+
+    // HTML
+    doc.setFontSize(10);
+    doc.setFillColor(245, 245, 245);
+    const htmlCode = `<link href="https://fonts.googleapis.com/css2?family=${recommendations.primary.name.replace(/ /g, '+')}:wght@400;500;700&display=swap" rel="stylesheet">`;
+    doc.rect(margin, yOffset + 10, contentWidth, 15, 'F');
+    doc.text(htmlCode, margin + 5, yOffset + 20);
+
+    // CSS
+    const cssCode = `font-family: '${recommendations.primary.name}', ${recommendations.primary.embedCode.split(',').slice(1).join(',')};`;
+    doc.rect(margin, yOffset + 35, contentWidth, 15, 'F');
+    doc.text(cssCode, margin + 5, yOffset + 45);
 
     // Footer
     const footerY = doc.internal.pageSize.getHeight() - margin;
-    doc.setFontSize(10);
-    doc.text('Want to learn more about strategic typography?', margin, footerY - 15);
+    doc.setFontSize(12);
+    doc.text('Ready to take your brand further?', margin, footerY - 20);
     doc.setTextColor(67, 218, 122);
-    doc.text('Contact us at hello@fontseek.com', margin, footerY - 5);
+    doc.text('Visit foundingcreative.com', margin, footerY - 10);
+    doc.text('Or email us at admin@foundingcreative.com', margin, footerY);
 
     // Save the PDF
-    doc.save('FontSeek-Recommendation.pdf');
+    doc.save('FontSeek-Report.pdf');
   };
 
   const getTopTraits = (font: typeof recommendations.primary) => {
