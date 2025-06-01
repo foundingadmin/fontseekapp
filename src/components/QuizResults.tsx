@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useQuizStore } from '../store/quizStore';
-import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle } from 'lucide-react';
+import { ArrowRight, RefreshCw, FileDown, Eye, EyeOff, Shuffle } from 'lucide-react';
 import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
+import { jsPDF } from 'jspdf';
 
 function loadGoogleFont(fontName: string) {
   const formatted = fontName.replace(/ /g, '+');
@@ -17,6 +18,7 @@ export const QuizResults: React.FC = () => {
   const [showLabels, setShowLabels] = useState(false);
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
   const [isShuffling, setIsShuffling] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   useEffect(() => {
     if (!scores && !recommendations) {
@@ -47,6 +49,110 @@ export const QuizResults: React.FC = () => {
     setTimeout(() => setIsShuffling(false), 500);
   };
 
+  const generatePDF = async () => {
+    if (!recommendations || !scores || isGeneratingPDF) return;
+    
+    setIsGeneratingPDF(true);
+    
+    try {
+      const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      // Header
+      doc.setFontSize(24);
+      doc.setTextColor(0, 0, 0);
+      doc.text('FontSeek Report', 20, 20);
+      
+      doc.setFontSize(14);
+      doc.setTextColor(100, 100, 100);
+      doc.text('Font Personality Profile', 20, 30);
+
+      // Trait Scores
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      const traits = [
+        { name: 'Tone', description: 'Formal → Casual' },
+        { name: 'Energy', description: 'Calm → Energetic' },
+        { name: 'Design', description: 'Minimal → Expressive' },
+        { name: 'Era', description: 'Classic → Modern' },
+        { name: 'Structure', description: 'Organic → Geometric' }
+      ];
+
+      let y = 50;
+      traits.forEach((trait, index) => {
+        const score = scores[trait.name.toLowerCase() as keyof typeof scores];
+        doc.text(`${trait.name}: ${score}/5`, 20, y);
+        doc.text(`(${trait.description})`, 70, y);
+        y += 10;
+      });
+
+      // Primary Font Recommendation
+      y += 20;
+      doc.setFontSize(16);
+      doc.text('Your Recommended Font', 20, y);
+      
+      y += 10;
+      doc.setFontSize(20);
+      doc.text(recommendations.primary.name, 20, y);
+      
+      y += 10;
+      doc.setFontSize(12);
+      doc.text('Selected based on your brand\'s personality', 20, y);
+
+      // Developer Instructions
+      y += 20;
+      doc.setFontSize(14);
+      doc.text('How to Use This Font in Your Website', 20, y);
+
+      y += 10;
+      doc.setFontSize(10);
+      const embedCode = `<link href="https://fonts.googleapis.com/css2?family=${recommendations.primary.name.replace(/ /g, '+')}:wght@400;500;700&display=swap" rel="stylesheet">`;
+      doc.text('Add to your HTML <head>:', 20, y);
+      
+      y += 10;
+      doc.setFillColor(245, 245, 245);
+      doc.rect(20, y - 5, 170, 10, 'F');
+      doc.text(embedCode, 22, y);
+
+      y += 15;
+      doc.text('Use in your CSS:', 20, y);
+      
+      y += 10;
+      doc.setFillColor(245, 245, 245);
+      doc.rect(20, y - 5, 170, 10, 'F');
+      doc.text(`font-family: '${recommendations.primary.name}', sans-serif;`, 22, y);
+
+      // Call to Action
+      y += 30;
+      doc.setDrawColor(200, 200, 200);
+      doc.line(20, y, 190, y);
+
+      y += 15;
+      doc.setFontSize(14);
+      doc.text('Need help bringing your brand to life?', 20, y);
+
+      y += 10;
+      doc.setFontSize(12);
+      doc.setTextColor(0, 100, 200);
+      doc.text('foundingcreative.com', 20, y);
+      doc.link(20, y - 5, 50, 7, { url: 'https://foundingcreative.com' });
+
+      y += 7;
+      doc.text('admin@foundingcreative.com', 20, y);
+      doc.link(20, y - 5, 70, 7, { url: 'mailto:admin@foundingcreative.com' });
+
+      // Save the PDF
+      doc.save(`FontSeek_Report_${recommendations.primary.name.replace(/ /g, '_')}.pdf`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
+
   if (!recommendations || !scores) {
     return (
       <div className="flex items-center justify-center">
@@ -66,11 +172,12 @@ export const QuizResults: React.FC = () => {
           Retake Quiz
         </button>
         <button
-          onClick={() => window.open('https://linkedin.com/share', '_blank')}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
+          onClick={generatePDF}
+          disabled={isGeneratingPDF}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <Share2 className="w-4 h-4" />
-          Share on LinkedIn
+          <FileDown className="w-4 h-4" />
+          {isGeneratingPDF ? 'Generating...' : 'Download PDF Report'}
         </button>
       </div>
 
