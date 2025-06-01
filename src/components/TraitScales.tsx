@@ -80,25 +80,22 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
                   <span>{trait.rightLabel}</span>
                 </div>
 
-                {/* Track */}
-                <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                  {/* Indicator */}
-                  <div 
-                    className="h-full bg-emerald-500 rounded-full transition-all duration-500"
-                    style={{ width: `${percentage}%` }}
-                  />
-                </div>
-
-                {/* Marker dots */}
-                <div className="absolute top-[calc(100%-0.375rem)] left-0 right-0 flex justify-between">
-                  {[0, 1, 2, 3, 4].map((point) => (
-                    <div 
-                      key={point}
-                      className={`w-1.5 h-1.5 rounded-full -mt-[3px] ${
-                        point * 25 <= percentage ? 'bg-emerald-500' : 'bg-white/20'
-                      }`}
+                {/* Track with tick marks */}
+                <div className="h-1.5 bg-neutral-700 rounded-full relative">
+                  {/* Tick marks */}
+                  {[0, 25, 50, 75, 100].map((tick) => (
+                    <div
+                      key={tick}
+                      className="absolute top-1/2 -translate-y-1/2 w-0.5 h-2.5 bg-white/10"
+                      style={{ left: `${tick}%` }}
                     />
                   ))}
+                  
+                  {/* Position indicator */}
+                  <div 
+                    className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/20 ring-4 ring-emerald-400/20 transition-all duration-500"
+                    style={{ left: `${percentage}%` }}
+                  />
                 </div>
               </div>
             </div>
