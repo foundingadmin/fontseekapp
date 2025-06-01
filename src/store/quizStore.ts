@@ -40,6 +40,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       answers: { ...state.answers, [questionNumber]: answer }
     }));
 
+    // Only auto-advance and calculate if we're on the last question
     if (questionNumber === quizQuestions.length) {
       get().calculateResults();
     } else {
@@ -57,7 +58,12 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
   previousQuestion: () => {
     const current = get().currentQuestion;
     if (current > 1) {
-      set({ currentQuestion: current - 1 });
+      // Clear any existing recommendations when going back
+      set({ 
+        currentQuestion: current - 1,
+        scores: null,
+        recommendations: null
+      });
     }
   },
 

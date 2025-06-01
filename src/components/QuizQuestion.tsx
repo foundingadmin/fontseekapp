@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useQuizStore } from '../store/quizStore';
 import { quizQuestions } from '../data/quiz';
-import { ArrowDown, ArrowUp, Check } from 'lucide-react';
+import { ArrowDown, ArrowUp, Check, ChevronLeft } from 'lucide-react';
 import clsx from 'clsx';
 
 export const QuizQuestion: React.FC = () => {
-  const { currentQuestion, answers, setAnswer } = useQuizStore();
+  const { currentQuestion, answers, setAnswer, previousQuestion } = useQuizStore();
   const question = quizQuestions[currentQuestion - 1];
   const currentAnswer = answers[currentQuestion];
 
@@ -35,6 +35,16 @@ export const QuizQuestion: React.FC = () => {
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4">
+      {currentQuestion > 1 && (
+        <button
+          onClick={previousQuestion}
+          className="flex items-center gap-1 text-white/60 hover:text-white mb-8 transition-colors group"
+        >
+          <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+          Back to previous question
+        </button>
+      )}
+      
       <h2 className="text-2xl md:text-3xl font-semibold text-white mb-8 text-center">
         {question.question}
       </h2>
@@ -66,7 +76,7 @@ export const QuizQuestion: React.FC = () => {
                 )}
               >
                 {currentAnswer === option.value && (
-                  <Check className="w-3 h-3 text-black" />
+                  <Check className="w-4 h-4 text-black" />
                 )}
               </div>
               <span>{option.label}</span>
