@@ -9,11 +9,11 @@ function determineAestheticStyle(scores: UserScores): string {
   
   // Other aesthetic style determinations...
   if (scores.tone <= 2 && scores.energy <= 2 && scores.era <= 2) {
-    return 'Serif Old Style';
+    return 'Classic Serif';
   }
   
   if (scores.tone <= 2 && scores.era >= 3 && scores.design >= 3) {
-    return 'Serif Transitional';
+    return 'Transitional Serif';
   }
   
   if (scores.structure >= 4 && scores.tone <= 3) {
