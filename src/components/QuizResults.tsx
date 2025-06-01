@@ -177,11 +177,11 @@ export const QuizResults: React.FC = () => {
               </div>
             </div>
 
-            <div className="absolute bottom-0 left-0 right-0 grid grid-cols-3 gap-2">
+            <div className="absolute bottom-0 left-0 right-0 flex flex-col md:grid md:grid-cols-3 gap-2">
               <button
                 onClick={shuffleCopyPack}
                 disabled={isShuffling}
-                className={`flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed ${
+                className={`flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed ${
                   isDarkMode 
                     ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
                     : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
@@ -192,7 +192,7 @@ export const QuizResults: React.FC = () => {
               </button>
               <button
                 onClick={() => setShowLabels(!showLabels)}
-                className={`flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm ${
+                className={`flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm ${
                   isDarkMode 
                     ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
                     : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
@@ -203,7 +203,7 @@ export const QuizResults: React.FC = () => {
               </button>
               <button
                 onClick={() => setIsDarkMode(!isDarkMode)}
-                className={`flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm ${
+                className={`flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm ${
                   isDarkMode 
                     ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
                     : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
