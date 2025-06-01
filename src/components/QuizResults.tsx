@@ -148,13 +148,17 @@ export const QuizResults: React.FC = () => {
         </div>
 
         <div className="mt-8 pt-8 border-t border-white/10">
+          <h3 className="text-lg font-semibold mb-2">Start Using This Font Right Now</h3>
+          <p className="text-sm text-white/60 mb-4">
+            This Google Web Font is free to use for your brand. You can download it to your computer or embed it in your website in seconds using the tools on Google Fonts.
+          </p>
           <a
             href={recommendations.primary.googleFontsLink}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-colors font-medium w-fit"
           >
-            View Font <ArrowRight className="w-4 h-4" />
+            Use This Font on Google Fonts <ArrowRight className="w-4 h-4" />
           </a>
         </div>
       </div>
