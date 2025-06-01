@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useQuizStore } from '../store/quizStore';
-import { ArrowRight, RefreshCw, FileDown, Eye, EyeOff, Shuffle } from 'lucide-react';
+import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle } from 'lucide-react';
 import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
-import { jsPDF } from 'jspdf';
-import logoBlack from '../assets/Founding-v1-Wordmark-black.svg';
+import { jsPDF } from "jspdf";
+import logoWhite from "../assets/Founding-v1-Wordmark-white.svg";
 
 function loadGoogleFont(fontName: string) {
   const formatted = fontName.replace(/ /g, '+');
@@ -19,7 +19,6 @@ export const QuizResults: React.FC = () => {
   const [showLabels, setShowLabels] = useState(false);
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
   const [isShuffling, setIsShuffling] = useState(false);
-  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   useEffect(() => {
     if (!scores && !recommendations) {
@@ -50,209 +49,124 @@ export const QuizResults: React.FC = () => {
     setTimeout(() => setIsShuffling(false), 500);
   };
 
-  const getTraitDescription = (trait: string, score: number): string => {
-    const descriptions: Record<string, string[]> = {
-      tone: ['Very Formal', 'Formal', 'Balanced', 'Casual', 'Very Casual'],
-      energy: ['Very Calm', 'Calm', 'Balanced', 'Energetic', 'Very Energetic'],
-      design: ['Very Minimal', 'Minimal', 'Balanced', 'Expressive', 'Very Expressive'],
-      era: ['Very Classic', 'Classic', 'Balanced', 'Modern', 'Very Modern'],
-      structure: ['Very Organic', 'Organic', 'Balanced', 'Geometric', 'Very Geometric']
-    };
-    return descriptions[trait.toLowerCase()][score - 1];
-  };
-
-  const getTraitEndLabels = (trait: string): [string, string] => {
-    const labels: Record<string, [string, string]> = {
-      tone: ['Formal', 'Casual'],
-      energy: ['Calm', 'Energetic'],
-      design: ['Minimal', 'Expressive'],
-      era: ['Classic', 'Modern'],
-      structure: ['Organic', 'Geometric']
-    };
-    return labels[trait.toLowerCase()];
-  };
-
   const generatePDF = async () => {
-    if (!recommendations || !scores || isGeneratingPDF) return;
+    if (!recommendations || !scores) return;
+
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 20;
+    const contentWidth = pageWidth - (margin * 2);
+
+    // Load logo
+    const img = new Image();
+    img.src = logoWhite;
+
+    await new Promise((resolve, reject) => {
+      img.onload = resolve;
+      img.onerror = reject;
+    });
+
+    // Add logo
+    const logoWidth = 60;
+    const logoHeight = (img.height / img.width) * logoWidth;
+    doc.addImage(img, 'PNG', margin, margin, logoWidth, logoHeight);
+
+    // Title
+    doc.setFontSize(24);
+    doc.text('Your Font Recommendation Report', margin, margin + logoHeight + 20);
+
+    // Aesthetic Style
+    doc.setFontSize(16);
+    doc.text('Brand Aesthetic Style:', margin, margin + logoHeight + 40);
+    doc.setFontSize(20);
+    doc.text(recommendations.aestheticStyle, margin, margin + logoHeight + 50);
+
+    // Primary Font Recommendation
+    doc.setFontSize(16);
+    doc.text('Your Recommended Font:', margin, margin + logoHeight + 70);
+    doc.setFontSize(20);
+    const fontName = recommendations.primary.name;
+    doc.text(fontName, margin, margin + logoHeight + 80);
+
+    // Font Details
+    doc.setFontSize(12);
+    doc.text('Personality:', margin, margin + logoHeight + 95);
+    doc.setFontSize(10);
+    doc.text(recommendations.primary.personalityTags.join(' • '), margin, margin + logoHeight + 105);
+
+    doc.setFontSize(12);
+    doc.text('Recommended For:', margin, margin + logoHeight + 120);
+    doc.setFontSize(10);
+    doc.text(recommendations.primary.recommendedFor.join(', '), margin, margin + logoHeight + 130);
+
+    // Implementation Code
+    doc.setFontSize(12);
+    doc.text('How to Use This Font:', margin, margin + logoHeight + 145);
     
-    setIsGeneratingPDF(true);
-    
-    try {
-      const doc = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4'
-      });
+    // HTML Link tag
+    const htmlCode = `<link href="https://fonts.googleapis.com/css2?family=${fontName.replace(/ /g, '+')}:wght@400;500;700&display=swap" rel="stylesheet">`;
+    doc.setFontSize(8);
+    doc.text('HTML:', margin, margin + logoHeight + 155);
+    doc.setFillColor(240, 240, 240);
+    doc.rect(margin, margin + logoHeight + 158, contentWidth, 10, 'F');
+    doc.setTextColor(60, 60, 60);
+    doc.text(htmlCode, margin + 2, margin + logoHeight + 165);
+    doc.setTextColor(0, 0, 0);
 
-      // Load and add logo
-      const img = new Image();
-      img.src = logoBlack;
-      
-      await new Promise((resolve, reject) => {
-        img.onload = () => {
-          try {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            
-            if (!ctx) {
-              throw new Error('Failed to get canvas context');
-            }
+    // CSS font-family
+    const cssCode = `font-family: '${fontName}', ${recommendations.primary.embedCode.split(',').slice(1).join(',')};`;
+    doc.setFontSize(8);
+    doc.text('CSS:', margin, margin + logoHeight + 175);
+    doc.setFillColor(240, 240, 240);
+    doc.rect(margin, margin + logoHeight + 178, contentWidth, 10, 'F');
+    doc.setTextColor(60, 60, 60);
+    doc.text(cssCode, margin + 2, margin + logoHeight + 185);
+    doc.setTextColor(0, 0, 0);
 
-            ctx.drawImage(img, 0, 0);
-            const pngDataUrl = canvas.toDataURL('image/png');
-            
-            doc.addImage(pngDataUrl, 'PNG', 150, 15, 40, 12);
-            resolve(null);
-          } catch (error) {
-            reject(error);
-          }
-        };
-        img.onerror = () => reject(new Error('Failed to load logo'));
-      });
+    // Brand Personality Traits
+    doc.setFontSize(16);
+    doc.text('Brand Personality Traits', margin, margin + logoHeight + 205);
 
-      // Header
-      doc.setFontSize(24);
-      doc.setTextColor(0, 0, 0);
-      doc.text('FontSeek Report', 20, 30);
-      
-      doc.setFontSize(14);
-      doc.setTextColor(100, 100, 100);
-      doc.text('Font Personality Profile', 20, 40);
+    // Draw trait bars
+    const traits = [
+      { name: 'Tone', value: scores.tone, left: 'Formal', right: 'Casual' },
+      { name: 'Energy', value: scores.energy, left: 'Calm', right: 'Energetic' },
+      { name: 'Design', value: scores.design, left: 'Minimal', right: 'Expressive' },
+      { name: 'Era', value: scores.era, left: 'Classic', right: 'Modern' },
+      { name: 'Structure', value: scores.structure, left: 'Organic', right: 'Geometric' }
+    ];
 
-      // Trait Scores with visual bars and end labels
-      doc.setFontSize(12);
-      doc.setTextColor(0, 0, 0);
-      const traits = [
-        { name: 'Tone', description: getTraitDescription('tone', scores.tone) },
-        { name: 'Energy', description: getTraitDescription('energy', scores.energy) },
-        { name: 'Design', description: getTraitDescription('design', scores.design) },
-        { name: 'Era', description: getTraitDescription('era', scores.era) },
-        { name: 'Structure', description: getTraitDescription('structure', scores.structure) }
-      ];
-
-      let y = 60;
-      traits.forEach((trait) => {
-        const score = scores[trait.name.toLowerCase() as keyof typeof scores];
-        const [startLabel, endLabel] = getTraitEndLabels(trait.name);
-        
-        // Trait name and description
-        doc.setFontSize(11);
-        doc.text(`${trait.name}: ${trait.description}`, 20, y);
-        
-        // Draw scale bar with end labels
-        y += 5;
-        
-        // Start label
-        doc.setFontSize(8);
-        doc.setTextColor(128, 128, 128);
-        doc.text(startLabel, 20, y - 2);
-        
-        // End label
-        const endLabelWidth = doc.getTextWidth(endLabel);
-        doc.text(endLabel, 120 - endLabelWidth, y - 2);
-        
-        // Bar
-        doc.setFillColor(240, 240, 240);
-        doc.rect(20, y, 100, 3, 'F');
-        
-        // Position marker
-        const markerPosition = 20 + ((score - 1) / 4) * 100;
-        doc.setFillColor(67, 218, 122); // emerald-500
-        doc.circle(markerPosition, y + 1.5, 2, 'F');
-        
-        doc.setTextColor(0, 0, 0);
-        y += 15;
-      });
-
-      // Primary Font Recommendation
-      y += 10;
-      doc.setFontSize(16);
-      doc.text('Your Recommended Font', 20, y);
-      
-      y += 10;
-      doc.setFontSize(20);
-      const fontName = recommendations.primary.name;
-      doc.text(fontName, 20, y);
-      
-      // Add clickable font link
-      const fontLink = recommendations.primary.googleFontsLink;
-      doc.setTextColor(0, 100, 200);
-      doc.link(20, y - 5, doc.getTextWidth(fontName), 7, { url: fontLink });
-      
-      y += 10;
-      doc.setTextColor(0, 0, 0);
-      doc.setFontSize(12);
-      doc.text('Selected based on your brand\'s personality', 20, y);
-
-      // Developer Instructions
-      y += 20;
-      doc.setFontSize(14);
-      doc.text('How to Use This Font in Your Website', 20, y);
-
-      // Code blocks with proper wrapping
-      y += 10;
+    let yOffset = margin + logoHeight + 220;
+    traits.forEach((trait, index) => {
+      // Trait name
       doc.setFontSize(10);
-      const embedCode = `<link href="https://fonts.googleapis.com/css2?family=${recommendations.primary.name.replace(/ /g, '+')}:wght@400;500;700&display=swap" rel="stylesheet">`;
-      doc.text('Add to your HTML <head>:', 20, y);
-      
-      y += 7;
-      doc.setFillColor(245, 245, 245);
-      const codeBlockHeight = 12;
-      doc.roundedRect(20, y - 5, 170, codeBlockHeight, 2, 2, 'F');
-      
-      // Split long code into multiple lines if needed
-      const maxWidth = 164; // Slightly less than block width for padding
-      let remainingCode = embedCode;
-      let lineY = y + 1;
-      
-      while (remainingCode.length > 0 && lineY < y + codeBlockHeight - 2) {
-        let lineEnd = remainingCode.length;
-        while (doc.getTextWidth(remainingCode.substring(0, lineEnd)) > maxWidth) {
-          lineEnd--;
-        }
-        
-        doc.text(remainingCode.substring(0, lineEnd), 23, lineY);
-        remainingCode = remainingCode.substring(lineEnd);
-        lineY += 4;
-      }
+      doc.text(trait.name, margin, yOffset + (index * 20));
 
-      y += 15;
-      doc.text('Use in your CSS:', 20, y);
-      
-      y += 7;
-      doc.setFillColor(245, 245, 245);
-      doc.roundedRect(20, y - 5, 170, codeBlockHeight, 2, 2, 'F');
-      doc.text(`font-family: '${recommendations.primary.name}', sans-serif;`, 23, y + 1);
+      // Bar background
+      doc.setFillColor(220, 220, 220);
+      doc.rect(margin + 50, yOffset - 4 + (index * 20), 100, 4, 'F');
 
-      // Call to Action (adjusted to fit within page)
-      y = Math.min(y + 30, 250); // Ensure it stays within page bounds
-      doc.setDrawColor(200, 200, 200);
-      doc.line(20, y, 190, y);
+      // Bar value
+      doc.setFillColor(67, 218, 122); // emerald-500
+      doc.rect(margin + 50, yOffset - 4 + (index * 20), (trait.value / 5) * 100, 4, 'F');
 
-      y += 15;
-      doc.setFontSize(14);
+      // Labels
+      doc.setFontSize(8);
+      doc.setTextColor(120, 120, 120);
+      doc.text(trait.left, margin + 50, yOffset + 5 + (index * 20));
+      doc.text(trait.right, margin + 150 - doc.getTextWidth(trait.right), yOffset + 5 + (index * 20));
       doc.setTextColor(0, 0, 0);
-      doc.text('Need help bringing your brand to life?', 20, y);
+    });
 
-      y += 10;
-      doc.setFontSize(12);
-      doc.setTextColor(0, 100, 200);
-      doc.text('foundingcreative.com', 20, y);
-      doc.link(20, y - 5, 50, 7, { url: 'https://foundingcreative.com' });
+    // Footer
+    const footerY = doc.internal.pageSize.getHeight() - margin;
+    doc.setFontSize(10);
+    doc.text('Want to learn more about strategic typography?', margin, footerY - 15);
+    doc.setTextColor(67, 218, 122);
+    doc.text('Contact us at hello@fontseek.com', margin, footerY - 5);
 
-      y += 7;
-      doc.text('admin@foundingcreative.com', 20, y);
-      doc.link(20, y - 5, 70, 7, { url: 'mailto:admin@foundingcreative.com' });
-
-      // Save the PDF
-      doc.save(`FontSeek_Report_${recommendations.primary.name.replace(/ /g, '_')}.pdf`);
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-    } finally {
-      setIsGeneratingPDF(false);
-    }
+    // Save the PDF
+    doc.save('FontSeek-Recommendation.pdf');
   };
 
   if (!recommendations || !scores) {
@@ -275,11 +189,10 @@ export const QuizResults: React.FC = () => {
         </button>
         <button
           onClick={generatePDF}
-          disabled={isGeneratingPDF}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
         >
-          <FileDown className="w-4 h-4" />
-          {isGeneratingPDF ? 'Generating...' : 'Download PDF Report'}
+          <Share2 className="w-4 h-4" />
+          Download Report
         </button>
       </div>
 
