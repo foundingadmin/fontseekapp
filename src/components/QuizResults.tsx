@@ -35,7 +35,6 @@ export const QuizResults: React.FC = () => {
       loadGoogleFont(recommendations.secondary.name);
       loadGoogleFont(recommendations.tertiary.name);
       
-      // Show fallback message if we're using Humanist Sans fallback
       setShowFallbackMessage(
         recommendations.aestheticStyle === 'Humanist Sans' &&
         recommendations.primary.name === 'Karla' &&
@@ -259,31 +258,30 @@ export const QuizResults: React.FC = () => {
         </div>
       )}
       
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4 mb-8">
         <button
           onClick={resetQuiz}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 text-black font-medium hover:bg-emerald-400 transition-colors"
+          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 text-black font-medium hover:bg-emerald-400 transition-colors w-full md:w-auto"
         >
           <RefreshCw className="w-4 h-4" />
           Retake Quiz
         </button>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setShowDebug(!showDebug)}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
-            title="Toggle debug info"
-          >
-            <Bug className="w-4 h-4" />
-            Debug
-          </button>
-          <button
-            onClick={handleDownloadReport}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
-          >
-            <Share2 className="w-4 h-4" />
-            Download Report
-          </button>
-        </div>
+        
+        <button
+          onClick={handleDownloadReport}
+          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full md:w-auto"
+        >
+          <Share2 className="w-4 h-4" />
+          Download Report
+        </button>
+        
+        <button
+          onClick={() => setShowDebug(!showDebug)}
+          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full md:w-auto order-last md:order-none"
+        >
+          <Bug className="w-4 h-4" />
+          Debug
+        </button>
       </div>
 
       {showDebug && (
