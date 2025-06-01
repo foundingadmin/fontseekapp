@@ -76,17 +76,20 @@ export const QuizResults: React.FC = () => {
     doc.save('FontSeek-Report.pdf');
   };
 
-  const FontPreviewCard = ({ font, title, description }: { 
+  const FontPreviewCard = ({ font, index }: { 
     font: typeof recommendations.primary;
-    title: string;
-    description: string;
+    index: number;
   }) => (
     <div className="mb-8 bg-[#1C1F26] rounded-xl overflow-hidden shadow-xl">
       <div className="px-6 py-5 border-b border-[#2A2D36]">
         <div>
-          <h2 className="text-xl font-semibold text-white mb-2 tracking-[-0.02em]">{title}</h2>
+          <h2 className="text-xl font-semibold text-white mb-2 tracking-[-0.02em]">
+            Suggested Font Option {index + 1}
+          </h2>
           <p className="text-2xl font-bold text-white tracking-[-0.02em]">{font.name}</p>
-          <p className="text-sm text-white/60 mt-2 max-w-xl tracking-[-0.02em]">{description}</p>
+          <p className="text-sm text-white/60 mt-2 max-w-xl tracking-[-0.02em]">
+            A {font.aestheticStyle.toLowerCase()} typeface that aligns with your brand's personality.
+          </p>
         </div>
       </div>
 
@@ -303,23 +306,9 @@ export const QuizResults: React.FC = () => {
         {scores && <TraitScales scores={scores} />}
       </div>
 
-      <FontPreviewCard 
-        font={recommendations.primary}
-        title="Your Top Font Recommendation"
-        description="Based on your answers, this Google Web Font is the best match for your brand. It's free to use and ready to download or embed today."
-      />
-
-      <FontPreviewCard 
-        font={recommendations.secondary}
-        title="Your Second Font Option"
-        description="This alternative font matches your brand's personality while offering a slightly different aesthetic approach."
-      />
-
-      <FontPreviewCard 
-        font={recommendations.tertiary}
-        title="Your Third Font Option"
-        description="Another strong match for your brand's personality, providing a distinct visual alternative."
-      />
+      <FontPreviewCard font={recommendations.primary} index={0} />
+      <FontPreviewCard font={recommendations.secondary} index={1} />
+      <FontPreviewCard font={recommendations.tertiary} index={2} />
 
       <ContactForm onDownloadReport={handleDownloadReport} />
     </div>
