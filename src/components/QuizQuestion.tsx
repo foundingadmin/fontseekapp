@@ -6,17 +6,12 @@ import { ArrowDown, ArrowUp } from 'lucide-react';
 import clsx from 'clsx';
 
 export const QuizQuestion: React.FC = () => {
-  const { currentQuestion, answers, setAnswer, nextQuestion, calculateResults } = useQuizStore();
+  const { currentQuestion, answers, setAnswer } = useQuizStore();
   const question = quizQuestions[currentQuestion - 1];
   const currentAnswer = answers[currentQuestion];
 
   const handleSelect = (value: string) => {
     setAnswer(currentQuestion, value as 'A' | 'B');
-    if (currentQuestion < quizQuestions.length) {
-      setTimeout(nextQuestion, 500);
-    } else {
-      setTimeout(calculateResults, 500);
-    }
   };
 
   useEffect(() => {
