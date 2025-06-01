@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useQuizStore } from '../store/quizStore';
 import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle } from 'lucide-react';
-import { RadarChart } from './RadarChart';
+import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 
 function loadGoogleFont(fontName: string) {
@@ -78,7 +78,7 @@ export const QuizResults: React.FC = () => {
         <p className="text-white/60 uppercase tracking-wider mb-2">Your Brand's Aesthetic Style</p>
         <h1 className="text-4xl font-bold text-white mb-8">{recommendations.aestheticStyle}</h1>
         
-        {scores && <RadarChart scores={scores} />}
+        {scores && <TraitScales scores={scores} />}
       </div>
 
       {/* First Font Suggestion */}
