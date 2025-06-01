@@ -85,6 +85,10 @@ export const IntroScreen: React.FC = () => {
               src="/Founding-v1-Wordmark-white.svg" 
               alt="FontSeek - Strategy-Driven Font Recommendations" 
               className="w-[140px] h-auto"
+              onError={(e) => {
+                const img = e.target as HTMLImageElement;
+                console.error('Failed to load image:', img.src);
+              }}
             />
           </a>
           
