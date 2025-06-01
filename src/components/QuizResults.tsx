@@ -20,7 +20,7 @@ export const QuizResults: React.FC = () => {
   const [showLabels, setShowLabels] = useState(false);
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [showDebug, setShowDebug] = useState(false);
+  const [showFallbackMessage, setShowFallbackMessage] = useState(false);
 
   useEffect(() => {
     if (!scores && !recommendations) {
@@ -33,6 +33,14 @@ export const QuizResults: React.FC = () => {
       loadGoogleFont(recommendations.primary.name);
       loadGoogleFont(recommendations.secondary.name);
       loadGoogleFont(recommendations.tertiary.name);
+      
+      // Show fallback message if we're using Humanist Sans fallback
+      setShowFallbackMessage(
+        recommendations.aestheticStyle === 'Humanist Sans' &&
+        recommendations.primary.name === 'Karla' &&
+        recommendations.secondary.name === 'Work Sans' &&
+        recommendations.tertiary.name === 'Cabin'
+      );
     }
   }, [recommendations]);
 
@@ -244,6 +252,12 @@ export const QuizResults: React.FC = () => {
 
   return (
     <div className="w-full max-w-3xl mx-auto">
+      {showFallbackMessage && (
+        <div className="mb-8 px-4 py-3 bg-white/5 rounded-lg text-white/60 text-sm text-center">
+          We had a little trouble finding a perfect match for your font style, so we've shown the closest match instead.
+        </div>
+      )}
+      
       <div className="flex justify-between items-center mb-8">
         <button
           onClick={resetQuiz}
@@ -254,12 +268,6 @@ export const QuizResults: React.FC = () => {
         </button>
         <div className="flex gap-2">
           <button
-            onClick={() => setShowDebug(!showDebug)}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
-          >
-            {showDebug ? 'Hide Debug' : 'Show Debug'}
-          </button>
-          <button
             onClick={handleDownloadReport}
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
           >
@@ -268,23 +276,6 @@ export const QuizResults: React.FC = () => {
           </button>
         </div>
       </div>
-
-      {showDebug && (
-        <div className="mb-8 p-4 bg-black/50 rounded-lg font-mono text-sm">
-          <h3 className="text-emerald-500 mb-2">Debug Information</h3>
-          <pre className="text-white/80">
-            {JSON.stringify({
-              scores,
-              aestheticStyle: recommendations.aestheticStyle,
-              fonts: {
-                primary: recommendations.primary.name,
-                secondary: recommendations.secondary.name,
-                tertiary: recommendations.tertiary.name,
-              }
-            }, null, 2)}
-          </pre>
-        </div>
-      )}
 
       <div className="mb-12">
         <h1 className="text-4xl font-bold text-white mb-4 tracking-[-0.02em]">{recommendations.aestheticStyle}</h1>
