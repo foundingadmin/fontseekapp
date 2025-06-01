@@ -96,7 +96,7 @@ export const QuizResults: React.FC = () => {
         <div className={`rounded-lg shadow-lg p-8 transition-colors duration-300 ${
           isDarkMode ? 'bg-neutral-900' : 'bg-white'
         }`}>
-          <div className="space-y-8">
+          <div className="space-y-8 min-h-[600px]">
             <div>
               {showLabels && <div className={`text-xs mb-1 ${
                 isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
