@@ -24,15 +24,7 @@ export function calculateFontRecommendations(scores: UserScores): FontRecommenda
   // Strictly filter fonts to only those matching the primary style
   let matchingFonts = fonts.filter(font => font.aestheticStyle === primaryStyle);
 
-  // If we don't have enough fonts in the primary style (minimum 3),
-  // find the next best matching style and include its fonts
-  if (matchingFonts.length < 3) {
-    const nextBestStyle = findNextBestStyle(scores, primaryStyle);
-    const additionalFonts = fonts.filter(font => font.aestheticStyle === nextBestStyle);
-    matchingFonts = [...matchingFonts, ...additionalFonts];
-  }
-
-  // Calculate match scores for each font
+  // Calculate match scores for each font within the aesthetic style
   const fontScores = matchingFonts.map(font => ({
     font,
     score: calculateFontMatchScore(scores, font)
@@ -41,8 +33,26 @@ export function calculateFontRecommendations(scores: UserScores): FontRecommenda
   // Sort by match score (higher is better)
   fontScores.sort((a, b) => b.score - a.score);
 
-  // Get top 3 unique fonts
+  // Get top 3 unique fonts from the same aesthetic style
   const selectedFonts = getTopUniqueFonts(fontScores, 3);
+
+  // If we don't have enough fonts in the primary style, find similar styles
+  if (selectedFonts.length < 3) {
+    const similarStyles = findSimilarStyles(scores, primaryStyle);
+    for (const style of similarStyles) {
+      const additionalFonts = fonts
+        .filter(font => font.aestheticStyle === style)
+        .map(font => ({
+          font,
+          score: calculateFontMatchScore(scores, font)
+        }))
+        .sort((a, b) => b.score - a.score);
+      
+      selectedFonts.push(...getTopUniqueFonts(additionalFonts, 3 - selectedFonts.length));
+      
+      if (selectedFonts.length >= 3) break;
+    }
+  }
 
   return {
     primary: selectedFonts[0] || fallbackFont,
@@ -54,7 +64,7 @@ export function calculateFontRecommendations(scores: UserScores): FontRecommenda
 
 function determineAestheticStyle(scores: UserScores): string {
   let bestMatch = '';
-  let highestScore = -1;
+  let highestScore = -Infinity;
 
   for (const [style, ranges] of Object.entries(aestheticScoring)) {
     const score = calculateStyleMatchScore(scores, ranges);
@@ -77,9 +87,11 @@ function calculateStyleMatchScore(scores: UserScores, ranges: any): number {
   ];
 
   return traits.reduce((total, trait) => {
+    // Perfect match within range
     if (trait.score >= trait.min && trait.score <= trait.max) {
       return total + (1 * trait.weight);
     }
+    // Penalty for being outside range
     const distanceToRange = Math.min(
       Math.abs(trait.score - trait.min),
       Math.abs(trait.score - trait.max)
@@ -88,16 +100,18 @@ function calculateStyleMatchScore(scores: UserScores, ranges: any): number {
   }, 0);
 }
 
-function findNextBestStyle(scores: UserScores, currentStyle: string): string {
+function findSimilarStyles(scores: UserScores, currentStyle: string): string[] {
   const styleScores = Object.entries(aestheticScoring)
     .filter(([style]) => style !== currentStyle)
     .map(([style, ranges]) => ({
       style,
       score: calculateStyleMatchScore(scores, ranges)
-    }));
+    }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 2)
+    .map(result => result.style);
 
-  styleScores.sort((a, b) => b.score - a.score);
-  return styleScores[0]?.style || currentStyle;
+  return styleScores;
 }
 
 function calculateFontMatchScore(scores: UserScores, font: FontData): number {
@@ -125,12 +139,12 @@ function calculateFontMatchScore(scores: UserScores, font: FontData): number {
 
 function getTopUniqueFonts(fontScores: { font: FontData; score: number }[], count: number): FontData[] {
   const uniqueFonts: FontData[] = [];
-  const seenStyles = new Set<string>();
+  const seenNames = new Set<string>();
 
   for (const { font } of fontScores) {
-    if (!seenStyles.has(font.aestheticStyle)) {
+    if (!seenNames.has(font.name)) {
       uniqueFonts.push(font);
-      seenStyles.add(font.aestheticStyle);
+      seenNames.add(font.name);
       if (uniqueFonts.length === count) break;
     }
   }
