@@ -18,54 +18,49 @@ const fallbackFont: FontData = {
 };
 
 function determineAestheticStyle(scores: UserScores): string {
-  let bestMatch = '';
-  let bestMatchScore = -1;
+  // Check Geometric Sans first (high structure + balanced traits)
+  if (scores.structure >= 5 && scores.design >= 3 && scores.tone >= 3) {
+    return 'Geometric Sans';
+  }
 
+  // Check Grotesque Sans (neutral traits + modern era)
+  if (scores.structure >= 3 && scores.structure <= 4 && 
+      scores.era >= 4 && 
+      scores.tone <= 3 && 
+      scores.design <= 3) {
+    return 'Grotesque Sans';
+  }
+
+  // Check other styles with strict matching
   for (const [style, ranges] of Object.entries(aestheticScoring)) {
-    let matchScore = 0;
-    let isValid = true;
+    if (style === 'Geometric Sans' || style === 'Grotesque Sans') continue;
 
-    // Check each trait against its range
-    const traits: Array<keyof UserScores> = ['tone', 'energy', 'design', 'era', 'structure'];
-    
-    for (const trait of traits) {
+    let matches = true;
+    for (const trait of ['tone', 'energy', 'design', 'era', 'structure'] as const) {
       const score = scores[trait];
       const min = ranges[`${trait}Min`];
       const max = ranges[`${trait}Max`];
 
       if (score < min || score > max) {
-        isValid = false;
+        matches = false;
         break;
       }
-
-      // Calculate how well this score fits within the range
-      const rangeCenter = (min + max) / 2;
-      const distance = Math.abs(score - rangeCenter);
-      matchScore += 1 - (distance / 4); // Higher score for closer matches
     }
 
-    if (isValid && matchScore > bestMatchScore) {
-      bestMatch = style;
-      bestMatchScore = matchScore;
-    }
+    if (matches) return style;
   }
 
-  // Special case for Grotesque Sans
-  if (scores.structure === 3 && 
-      [scores.tone, scores.energy, scores.design].filter(s => s <= 2).length >= 2 &&
-      scores.era >= 4) {
-    return 'Grotesque Sans';
-  }
-
-  return bestMatch || 'Humanist Sans';
+  // Default to Grotesque Sans if no clear match
+  // (neutral, structured, modern fonts work well as a fallback)
+  return 'Grotesque Sans';
 }
 
 function getMatchingFonts(aestheticStyle: string, scores: UserScores): FontData[] {
   const matchingFonts = fonts.filter(font => font.aestheticStyle === aestheticStyle);
 
   if (matchingFonts.length === 0) {
-    console.warn(`No fonts found for style '${aestheticStyle}'. Falling back to Humanist Sans.`);
-    return fonts.filter(font => font.aestheticStyle === 'Humanist Sans');
+    console.warn(`No fonts found for style '${aestheticStyle}'. Falling back to Grotesque Sans.`);
+    return fonts.filter(font => font.aestheticStyle === 'Grotesque Sans');
   }
 
   // Sort fonts by how well they match the scores
@@ -90,12 +85,12 @@ export function calculateFontRecommendations(scores: UserScores): FontRecommenda
 
   if (matchingFonts.length < 3) {
     console.warn(`Not enough fonts for style '${aestheticStyle}'. Using fallbacks.`);
-    const humanistFonts = fonts.filter(font => font.aestheticStyle === 'Humanist Sans');
+    const grotesqueFonts = fonts.filter(font => font.aestheticStyle === 'Grotesque Sans');
     return {
-      primary: humanistFonts[0] || fallbackFont,
-      secondary: humanistFonts[1] || fallbackFont,
-      tertiary: humanistFonts[2] || fallbackFont,
-      aestheticStyle: 'Humanist Sans'
+      primary: grotesqueFonts[0] || fallbackFont,
+      secondary: grotesqueFonts[1] || fallbackFont,
+      tertiary: grotesqueFonts[2] || fallbackFont,
+      aestheticStyle: 'Grotesque Sans'
     };
   }
 
