@@ -78,6 +78,169 @@ export const QuizResults: React.FC = () => {
     doc.save('FontSeek-Report.pdf');
   };
 
+  const FontPreviewCard = ({ font, title, description }: { 
+    font: typeof recommendations.primary;
+    title: string;
+    description: string;
+  }) => (
+    <div className="mb-8 bg-[#1C1F26] rounded-xl overflow-hidden shadow-xl">
+      <div className="px-6 py-5 border-b border-[#2A2D36]">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-semibold text-white mb-2">{title}</h2>
+            <p className="text-2xl font-bold text-white">{font.name}</p>
+            <p className="text-sm text-white/60 mt-2 max-w-xl">{description}</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {getTopTraits(font).map((trait) => (
+              <span key={trait} className="bg-emerald-500/10 text-emerald-400 text-xs font-medium px-3 py-1 rounded-full">
+                {trait}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="p-8">
+        <div className={`rounded-lg shadow-lg p-8 transition-colors duration-300 ${
+          isDarkMode ? 'bg-neutral-900' : 'bg-white'
+        }`}>
+          <div className="flex gap-2 mb-8">
+            <button
+              onClick={shuffleCopyPack}
+              disabled={isShuffling}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed ${
+                isDarkMode 
+                  ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                  : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
+              }`}
+            >
+              <Shuffle className="w-4 h-4" />
+              Shuffle Copy Style
+            </button>
+            <button
+              onClick={() => setShowLabels(!showLabels)}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm ${
+                isDarkMode 
+                  ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                  : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
+              }`}
+            >
+              {showLabels ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {showLabels ? 'Hide specs' : 'Show specs'}
+            </button>
+            <button
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm ${
+                isDarkMode 
+                  ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                  : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
+              }`}
+            >
+              {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              {isDarkMode ? 'Light mode' : 'Dark mode'}
+            </button>
+          </div>
+          
+          <div className="space-y-8">
+            <div>
+              {showLabels && <div className={`text-xs mb-1 ${
+                isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+              }`}>Heading • 48px • Bold</div>}
+              <h1 
+                style={{ fontFamily: font.name }} 
+                className={`text-5xl font-bold transition-colors ${
+                  isDarkMode ? 'text-white' : 'text-neutral-900'
+                }`}
+              >
+                {currentCopyPack.heading}
+              </h1>
+            </div>
+
+            <div>
+              {showLabels && <div className={`text-xs mb-1 ${
+                isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+              }`}>Subheading • 24px • Medium</div>}
+              <h2 
+                style={{ fontFamily: font.name }} 
+                className={`text-2xl font-medium transition-colors ${
+                  isDarkMode ? 'text-white' : 'text-neutral-900'
+                }`}
+              >
+                {currentCopyPack.subheading}
+              </h2>
+            </div>
+
+            <div>
+              {showLabels && <div className={`text-xs mb-1 ${
+                isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+              }`}>Lead Paragraph • 20px • Regular</div>}
+              <p 
+                style={{ fontFamily: font.name }} 
+                className={`text-xl transition-colors ${
+                  isDarkMode ? 'text-white' : 'text-neutral-900'
+                }`}
+              >
+                {currentCopyPack.leadParagraph}
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              {showLabels && <div className={`text-xs mb-1 ${
+                isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+              }`}>Body Copy • 16px • Regular</div>}
+              <p 
+                style={{ fontFamily: font.name }} 
+                className={`text-base transition-colors ${
+                  isDarkMode ? 'text-white' : 'text-neutral-900'
+                }`}
+              >
+                {currentCopyPack.body1}
+              </p>
+              <p 
+                style={{ fontFamily: font.name }} 
+                className={`text-base transition-colors ${
+                  isDarkMode ? 'text-white' : 'text-neutral-900'
+                }`}
+              >
+                {currentCopyPack.body2}
+              </p>
+            </div>
+
+            <div>
+              {showLabels && <div className={`text-xs mb-1 ${
+                isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+              }`}>Fine Print • 12px • Light</div>}
+              <small 
+                style={{ fontFamily: font.name }} 
+                className={`text-xs font-light block transition-colors ${
+                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+                }`}
+              >
+                {currentCopyPack.finePrint}
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-6 py-5 border-t border-[#2A2D36]">
+        <h3 className="text-lg font-semibold mb-2 text-white">Start Using This Font Right Now</h3>
+        <p className="text-white/80 text-sm mb-4">
+          This Google Web Font is free to use for your brand. You can download it to your computer or embed it in your website in seconds using the tools on Google Fonts.
+        </p>
+        <a
+          href={font.googleFontsLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-colors font-semibold w-fit"
+        >
+          Use This Font <ArrowRight className="w-4 h-4" />
+        </a>
+      </div>
+    </div>
+  );
+
   if (!recommendations || !scores) {
     return (
       <div className="flex items-center justify-center">
@@ -112,199 +275,23 @@ export const QuizResults: React.FC = () => {
         {scores && <TraitScales scores={scores} />}
       </div>
 
-      {/* Primary Font */}
-      <div className="mb-16 bg-[#1C1F26] rounded-xl overflow-hidden shadow-xl">
-        <div className="px-6 py-5 border-b border-[#2A2D36]">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <h2 className="text-xl font-semibold text-white mb-2">Your Top Font Recommendation</h2>
-              <p className="text-2xl font-bold text-white">{recommendations.primary.name}</p>
-              <p className="text-sm text-white/60 mt-2 max-w-xl">
-                Based on your answers, this Google Web Font is the best match for your brand. It's free to use and ready to download or embed today.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {getTopTraits(recommendations.primary).map((trait) => (
-                <span key={trait} className="bg-emerald-500/10 text-emerald-400 text-xs font-medium px-3 py-1 rounded-full">
-                  {trait}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
+      <FontPreviewCard 
+        font={recommendations.primary}
+        title="Your Top Font Recommendation"
+        description="Based on your answers, this Google Web Font is the best match for your brand. It's free to use and ready to download or embed today."
+      />
 
-        <div className="p-8">
-          <div className={`rounded-lg shadow-lg p-8 transition-colors duration-300 ${
-            isDarkMode ? 'bg-neutral-900' : 'bg-white'
-          }`}>
-            <div className="flex gap-2 mb-8">
-              <button
-                onClick={shuffleCopyPack}
-                disabled={isShuffling}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed ${
-                  isDarkMode 
-                    ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
-                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
-                }`}
-              >
-                <Shuffle className="w-4 h-4" />
-                Shuffle Copy Style
-              </button>
-              <button
-                onClick={() => setShowLabels(!showLabels)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm ${
-                  isDarkMode 
-                    ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
-                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
-                }`}
-              >
-                {showLabels ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                {showLabels ? 'Hide specs' : 'Show specs'}
-              </button>
-              <button
-                onClick={() => setIsDarkMode(!isDarkMode)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm ${
-                  isDarkMode 
-                    ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
-                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
-                }`}
-              >
-                {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                {isDarkMode ? 'Light mode' : 'Dark mode'}
-              </button>
-            </div>
-            
-            <div className="space-y-8">
-              <div>
-                {showLabels && <div className={`text-xs mb-1 ${
-                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                }`}>Heading • 48px • Bold</div>}
-                <h1 
-                  style={{ fontFamily: recommendations.primary.name }} 
-                  className={`text-5xl font-bold transition-colors ${
-                    isDarkMode ? 'text-white' : 'text-neutral-900'
-                  }`}
-                >
-                  {currentCopyPack.heading}
-                </h1>
-              </div>
+      <FontPreviewCard 
+        font={recommendations.secondary}
+        title="Your Second Font Option"
+        description="This alternative font matches your brand's personality while offering a slightly different aesthetic approach."
+      />
 
-              <div>
-                {showLabels && <div className={`text-xs mb-1 ${
-                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                }`}>Subheading • 24px • Medium</div>}
-                <h2 
-                  style={{ fontFamily: recommendations.primary.name }} 
-                  className={`text-2xl font-medium transition-colors ${
-                    isDarkMode ? 'text-white' : 'text-neutral-900'
-                  }`}
-                >
-                  {currentCopyPack.subheading}
-                </h2>
-              </div>
-
-              <div>
-                {showLabels && <div className={`text-xs mb-1 ${
-                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                }`}>Lead Paragraph • 20px • Regular</div>}
-                <p 
-                  style={{ fontFamily: recommendations.primary.name }} 
-                  className={`text-xl transition-colors ${
-                    isDarkMode ? 'text-white' : 'text-neutral-900'
-                  }`}
-                >
-                  {currentCopyPack.leadParagraph}
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                {showLabels && <div className={`text-xs mb-1 ${
-                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                }`}>Body Copy • 16px • Regular</div>}
-                <p 
-                  style={{ fontFamily: recommendations.primary.name }} 
-                  className={`text-base transition-colors ${
-                    isDarkMode ? 'text-white' : 'text-neutral-900'
-                  }`}
-                >
-                  {currentCopyPack.body1}
-                </p>
-                <p 
-                  style={{ fontFamily: recommendations.primary.name }} 
-                  className={`text-base transition-colors ${
-                    isDarkMode ? 'text-white' : 'text-neutral-900'
-                  }`}
-                >
-                  {currentCopyPack.body2}
-                </p>
-              </div>
-
-              <div>
-                {showLabels && <div className={`text-xs mb-1 ${
-                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                }`}>Fine Print • 12px • Light</div>}
-                <small 
-                  style={{ fontFamily: recommendations.primary.name }} 
-                  className={`text-xs font-light block transition-colors ${
-                    isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                  }`}
-                >
-                  {currentCopyPack.finePrint}
-                </small>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="px-6 py-5 border-t border-[#2A2D36]">
-          <h3 className="text-lg font-semibold mb-2 text-white">Start Using This Font Right Now</h3>
-          <p className="text-white/80 text-sm mb-4">
-            This Google Web Font is free to use for your brand. You can download it to your computer or embed it in your website in seconds using the tools on Google Fonts.
-          </p>
-          <a
-            href={recommendations.primary.googleFontsLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-colors font-semibold w-fit"
-          >
-            Use This Font <ArrowRight className="w-4 h-4" />
-          </a>
-        </div>
-      </div>
-
-      {/* Second and Third Options */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {[
-          { title: 'Second Option', font: recommendations.secondary },
-          { title: 'Third Option', font: recommendations.tertiary }
-        ].map(({ title, font }) => (
-          <div key={font.name} className="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">{title}: {font.name}</h3>
-              <a
-                href={font.googleFontsLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-3 py-1.5 bg-white/20 rounded-lg hover:bg-white/30 transition-colors text-sm"
-              >
-                View Font <ArrowRight className="w-4 h-4" />
-              </a>
-            </div>
-            <div style={{ fontFamily: font.name }}>
-              {showLabels && <div className="text-xs text-white/40 mb-1">Display • 24px • Bold</div>}
-              <p style={{ fontWeight: 700 }} className="text-2xl mb-4 text-white">
-                The quick brown fox jumps over the lazy dog
-              </p>
-              {showLabels && <div className="text-xs text-white/40 mb-1">Body • 16px • Regular</div>}
-              <p style={{ fontWeight: 400 }} className="text-base mb-1 text-white">
-                Pack my box with five dozen liquor jugs
-              </p>
-              <p className="text-sm text-white/60">{font.personalityTags.join(' • ')}</p>
-              <p className="mt-2 text-sm text-white/60">Recommended for: {font.recommendedFor.join(', ')}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+      <FontPreviewCard 
+        font={recommendations.tertiary}
+        title="Your Third Font Option"
+        description="Another strong match for your brand's personality, providing a distinct visual alternative."
+      />
     </div>
   );
 };
