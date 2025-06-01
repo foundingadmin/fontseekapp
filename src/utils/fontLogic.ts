@@ -78,22 +78,23 @@ export function calculateFontRecommendations(scores: UserScores): FontRecommenda
   const aestheticStyle = determineAestheticStyle(scores);
   let matchingFonts = getMatchingFonts(aestheticStyle, scores);
 
-  // Ensure we have exactly three unique fonts
-  const uniqueFonts = Array.from(new Set(matchingFonts.map(font => font.name)))
-    .map(name => matchingFonts.find(font => font.name === name)!)
-    .slice(0, 3);
-
-  // For Display / Bubbly, if we don't have enough fonts, cycle through the available ones
-  if (aestheticStyle === 'Display / Bubbly' && uniqueFonts.length < 3) {
-    while (uniqueFonts.length < 3) {
-      uniqueFonts.push(uniqueFonts[0]);
-    }
+  // Ensure we have at least one font to work with
+  if (matchingFonts.length === 0) {
+    // If no fonts match the aesthetic style, get all fonts and sort by score
+    matchingFonts = fonts.sort((a, b) => calculateFontMatchScore(b, scores) - calculateFontMatchScore(a, scores));
   }
 
+  // Get the best matching font as our primary
+  const primary = matchingFonts[0];
+
+  // For secondary and tertiary, either use unique fonts if available, or fall back to the primary
+  const secondary = matchingFonts[1] || primary;
+  const tertiary = matchingFonts[2] || primary;
+
   return {
-    primary: uniqueFonts[0],
-    secondary: uniqueFonts[1],
-    tertiary: uniqueFonts[2],
+    primary,
+    secondary,
+    tertiary,
     aestheticStyle
   };
 }
