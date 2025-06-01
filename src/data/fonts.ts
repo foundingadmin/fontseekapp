@@ -1,7 +1,85 @@
 import { FontData } from '../types';
 
 export const fonts: FontData[] = [
-  // Transitional Serif fonts
+  // Display / Bubbly fonts
+  {
+    name: 'Fredoka',
+    googleFontsLink: 'https://fonts.google.com/specimen/Fredoka',
+    tone: 5,
+    energy: 5,
+    design: 5,
+    era: 5,
+    structure: 2,
+    aestheticStyle: 'Display / Bubbly',
+    embedCode: "Fredoka', sans-serif",
+    personalityTags: ['Playful', 'Friendly', 'Modern'],
+    recommendedFor: ['Kids', 'Entertainment', 'Food']
+  },
+  {
+    name: 'Rubik Bubbles',
+    googleFontsLink: 'https://fonts.google.com/specimen/Rubik+Bubbles',
+    tone: 5,
+    energy: 5,
+    design: 5,
+    era: 4,
+    structure: 2,
+    aestheticStyle: 'Display / Bubbly',
+    embedCode: "Rubik Bubbles', cursive",
+    personalityTags: ['Fun', 'Bold', 'Energetic'],
+    recommendedFor: ['Kids Brands', 'Entertainment', 'Casual Food']
+  },
+  {
+    name: 'Pacifico',
+    googleFontsLink: 'https://fonts.google.com/specimen/Pacifico',
+    tone: 5,
+    energy: 5,
+    design: 5,
+    era: 4,
+    structure: 1,
+    aestheticStyle: 'Display / Bubbly',
+    embedCode: "Pacifico', cursive",
+    personalityTags: ['Casual', 'Fun', 'Personal'],
+    recommendedFor: ['Lifestyle', 'Food & Bev']
+  },
+  {
+    name: 'Comfortaa',
+    googleFontsLink: 'https://fonts.google.com/specimen/Comfortaa',
+    tone: 4,
+    energy: 4,
+    design: 5,
+    era: 5,
+    structure: 2,
+    aestheticStyle: 'Display / Bubbly',
+    embedCode: "Comfortaa', cursive",
+    personalityTags: ['Friendly', 'Modern', 'Rounded'],
+    recommendedFor: ['Tech', 'Apps', 'Youth Brands']
+  },
+  {
+    name: 'Chewy',
+    googleFontsLink: 'https://fonts.google.com/specimen/Chewy',
+    tone: 5,
+    energy: 5,
+    design: 5,
+    era: 4,
+    structure: 2,
+    aestheticStyle: 'Display / Bubbly',
+    embedCode: "Chewy', cursive",
+    personalityTags: ['Playful', 'Bold', 'Fun'],
+    recommendedFor: ['Kids', 'Entertainment', 'Casual']
+  },
+  {
+    name: 'Caveat',
+    googleFontsLink: 'https://fonts.google.com/specimen/Caveat',
+    tone: 5,
+    energy: 4,
+    design: 5,
+    era: 3,
+    structure: 1,
+    aestheticStyle: 'Display / Bubbly',
+    embedCode: "Caveat', cursive",
+    personalityTags: ['Handwritten', 'Personal', 'Casual'],
+    recommendedFor: ['Personal Brands', 'Blogs', 'Creative']
+  },
   {
     name: 'Domine',
     googleFontsLink: 'https://fonts.google.com/specimen/Domine',
@@ -41,21 +119,17 @@ export const fonts: FontData[] = [
     personalityTags: ['Elegant', 'Balanced', 'Versatile'],
     recommendedFor: ['Editorial', 'Literature', 'Branding']
   },
-
-  // Existing fonts...
-  // Display / Bubbly fonts
   {
-    name: 'Fredoka',
-    googleFontsLink: 'https://fonts.google.com/specimen/Fredoka',
-    tone: 5,
-    energy: 5,
-    design: 5,
-    era: 5,
-    structure: 2,
-    aestheticStyle: 'Display / Bubbly',
-    embedCode: "Fredoka', sans-serif",
-    personalityTags: ['Playful', 'Friendly', 'Modern'],
-    recommendedFor: ['Kids', 'Entertainment', 'Food']
-  },
-  // ... (rest of existing fonts)
+    name: 'Raleway',
+    googleFontsLink: 'https://fonts.google.com/specimen/Raleway',
+    tone: 2,
+    energy: 3,
+    design: 2,
+    era: 4,
+    structure: 4,
+    aestheticStyle: 'Geometric Sans',
+    embedCode: "Raleway', sans-serif",
+    personalityTags: ['Modern', 'Elegant', 'Minimalist'],
+    recommendedFor: ['Tech', 'Wellness']
+  }
 ];
