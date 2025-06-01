@@ -81,12 +81,13 @@ export const QuizResults: React.FC = () => {
         {scores && <TraitScales scores={scores} />}
       </div>
 
-      {/* First Font Suggestion */}
+      {/* Primary Font */}
       <div className="mb-16 bg-white/10 rounded-xl p-8 backdrop-blur-sm">
         <div className="flex justify-between items-start mb-8">
           <div>
-            <h2 className="text-xl font-semibold text-white mb-2">First Font Suggestion</h2>
+            <h2 className="text-xl font-semibold text-white mb-2">Your Top Font Recommendation</h2>
             <p className="text-2xl font-bold text-white">{recommendations.primary.name}</p>
+            <p className="text-sm text-white/60 mt-2">Based on your answers, this Google Web Font is the best match for your brand. It's free to use and ready to download or embed today.</p>
           </div>
           <div className="flex flex-col items-end gap-4">
             <div className="flex items-center gap-2">
@@ -106,7 +107,6 @@ export const QuizResults: React.FC = () => {
                 {showLabels ? 'Hide specs' : 'Show specs'}
               </button>
             </div>
-            <p className="text-sm text-white/40">Voice Style: {currentCopyPack.styleId}</p>
           </div>
         </div>
         
