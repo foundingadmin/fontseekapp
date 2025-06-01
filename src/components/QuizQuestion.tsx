@@ -12,8 +12,10 @@ export const QuizQuestion: React.FC = () => {
 
   const handleSelect = (value: 'A' | 'B') => {
     setSelectedAnswer(value);
-    setAnswer(currentQuestion, value);
-    setSelectedAnswer(null);
+    setTimeout(() => {
+      setAnswer(currentQuestion, value);
+      setSelectedAnswer(null);
+    }, 100);
   };
 
   useEffect(() => {
