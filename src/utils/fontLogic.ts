@@ -2,37 +2,12 @@ import type { UserScores, FontRecommendation, FontData } from '../types';
 import { fonts } from '../data/fonts';
 import { aestheticScoring } from '../data/aestheticScoring';
 
-// Default fallback font
-const fallbackFont: FontData = {
-  name: 'System UI',
-  googleFontsLink: '',
-  tone: 3,
-  energy: 3,
-  design: 3,
-  era: 3,
-  structure: 3,
-  aestheticStyle: 'System Default',
-  embedCode: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-  personalityTags: ['Clean', 'Universal', 'Reliable'],
-  recommendedFor: ['Any Context']
-};
-
 export function calculateFontRecommendations(scores: UserScores): FontRecommendation {
   // First, determine the aesthetic style based on trait ranges
   const primaryStyle = determineAestheticStyle(scores);
   
   // Strictly filter fonts to ONLY those matching the primary aesthetic style
   const matchingFonts = fonts.filter(font => font.aestheticStyle === primaryStyle);
-
-  // If we don't have any fonts in this style, use fallback
-  if (matchingFonts.length === 0) {
-    return {
-      primary: fallbackFont,
-      secondary: fallbackFont,
-      tertiary: fallbackFont,
-      aestheticStyle: primaryStyle
-    };
-  }
 
   // Calculate weighted distance scores for each matching font
   const fontScores = matchingFonts.map(font => ({
@@ -46,20 +21,25 @@ export function calculateFontRecommendations(scores: UserScores): FontRecommenda
   // Get unique fonts (no duplicates)
   const uniqueFonts = getUniqueFonts(fontScores);
 
-  // If we don't have enough fonts, use fallback
-  while (uniqueFonts.length < 3) {
-    uniqueFonts.push(fallbackFont);
+  // If we don't have enough fonts, repeat from the top
+  while (uniqueFonts.length < 3 && matchingFonts.length > 0) {
+    uniqueFonts.push(matchingFonts[0]);
   }
 
   return {
     primary: uniqueFonts[0],
-    secondary: uniqueFonts[1],
-    tertiary: uniqueFonts[2],
+    secondary: uniqueFonts[1] || uniqueFonts[0],
+    tertiary: uniqueFonts[2] || uniqueFonts[1] || uniqueFonts[0],
     aestheticStyle: primaryStyle
   };
 }
 
 function determineAestheticStyle(scores: UserScores): string {
+  // Special case for all-1 scores
+  if (Object.values(scores).every(score => score === 1)) {
+    return 'Serif Old Style';
+  }
+
   let bestMatch = '';
   let highestScore = -Infinity;
 
@@ -76,7 +56,7 @@ function determineAestheticStyle(scores: UserScores): string {
   return bestMatch;
 }
 
-function calculateStyleMatchScore(scores: UserScores, ranges: AestheticRange): number {
+function calculateStyleMatchScore(scores: UserScores, ranges: any): number {
   let score = 0;
   const traits: Array<keyof UserScores> = ['tone', 'energy', 'design', 'era', 'structure'];
 
@@ -114,7 +94,6 @@ function calculateWeightedDistance(scores: UserScores, font: FontData, style: st
 }
 
 function getTraitWeights(style: string): Record<keyof UserScores, number> {
-  // Default weights
   const weights = {
     tone: 1,
     energy: 1,
@@ -123,8 +102,12 @@ function getTraitWeights(style: string): Record<keyof UserScores, number> {
     structure: 1
   };
 
-  // Apply style-specific weight adjustments
   switch (style) {
+    case 'Serif Old Style':
+      weights.tone = 1.5;
+      weights.era = 1.25;
+      weights.design = 1.25;
+      break;
     case 'Monospace':
       weights.structure = 1.5;
       weights.era = 1.25;
@@ -136,10 +119,6 @@ function getTraitWeights(style: string): Record<keyof UserScores, number> {
     case 'Geometric Sans':
       weights.design = 1.5;
       weights.structure = 1.25;
-      break;
-    case 'Serif Old Style':
-      weights.tone = 1.5;
-      weights.era = 1.25;
       break;
     case 'Display / Bubbly':
       weights.energy = 1.5;

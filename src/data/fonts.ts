@@ -1,6 +1,47 @@
 import { FontData } from '../types';
 
 export const fonts: FontData[] = [
+  // Serif Old Style
+  {
+    name: 'EB Garamond',
+    googleFontsLink: 'https://fonts.google.com/specimen/EB+Garamond',
+    tone: 1,
+    energy: 1,
+    design: 2,
+    era: 1,
+    structure: 2,
+    aestheticStyle: 'Serif Old Style',
+    embedCode: "EB Garamond', serif",
+    personalityTags: ['Traditional', 'Literary', 'Academic'],
+    recommendedFor: ['Books', 'Editorial', 'Institutions']
+  },
+  {
+    name: 'Lora',
+    googleFontsLink: 'https://fonts.google.com/specimen/Lora',
+    tone: 2,
+    energy: 2,
+    design: 3,
+    era: 2,
+    structure: 2,
+    aestheticStyle: 'Serif Old Style',
+    embedCode: "Lora', serif",
+    personalityTags: ['Warm', 'Classic', 'Readable'],
+    recommendedFor: ['Education', 'Publishing']
+  },
+  {
+    name: 'Crimson Text',
+    googleFontsLink: 'https://fonts.google.com/specimen/Crimson+Text',
+    tone: 1,
+    energy: 1,
+    design: 2,
+    era: 1,
+    structure: 2,
+    aestheticStyle: 'Serif Old Style',
+    embedCode: "Crimson Text', serif",
+    personalityTags: ['Traditional', 'Elegant', 'Refined'],
+    recommendedFor: ['Academia', 'Literature']
+  },
+  
   // Humanist Sans
   {
     name: 'Karla',
