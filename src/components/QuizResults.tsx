@@ -5,29 +5,12 @@ import { RadarChart } from './RadarChart';
 
 export const QuizResults: React.FC = () => {
   const { scores, recommendations, calculateResults, resetQuiz } = useQuizStore();
-  
-  const loadGoogleFont = (fontName: string) => {
-    const link = document.createElement('link');
-    const formattedName = fontName.replace(/ /g, '+');
-    link.href = `https://fonts.googleapis.com/css2?family=${formattedName}:wght@400;500;700&display=swap`;
-    link.rel = 'stylesheet';
-    document.head.appendChild(link);
-  };
 
   useEffect(() => {
     if (!scores && !recommendations) {
       calculateResults();
     }
   }, [scores, recommendations, calculateResults]);
-
-  useEffect(() => {
-    if (recommendations) {
-      // Load fonts dynamically
-      loadGoogleFont(recommendations.primary.name);
-      loadGoogleFont(recommendations.secondary.name);
-      loadGoogleFont(recommendations.tertiary.name);
-    }
-  }, [recommendations]);
 
   if (!recommendations || !scores) {
     return (
@@ -77,30 +60,24 @@ export const QuizResults: React.FC = () => {
           </a>
         </div>
         
-        <div className="space-y-6" style={{ fontFamily: recommendations.primary.embedCode }}>
-          <div>
-            <h1 className="text-5xl font-bold">The quick brown fox jumps over the lazy dog</h1>
-            <div className="mt-1 text-white/40 text-sm">5xl / Bold</div>
+        <div style={{ fontFamily: recommendations.primary.embedCode }}>
+          <div className="mb-8">
+            <h1 style={{ fontFamily: recommendations.primary.embedCode, fontWeight: 700 }} className="text-5xl">
+              The quick brown fox jumps over the lazy dog
+            </h1>
+            <div className="mt-1 text-white/40 text-sm">5xl / Bold (700)</div>
           </div>
-          <div>
-            <h2 className="text-4xl font-semibold">Pack my box with five dozen liquor jugs</h2>
-            <div className="mt-1 text-white/40 text-sm">4xl / Semibold</div>
+          <div className="mb-8">
+            <h2 style={{ fontFamily: recommendations.primary.embedCode, fontWeight: 500 }} className="text-4xl">
+              Pack my box with five dozen liquor jugs
+            </h2>
+            <div className="mt-1 text-white/40 text-sm">4xl / Medium (500)</div>
           </div>
-          <div>
-            <h3 className="text-2xl font-medium">How vexingly quick daft zebras jump</h3>
-            <div className="mt-1 text-white/40 text-sm">2xl / Medium</div>
-          </div>
-          <div>
-            <p className="text-xl">The five boxing wizards jump quickly</p>
-            <div className="mt-1 text-white/40 text-sm">xl / Regular</div>
-          </div>
-          <div>
-            <p className="text-base">Sphinx of black quartz, judge my vow</p>
-            <div className="mt-1 text-white/40 text-sm">base / Regular</div>
-          </div>
-          <div>
-            <p className="text-sm">Waltz, nymph, for quick jigs vex Bud</p>
-            <div className="mt-1 text-white/40 text-sm">sm / Regular</div>
+          <div className="mb-8">
+            <p style={{ fontFamily: recommendations.primary.embedCode, fontWeight: 400 }} className="text-2xl">
+              How vexingly quick daft zebras jump
+            </p>
+            <div className="mt-1 text-white/40 text-sm">2xl / Regular (400)</div>
           </div>
         </div>
       </div>
@@ -123,9 +100,13 @@ export const QuizResults: React.FC = () => {
                 View Font <ArrowRight className="w-4 h-4" />
               </a>
             </div>
-            <div style={{ fontFamily: font.embedCode }}>
-              <p className="text-2xl mb-4">The quick brown fox jumps over the lazy dog</p>
-              <p className="text-base mb-1">Pack my box with five dozen liquor jugs</p>
+            <div>
+              <p style={{ fontFamily: font.embedCode, fontWeight: 700 }} className="text-2xl mb-4">
+                The quick brown fox jumps over the lazy dog
+              </p>
+              <p style={{ fontFamily: font.embedCode, fontWeight: 400 }} className="text-base mb-1">
+                Pack my box with five dozen liquor jugs
+              </p>
               <p className="text-sm text-white/60">{font.personalityTags.join(' • ')}</p>
               <p className="mt-2 text-sm text-white/60">Recommended for: {font.recommendedFor.join(', ')}</p>
             </div>
