@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuizStore } from '../store/quizStore';
-import { ArrowRight, RefreshCw, Share2 } from 'lucide-react';
+import { ArrowRight, RefreshCw, Share2, Eye, EyeOff } from 'lucide-react';
 import { RadarChart } from './RadarChart';
 
 function loadGoogleFont(fontName: string) {
@@ -13,6 +13,7 @@ function loadGoogleFont(fontName: string) {
 
 export const QuizResults: React.FC = () => {
   const { scores, recommendations, calculateResults, resetQuiz } = useQuizStore();
+  const [showLabels, setShowLabels] = useState(false);
 
   useEffect(() => {
     if (!scores && !recommendations) {
@@ -67,14 +68,23 @@ export const QuizResults: React.FC = () => {
       <div className="mb-16 bg-white/10 rounded-xl p-8 backdrop-blur-sm">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-white">Primary Font: {recommendations.primary.name}</h2>
-          <a
-            href={recommendations.primary.googleFontsLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-colors font-medium"
-          >
-            View Font <ArrowRight className="w-4 h-4" />
-          </a>
+          <div className="flex gap-4">
+            <button
+              onClick={() => setShowLabels(!showLabels)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors text-sm"
+            >
+              {showLabels ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {showLabels ? 'Hide specs' : 'Show specs'}
+            </button>
+            <a
+              href={recommendations.primary.googleFontsLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-colors font-medium"
+            >
+              View Font <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
         </div>
         
         <div style={{ fontFamily: recommendations.primary.name }} className="space-y-8">
@@ -82,36 +92,44 @@ export const QuizResults: React.FC = () => {
             <p className="text-sm font-semibold uppercase tracking-wide text-white/90">
               Brand Typography System
             </p>
-            <p className="text-xs text-white/40 mt-1">
-              sm / Semibold / &lt;p&gt; / text-sm font-semibold uppercase tracking-wide
-            </p>
+            {showLabels && (
+              <p className="text-xs text-white/40 mt-1">
+                Font size: Small (14px) • Weight: Semibold • Usage: Section label
+              </p>
+            )}
           </div>
 
           <div>
             <h1 className="text-5xl font-bold leading-tight">
               The quick brown fox jumps over the lazy dog
             </h1>
-            <p className="text-xs text-white/40 mt-1">
-              5xl / Bold / &lt;h1&gt; / text-5xl font-bold leading-tight
-            </p>
+            {showLabels && (
+              <p className="text-xs text-white/40 mt-1">
+                Font size: Extra Large (48px) • Weight: Bold • Usage: Main heading
+              </p>
+            )}
           </div>
 
           <div>
             <h2 className="text-2xl font-medium leading-relaxed">
               Pack my box with five dozen liquor jugs
             </h2>
-            <p className="text-xs text-white/40 mt-1">
-              2xl / Medium / &lt;h2&gt; / text-2xl font-medium leading-relaxed
-            </p>
+            {showLabels && (
+              <p className="text-xs text-white/40 mt-1">
+                Font size: Large (24px) • Weight: Medium • Usage: Subheading
+              </p>
+            )}
           </div>
 
           <div>
             <p className="text-xl font-normal leading-relaxed">
               How vexingly quick daft zebras jump! The five boxing wizards jump quickly.
             </p>
-            <p className="text-xs text-white/40 mt-1">
-              xl / Regular / &lt;p&gt; / text-xl font-normal leading-relaxed
-            </p>
+            {showLabels && (
+              <p className="text-xs text-white/40 mt-1">
+                Font size: Medium (20px) • Weight: Regular • Usage: Lead paragraph
+              </p>
+            )}
           </div>
 
           <div>
@@ -119,18 +137,22 @@ export const QuizResults: React.FC = () => {
               The quick brown fox jumps over the lazy dog. A wizard's job is to vex chumps quickly in fog.
               Pack my box with five dozen liquor jugs. How vexingly quick daft zebras jump!
             </p>
-            <p className="text-xs text-white/40 mt-1">
-              base / Regular / &lt;p&gt; / text-base font-normal leading-loose
-            </p>
+            {showLabels && (
+              <p className="text-xs text-white/40 mt-1">
+                Font size: Normal (16px) • Weight: Regular • Usage: Body copy
+              </p>
+            )}
           </div>
 
           <div>
             <small className="text-xs font-light text-white/60 block">
               © 2025 FontSeek. All rights reserved. The quick brown fox jumps over the lazy dog.
             </small>
-            <p className="text-xs text-white/40 mt-1">
-              xs / Light / &lt;small&gt; / text-xs font-light text-white/60
-            </p>
+            {showLabels && (
+              <p className="text-xs text-white/40 mt-1">
+                Font size: Extra Small (12px) • Weight: Light • Usage: Fine print
+              </p>
+            )}
           </div>
         </div>
       </div>
