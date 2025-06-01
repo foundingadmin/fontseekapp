@@ -82,7 +82,7 @@ export const IntroScreen: React.FC = () => {
         <div className="max-w-3xl mx-auto px-4 py-16 text-center">
           <a href="/" className="inline-block mb-12">
             <img 
-              src="/Founding-v1-Wordmark-white.svg" 
+              src="../assets/Founding-v1-Wordmark-white.svg" 
               alt="FontSeek - Strategy-Driven Font Recommendations" 
               className="w-[140px] h-auto"
               onError={(e) => {
