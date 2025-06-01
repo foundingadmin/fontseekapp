@@ -9,7 +9,6 @@ export const IntroScreen: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Check for Cmd (Meta) + Alt + Option (Alt) + Enter
       if (e.metaKey && e.altKey && e.key === 'Enter') {
         startQuiz('skip@fontseek.com');
       }
@@ -84,18 +83,18 @@ export const IntroScreen: React.FC = () => {
           <img src="/src/assets/Founding-v1-Wordmark-white.svg" alt="FontSeek" className="w-[145px] mx-auto mb-12" />
           
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Find your brand's perfect font in 3 minutes
+            Choose fonts on what they say. Not how they look.
           </h1>
           
           <p className="text-xl text-white/80 mb-12">
-            Take our interactive quiz to discover the Google Web Font that best matches your brand's personality — with instant recommendations and usage guides.
+            FontSeek helps you discover the Google Web Font that best fits your brand's personality—not just its style. Get instant recommendations, usage previews, and dev-ready code in under 3 minutes.
           </p>
 
           <form onSubmit={handleSubmit} className="max-w-[400px] mx-auto">
             <input
               type="email"
               required
-              placeholder="Enter your email to start"
+              placeholder="Enter your email to begin"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-6 py-3 mb-4 bg-white/5 border border-white/20 rounded-full text-white placeholder-white/40 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
