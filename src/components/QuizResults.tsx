@@ -4,6 +4,7 @@ import { ArrowRight, RefreshCw, FileDown, Eye, EyeOff, Shuffle } from 'lucide-re
 import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { jsPDF } from 'jspdf';
+import logoBlack from '../assets/Founding-v1-Wordmark-black.svg';
 
 function loadGoogleFont(fontName: string) {
   const formatted = fontName.replace(/ /g, '+');
@@ -85,7 +86,7 @@ export const QuizResults: React.FC = () => {
 
       // Load and add logo
       const img = new Image();
-      img.src = '/src/assets/Founding-v1-Wordmark-black.svg';
+      img.src = logoBlack;
       
       await new Promise((resolve, reject) => {
         img.onload = () => {
