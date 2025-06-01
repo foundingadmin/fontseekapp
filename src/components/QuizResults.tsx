@@ -5,6 +5,7 @@ import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon } from '
 import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
+import { ContactForm } from './ContactForm';
 
 function loadGoogleFont(fontName: string) {
   const formatted = fontName.replace(/ /g, '+');
@@ -288,6 +289,8 @@ export const QuizResults: React.FC = () => {
         title="Your Third Font Option"
         description="Another strong match for your brand's personality, providing a distinct visual alternative."
       />
+
+      <ContactForm onDownloadReport={handleDownloadReport} />
     </div>
   );
 };

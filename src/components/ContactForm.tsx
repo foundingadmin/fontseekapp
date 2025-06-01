@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, Download } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import { useQuizStore } from '../store/quizStore';
 
@@ -84,15 +84,6 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
               className="w-full px-4 py-3 bg-[#2A2D36] border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 resize-none"
             />
           </div>
-
-          <button
-            type="button"
-            onClick={onDownloadReport}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 border border-emerald-500 text-emerald-500 rounded-lg hover:bg-emerald-500/10 transition-colors mb-4"
-          >
-            <Download className="w-5 h-5" />
-            Download Results
-          </button>
 
           <button
             type="submit"
