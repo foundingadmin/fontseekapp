@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { useQuizStore } from '../store/quizStore';
+import emailjs from '@emailjs/browser';
 
 interface ContactFormProps {
   onDownloadReport: () => void;
@@ -9,6 +10,7 @@ interface ContactFormProps {
 export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const formRef = useRef<HTMLFormElement>(null);
   const email = useQuizStore(state => state.email);
   const scores = useQuizStore(state => state.scores);
   const recommendations = useQuizStore(state => state.recommendations);
@@ -19,21 +21,21 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
     setSubmitStatus('idle');
 
     try {
-      const form = e.target as HTMLFormElement;
-      const data = new FormData(form);
-      
-      const response = await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(data as any).toString()
-      });
+      if (!formRef.current) return;
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      const result = await emailjs.sendForm(
+        'YOUR_SERVICE_ID', // Replace with your EmailJS service ID
+        'YOUR_TEMPLATE_ID', // Replace with your EmailJS template ID
+        formRef.current,
+        'YOUR_PUBLIC_KEY' // Replace with your EmailJS public key
+      );
+
+      if (result.status === 200) {
+        setSubmitStatus('success');
+        formRef.current.reset();
+      } else {
+        throw new Error('Failed to send message');
       }
-
-      setSubmitStatus('success');
-      form.reset();
     } catch (error) {
       console.error('Failed to submit form:', error);
       setSubmitStatus('error');
@@ -59,60 +61,46 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
         </p>
 
         <form 
+          ref={formRef}
           onSubmit={handleSubmit} 
           className="space-y-6"
-          name="contact"
-          method="POST"
-          data-netlify="true"
-          netlify-honeypot="bot-field"
-          data-netlify-email="admin@foundingcreative.com"
-          data-netlify-subject="I Found My Font!"
         >
-          <input type="hidden" name="form-name" value="contact" />
-          <input type="hidden" name="subject" value="I Found My Font!" />
-          
           {/* Hidden fields for font results */}
           <input 
             type="hidden" 
-            name="primary-font" 
+            name="primary_font" 
             value={recommendations?.primary.name || ''}
           />
           <input 
             type="hidden" 
-            name="aesthetic-style" 
+            name="aesthetic_style" 
             value={recommendations?.aestheticStyle || ''}
           />
           <input 
             type="hidden" 
-            name="tone-score" 
+            name="tone_score" 
             value={scores?.tone.toString() || ''}
           />
           <input 
             type="hidden" 
-            name="energy-score" 
+            name="energy_score" 
             value={scores?.energy.toString() || ''}
           />
           <input 
             type="hidden" 
-            name="design-score" 
+            name="design_score" 
             value={scores?.design.toString() || ''}
           />
           <input 
             type="hidden" 
-            name="era-score" 
+            name="era_score" 
             value={scores?.era.toString() || ''}
           />
           <input 
             type="hidden" 
-            name="structure-score" 
+            name="structure_score" 
             value={scores?.structure.toString() || ''}
           />
-
-          <p className="hidden">
-            <label>
-              Don't fill this out if you're human: <input name="bot-field" />
-            </label>
-          </p>
 
           <div>
             <input
