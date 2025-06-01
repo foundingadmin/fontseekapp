@@ -60,6 +60,17 @@ export const QuizResults: React.FC = () => {
     return descriptions[trait.toLowerCase()][score - 1];
   };
 
+  const getTraitEndLabels = (trait: string): [string, string] => {
+    const labels: Record<string, [string, string]> = {
+      tone: ['Formal', 'Casual'],
+      energy: ['Calm', 'Energetic'],
+      design: ['Minimal', 'Expressive'],
+      era: ['Classic', 'Modern'],
+      structure: ['Organic', 'Geometric']
+    };
+    return labels[trait.toLowerCase()];
+  };
+
   const generatePDF = async () => {
     if (!recommendations || !scores || isGeneratingPDF) return;
     
@@ -77,7 +88,6 @@ export const QuizResults: React.FC = () => {
         const logo = new Image();
         logo.onload = () => {
           try {
-            // Create a canvas element to draw the SVG
             const canvas = document.createElement('canvas');
             canvas.width = logo.width;
             canvas.height = logo.height;
@@ -87,13 +97,10 @@ export const QuizResults: React.FC = () => {
               throw new Error('Failed to get canvas context');
             }
 
-            // Draw the SVG image onto the canvas
             ctx.drawImage(logo, 0, 0);
-            
-            // Convert canvas to PNG data URL
             const pngDataUrl = canvas.toDataURL('image/png');
             
-            // Add the PNG image to the PDF
+            // Add the PNG image to the PDF in black
             doc.addImage(pngDataUrl, 'PNG', 150, 15, 40, 12);
             resolve(null);
           } catch (error) {
@@ -113,7 +120,7 @@ export const QuizResults: React.FC = () => {
       doc.setTextColor(100, 100, 100);
       doc.text('Font Personality Profile', 20, 40);
 
-      // Trait Scores with visual bars
+      // Trait Scores with visual bars and end labels
       doc.setFontSize(12);
       doc.setTextColor(0, 0, 0);
       const traits = [
@@ -127,22 +134,35 @@ export const QuizResults: React.FC = () => {
       let y = 60;
       traits.forEach((trait) => {
         const score = scores[trait.name.toLowerCase() as keyof typeof scores];
+        const [startLabel, endLabel] = getTraitEndLabels(trait.name);
         
         // Trait name and description
         doc.setFontSize(11);
         doc.text(`${trait.name}: ${trait.description}`, 20, y);
         
-        // Draw scale bar
+        // Draw scale bar with end labels
         y += 5;
+        
+        // Start label
+        doc.setFontSize(8);
+        doc.setTextColor(128, 128, 128);
+        doc.text(startLabel, 20, y - 2);
+        
+        // End label
+        const endLabelWidth = doc.getTextWidth(endLabel);
+        doc.text(endLabel, 120 - endLabelWidth, y - 2);
+        
+        // Bar
         doc.setFillColor(240, 240, 240);
         doc.rect(20, y, 100, 3, 'F');
         
-        // Draw position marker
+        // Position marker
         const markerPosition = 20 + ((score - 1) / 4) * 100;
         doc.setFillColor(67, 218, 122); // emerald-500
         doc.circle(markerPosition, y + 1.5, 2, 'F');
         
-        y += 12;
+        doc.setTextColor(0, 0, 0);
+        y += 15;
       });
 
       // Primary Font Recommendation
@@ -152,9 +172,16 @@ export const QuizResults: React.FC = () => {
       
       y += 10;
       doc.setFontSize(20);
-      doc.text(recommendations.primary.name, 20, y);
+      const fontName = recommendations.primary.name;
+      doc.text(fontName, 20, y);
+      
+      // Add clickable font link
+      const fontLink = recommendations.primary.googleFontsLink;
+      doc.setTextColor(0, 100, 200);
+      doc.link(20, y - 5, doc.getTextWidth(fontName), 7, { url: fontLink });
       
       y += 10;
+      doc.setTextColor(0, 0, 0);
       doc.setFontSize(12);
       doc.text('Selected based on your brand\'s personality', 20, y);
 
@@ -163,32 +190,49 @@ export const QuizResults: React.FC = () => {
       doc.setFontSize(14);
       doc.text('How to Use This Font in Your Website', 20, y);
 
+      // Code blocks with proper wrapping
       y += 10;
       doc.setFontSize(10);
       const embedCode = `<link href="https://fonts.googleapis.com/css2?family=${recommendations.primary.name.replace(/ /g, '+')}:wght@400;500;700&display=swap" rel="stylesheet">`;
       doc.text('Add to your HTML <head>:', 20, y);
       
-      // Code block with background
       y += 7;
       doc.setFillColor(245, 245, 245);
-      doc.roundedRect(20, y - 5, 170, 12, 2, 2, 'F');
-      doc.text(embedCode, 23, y + 1);
+      const codeBlockHeight = 12;
+      doc.roundedRect(20, y - 5, 170, codeBlockHeight, 2, 2, 'F');
+      
+      // Split long code into multiple lines if needed
+      const maxWidth = 164; // Slightly less than block width for padding
+      let remainingCode = embedCode;
+      let lineY = y + 1;
+      
+      while (remainingCode.length > 0 && lineY < y + codeBlockHeight - 2) {
+        let lineEnd = remainingCode.length;
+        while (doc.getTextWidth(remainingCode.substring(0, lineEnd)) > maxWidth) {
+          lineEnd--;
+        }
+        
+        doc.text(remainingCode.substring(0, lineEnd), 23, lineY);
+        remainingCode = remainingCode.substring(lineEnd);
+        lineY += 4;
+      }
 
       y += 15;
       doc.text('Use in your CSS:', 20, y);
       
       y += 7;
       doc.setFillColor(245, 245, 245);
-      doc.roundedRect(20, y - 5, 170, 12, 2, 2, 'F');
+      doc.roundedRect(20, y - 5, 170, codeBlockHeight, 2, 2, 'F');
       doc.text(`font-family: '${recommendations.primary.name}', sans-serif;`, 23, y + 1);
 
-      // Call to Action
-      y += 30;
+      // Call to Action (adjusted to fit within page)
+      y = Math.min(y + 30, 250); // Ensure it stays within page bounds
       doc.setDrawColor(200, 200, 200);
       doc.line(20, y, 190, y);
 
       y += 15;
       doc.setFontSize(14);
+      doc.setTextColor(0, 0, 0);
       doc.text('Need help bringing your brand to life?', 20, y);
 
       y += 10;
