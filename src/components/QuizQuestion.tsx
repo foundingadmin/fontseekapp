@@ -49,9 +49,11 @@ export const QuizQuestion: React.FC = () => {
         )}
       </div>
       
-      <h2 className="text-2xl md:text-3xl font-semibold text-white mb-8 text-center">
-        {question.question}
-      </h2>
+      <div className="min-h-[160px] flex flex-col justify-center mb-8">
+        <h2 className="text-2xl md:text-3xl font-semibold text-white text-center">
+          {question.question}
+        </h2>
+      </div>
       
       <div className="flex flex-col gap-4">
         {[
