@@ -20,7 +20,54 @@ export const IntroScreen: React.FC = () => {
           region: "na2",
           portalId: "242336861",
           formId: "5d375dfe-3d01-4816-9192-93063d111929",
-          target: "#fontseek-email-form"
+          target: "#fontseek-email-form",
+          css: `
+            .hs-form {
+              font-family: inherit;
+            }
+            .hs-form-field label {
+              display: none;
+            }
+            .hs-input {
+              width: 100% !important;
+              padding: 0.75rem 1.5rem !important;
+              background-color: #0F111A !important;
+              border: 1px solid #2C2F3B !important;
+              border-radius: 9999px !important;
+              color: white !important;
+              font-size: 0.875rem !important;
+              margin-bottom: 1rem !important;
+            }
+            .hs-input::placeholder {
+              color: rgba(255, 255, 255, 0.4) !important;
+            }
+            .hs-input:focus {
+              outline: none !important;
+              box-shadow: 0 0 0 2px #43DA7A !important;
+            }
+            .hs-button {
+              width: 100% !important;
+              padding: 0.75rem 1.5rem !important;
+              background-color: #43DA7A !important;
+              border: none !important;
+              border-radius: 9999px !important;
+              color: black !important;
+              font-weight: 600 !important;
+              font-size: 0.875rem !important;
+              cursor: pointer !important;
+              transition: background-color 0.2s !important;
+            }
+            .hs-button:hover {
+              background-color: #3ac76b !important;
+            }
+            .hs-error-msg {
+              color: #ef4444 !important;
+              font-size: 0.75rem !important;
+              margin-top: -0.5rem !important;
+              margin-bottom: 0.5rem !important;
+              padding-left: 1.5rem !important;
+            }
+          `
         });
       }
     };
