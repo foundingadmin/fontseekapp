@@ -3,7 +3,7 @@ import { useQuizStore } from '../store/quizStore';
 import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle } from 'lucide-react';
 import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
-import { jsPDF } from "jspdf";
+import { generateFontReport } from '../utils/pdfGenerator';
 
 function loadGoogleFont(fontName: string) {
   const formatted = fontName.replace(/ /g, '+');
@@ -48,87 +48,6 @@ export const QuizResults: React.FC = () => {
     setTimeout(() => setIsShuffling(false), 500);
   };
 
-  const generatePDF = async () => {
-    if (!recommendations || !scores) return;
-
-    const doc = new jsPDF();
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const margin = 20;
-    const contentWidth = pageWidth - (margin * 2);
-
-    // Title
-    doc.setFontSize(24);
-    doc.text('FontSeek Report', margin, margin);
-
-    // Font Personality Profile
-    doc.setFontSize(18);
-    doc.text('Font Personality Profile', margin, margin + 30);
-
-    // Trait bars
-    const traits = [
-      { name: 'Tone', value: scores.tone, left: 'Formal', right: 'Casual' },
-      { name: 'Energy', value: scores.energy, left: 'Calm', right: 'Energetic' },
-      { name: 'Design', value: scores.design, left: 'Minimal', right: 'Expressive' },
-      { name: 'Era', value: scores.era, left: 'Classic', right: 'Modern' },
-      { name: 'Structure', value: scores.structure, left: 'Organic', right: 'Geometric' }
-    ];
-
-    let yOffset = margin + 50;
-    traits.forEach((trait, index) => {
-      // Trait name
-      doc.setFontSize(12);
-      doc.text(`${trait.name}: ${trait.left} → ${trait.right}`, margin, yOffset + (index * 20));
-
-      // Bar background
-      doc.setFillColor(240, 240, 240);
-      doc.rect(margin + 50, yOffset - 4 + (index * 20), 100, 4, 'F');
-
-      // Bar value
-      doc.setFillColor(67, 218, 122); // emerald-500
-      doc.rect(margin + 50, yOffset - 4 + (index * 20), (trait.value / 5) * 100, 4, 'F');
-    });
-
-    // Font Recommendation
-    yOffset = margin + 160;
-    doc.setFontSize(18);
-    doc.text('Your Recommended Font', margin, yOffset);
-
-    doc.setFontSize(24);
-    doc.text(recommendations.primary.name, margin, yOffset + 15);
-
-    // Font Preview
-    doc.setFontSize(12);
-    doc.text('What Your Font Looks Like:', margin, yOffset + 35);
-
-    // Code blocks
-    yOffset = yOffset + 80;
-    doc.setFontSize(14);
-    doc.text('How to Use This Font:', margin, yOffset);
-
-    // HTML
-    doc.setFontSize(10);
-    doc.setFillColor(245, 245, 245);
-    const htmlCode = `<link href="https://fonts.googleapis.com/css2?family=${recommendations.primary.name.replace(/ /g, '+')}:wght@400;500;700&display=swap" rel="stylesheet">`;
-    doc.rect(margin, yOffset + 10, contentWidth, 15, 'F');
-    doc.text(htmlCode, margin + 5, yOffset + 20);
-
-    // CSS
-    const cssCode = `font-family: '${recommendations.primary.name}', ${recommendations.primary.embedCode.split(',').slice(1).join(',')};`;
-    doc.rect(margin, yOffset + 35, contentWidth, 15, 'F');
-    doc.text(cssCode, margin + 5, yOffset + 45);
-
-    // Footer
-    const footerY = doc.internal.pageSize.getHeight() - margin;
-    doc.setFontSize(12);
-    doc.text('Ready to take your brand further?', margin, footerY - 20);
-    doc.setTextColor(67, 218, 122);
-    doc.text('Visit foundingcreative.com', margin, footerY - 10);
-    doc.text('Or email us at admin@foundingcreative.com', margin, footerY);
-
-    // Save the PDF
-    doc.save('FontSeek-Report.pdf');
-  };
-
   const getTopTraits = (font: typeof recommendations.primary) => {
     const traits = [
       { name: 'Casual', value: font.tone },
@@ -143,6 +62,19 @@ export const QuizResults: React.FC = () => {
       .slice(0, 3)
       .filter(trait => trait.value >= 3)
       .map(trait => trait.name);
+  };
+
+  const handleDownloadReport = () => {
+    if (!recommendations || !scores) return;
+
+    const traits = getTopTraits(recommendations.primary);
+    const doc = generateFontReport({
+      font: recommendations.primary,
+      scores,
+      traits
+    });
+
+    doc.save('FontSeek-Report.pdf');
   };
 
   if (!recommendations || !scores) {
@@ -164,7 +96,7 @@ export const QuizResults: React.FC = () => {
           Retake Quiz
         </button>
         <button
-          onClick={generatePDF}
+          onClick={handleDownloadReport}
           className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
         >
           <Share2 className="w-4 h-4" />
