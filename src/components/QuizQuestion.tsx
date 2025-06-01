@@ -15,7 +15,7 @@ export const QuizQuestion: React.FC = () => {
     setTimeout(() => {
       setAnswer(currentQuestion, value);
       setSelectedAnswer(null);
-    }, 300);
+    }, 400); // Increased animation duration
   };
 
   useEffect(() => {
@@ -69,7 +69,7 @@ export const QuizQuestion: React.FC = () => {
               onClick={() => !selectedAnswer && handleSelect(option.value as 'A' | 'B')}
               disabled={selectedAnswer !== null}
               className={clsx(
-                'w-full p-6 rounded-xl border-2 transition-all duration-200',
+                'w-full p-6 rounded-xl border-2 transition-all duration-400 ease-in-out',
                 'text-left text-lg font-medium group',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75',
                 isSelected
@@ -81,7 +81,7 @@ export const QuizQuestion: React.FC = () => {
               <div className="flex items-center gap-4">
                 <div
                   className={clsx(
-                    'w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200',
+                    'flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-400 ease-in-out',
                     isSelected
                       ? 'border-emerald-500 bg-emerald-500 ring-2 ring-emerald-500/20'
                       : 'border-white group-hover:border-white/60'
@@ -91,7 +91,7 @@ export const QuizQuestion: React.FC = () => {
                     <Check className="w-4 h-4 text-black" />
                   )}
                 </div>
-                <span>{option.label}</span>
+                <span className="flex-1">{option.label}</span>
               </div>
             </button>
           );
@@ -99,7 +99,7 @@ export const QuizQuestion: React.FC = () => {
       </div>
 
       <div className="mt-8 text-center text-sm text-white/60">
-        <p className="md:hidden">Click an option to select your answer</p>
+        <p className="md:hidden">Tap an option to select your answer</p>
         <p className="hidden md:block">
           Click or use <span className="inline-flex items-center mx-1"><ArrowUp className="w-4 h-4" /></span> 
           and <span className="inline-flex items-center mx-1"><ArrowDown className="w-4 h-4" /></span> 
