@@ -108,9 +108,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       currentQuestion: 1,
       answers: {},
       scores: null,
-      recommendations: null,
-      hasStarted: false,
-      email: null
+      recommendations: null
     });
   },
 
