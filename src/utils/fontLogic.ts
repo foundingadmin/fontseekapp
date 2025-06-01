@@ -1,8 +1,52 @@
 import type { UserScores, FontRecommendation, FontData } from '../types';
 import { fonts } from '../data/fonts';
+import { aestheticScoring } from '../data/aestheticScoring';
 
-// Default Humanist Sans fallback fonts
-const fallbackFonts: FontData[] = [
+// Grotesque Sans default fonts
+const grotesqueSansFonts: FontData[] = [
+  {
+    name: 'Chivo',
+    googleFontsLink: 'https://fonts.google.com/specimen/Chivo',
+    tone: 3,
+    energy: 3,
+    design: 2,
+    era: 5,
+    structure: 4,
+    aestheticStyle: 'Grotesque Sans',
+    embedCode: "Chivo', sans-serif",
+    personalityTags: ['Neutral', 'Technical', 'Contemporary'],
+    recommendedFor: ['SaaS', 'News', 'Product Design']
+  },
+  {
+    name: 'Work Sans',
+    googleFontsLink: 'https://fonts.google.com/specimen/Work+Sans',
+    tone: 3,
+    energy: 3,
+    design: 2,
+    era: 5,
+    structure: 4,
+    aestheticStyle: 'Grotesque Sans',
+    embedCode: "Work Sans', sans-serif",
+    personalityTags: ['Versatile', 'Clean', 'Balanced'],
+    recommendedFor: ['Startups', 'Content', 'Marketing']
+  },
+  {
+    name: 'Barlow',
+    googleFontsLink: 'https://fonts.google.com/specimen/Barlow',
+    tone: 3,
+    energy: 4,
+    design: 3,
+    era: 5,
+    structure: 5,
+    aestheticStyle: 'Grotesque Sans',
+    embedCode: "Barlow', sans-serif",
+    personalityTags: ['Neutral', 'Clean', 'Versatile'],
+    recommendedFor: ['Corporate', 'SaaS']
+  }
+];
+
+// Humanist Sans fallback fonts
+const humanistSansFonts: FontData[] = [
   {
     name: 'Karla',
     googleFontsLink: 'https://fonts.google.com/specimen/Karla',
@@ -17,17 +61,17 @@ const fallbackFonts: FontData[] = [
     recommendedFor: ['DTC', 'Services']
   },
   {
-    name: 'Work Sans',
-    googleFontsLink: 'https://fonts.google.com/specimen/Work+Sans',
+    name: 'PT Sans',
+    googleFontsLink: 'https://fonts.google.com/specimen/PT+Sans',
     tone: 3,
-    energy: 3,
+    energy: 2,
     design: 2,
-    era: 5,
+    era: 3,
     structure: 4,
     aestheticStyle: 'Humanist Sans',
-    embedCode: "Work Sans', sans-serif",
-    personalityTags: ['Versatile', 'Clean', 'Balanced'],
-    recommendedFor: ['Startups', 'Content', 'Marketing']
+    embedCode: "PT Sans', sans-serif",
+    personalityTags: ['Open', 'Versatile', 'Professional'],
+    recommendedFor: ['Publishing', 'Web', 'Service']
   },
   {
     name: 'Cabin',
@@ -45,40 +89,47 @@ const fallbackFonts: FontData[] = [
 ];
 
 function determineAestheticStyle(scores: UserScores): string {
-  // Existing style determination logic...
-  if (scores.structure === 5 && scores.design <= 2) {
-    return 'Monospace';
+  // Check for Grotesque Sans first
+  const lowScores = [scores.tone, scores.energy, scores.design, scores.era].filter(s => s <= 2).length;
+  if (scores.structure === 3 && lowScores >= 3) {
+    return 'Grotesque Sans';
   }
-  
-  if (scores.tone <= 2 && scores.energy <= 2 && scores.era <= 2) {
-    return 'Classic Serif';
+
+  // Check other styles based on scoring ranges
+  for (const [style, ranges] of Object.entries(aestheticScoring)) {
+    const isMatch = 
+      scores.tone >= ranges.toneMin && scores.tone <= ranges.toneMax &&
+      scores.energy >= ranges.energyMin && scores.energy <= ranges.energyMax &&
+      scores.design >= ranges.designMin && scores.design <= ranges.designMax &&
+      scores.era >= ranges.eraMin && scores.era <= ranges.eraMax &&
+      scores.structure >= ranges.structureMin && scores.structure <= ranges.structureMax;
+
+    if (isMatch) {
+      return style;
+    }
   }
-  
-  if (scores.structure >= 4 && scores.tone <= 3) {
-    return 'Condensed Sans';
-  }
-  
-  if (scores.structure === 5 && scores.design >= 4) {
-    return 'Geometric Sans';
-  }
-  
+
   // Default to Humanist Sans if no clear match
   return 'Humanist Sans';
 }
 
 function getMatchingFonts(aestheticStyle: string): FontData[] {
   try {
+    if (aestheticStyle === 'Grotesque Sans') {
+      return grotesqueSansFonts;
+    }
+
     const matchingFonts = fonts.filter(font => font.aestheticStyle === aestheticStyle);
     
     if (matchingFonts.length === 0) {
       console.warn(`No fonts found for style '${aestheticStyle}'. Falling back to Humanist Sans.`);
-      return fallbackFonts;
+      return humanistSansFonts;
     }
     
     return matchingFonts;
   } catch (error) {
     console.warn('Error finding matching fonts:', error);
-    return fallbackFonts;
+    return humanistSansFonts;
   }
 }
 
@@ -90,20 +141,17 @@ export function calculateFontRecommendations(scores: UserScores): FontRecommenda
   if (matchingFonts.length < 3) {
     console.warn(`Not enough fonts found for style '${aestheticStyle}'. Using fallbacks to complete the set.`);
     return {
-      primary: fallbackFonts[0],
-      secondary: fallbackFonts[1],
-      tertiary: fallbackFonts[2],
+      primary: humanistSansFonts[0],
+      secondary: humanistSansFonts[1],
+      tertiary: humanistSansFonts[2],
       aestheticStyle: 'Humanist Sans'
     };
   }
   
-  // Randomize the order of matching fonts
-  const shuffled = [...matchingFonts].sort(() => Math.random() - 0.5);
-  
   return {
-    primary: shuffled[0],
-    secondary: shuffled[1],
-    tertiary: shuffled[2],
+    primary: matchingFonts[0],
+    secondary: matchingFonts[1],
+    tertiary: matchingFonts[2],
     aestheticStyle
   };
 }
