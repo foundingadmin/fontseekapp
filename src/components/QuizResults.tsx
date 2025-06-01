@@ -3,6 +3,14 @@ import { useQuizStore } from '../store/quizStore';
 import { ArrowRight, RefreshCw, Share2 } from 'lucide-react';
 import { RadarChart } from './RadarChart';
 
+function loadGoogleFont(fontName: string) {
+  const formatted = fontName.replace(/ /g, '+');
+  const link = document.createElement('link');
+  link.href = `https://fonts.googleapis.com/css2?family=${formatted}:wght@400;500;700&display=swap`;
+  link.rel = 'stylesheet';
+  document.head.appendChild(link);
+}
+
 export const QuizResults: React.FC = () => {
   const { scores, recommendations, calculateResults, resetQuiz } = useQuizStore();
 
@@ -11,6 +19,15 @@ export const QuizResults: React.FC = () => {
       calculateResults();
     }
   }, [scores, recommendations, calculateResults]);
+
+  useEffect(() => {
+    if (recommendations) {
+      // Load fonts when recommendations are available
+      loadGoogleFont(recommendations.primary.name);
+      loadGoogleFont(recommendations.secondary.name);
+      loadGoogleFont(recommendations.tertiary.name);
+    }
+  }, [recommendations]);
 
   if (!recommendations || !scores) {
     return (
@@ -60,21 +77,21 @@ export const QuizResults: React.FC = () => {
           </a>
         </div>
         
-        <div style={{ fontFamily: recommendations.primary.embedCode }}>
+        <div style={{ fontFamily: recommendations.primary.name }}>
           <div className="mb-8">
-            <h1 style={{ fontFamily: recommendations.primary.embedCode, fontWeight: 700 }} className="text-5xl">
+            <h1 style={{ fontWeight: 700 }} className="text-5xl">
               The quick brown fox jumps over the lazy dog
             </h1>
             <div className="mt-1 text-white/40 text-sm">5xl / Bold (700)</div>
           </div>
           <div className="mb-8">
-            <h2 style={{ fontFamily: recommendations.primary.embedCode, fontWeight: 500 }} className="text-4xl">
+            <h2 style={{ fontWeight: 500 }} className="text-4xl">
               Pack my box with five dozen liquor jugs
             </h2>
             <div className="mt-1 text-white/40 text-sm">4xl / Medium (500)</div>
           </div>
           <div className="mb-8">
-            <p style={{ fontFamily: recommendations.primary.embedCode, fontWeight: 400 }} className="text-2xl">
+            <p style={{ fontWeight: 400 }} className="text-2xl">
               How vexingly quick daft zebras jump
             </p>
             <div className="mt-1 text-white/40 text-sm">2xl / Regular (400)</div>
@@ -100,11 +117,11 @@ export const QuizResults: React.FC = () => {
                 View Font <ArrowRight className="w-4 h-4" />
               </a>
             </div>
-            <div>
-              <p style={{ fontFamily: font.embedCode, fontWeight: 700 }} className="text-2xl mb-4">
+            <div style={{ fontFamily: font.name }}>
+              <p style={{ fontWeight: 700 }} className="text-2xl mb-4">
                 The quick brown fox jumps over the lazy dog
               </p>
-              <p style={{ fontFamily: font.embedCode, fontWeight: 400 }} className="text-base mb-1">
+              <p style={{ fontWeight: 400 }} className="text-base mb-1">
                 Pack my box with five dozen liquor jugs
               </p>
               <p className="text-sm text-white/60">{font.personalityTags.join(' • ')}</p>
