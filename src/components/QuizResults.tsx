@@ -181,6 +181,22 @@ export const QuizResults: React.FC = () => {
     doc.save('FontSeek-Recommendation.pdf');
   };
 
+  const getTopTraits = (font: typeof recommendations.primary) => {
+    const traits = [
+      { name: 'Casual', value: font.tone },
+      { name: 'Energetic', value: font.energy },
+      { name: 'Expressive', value: font.design },
+      { name: 'Modern', value: font.era },
+      { name: 'Geometric', value: font.structure }
+    ];
+    
+    return traits
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 3)
+      .filter(trait => trait.value >= 3)
+      .map(trait => trait.name);
+  };
+
   if (!recommendations || !scores) {
     return (
       <div className="flex items-center justify-center">
@@ -217,13 +233,26 @@ export const QuizResults: React.FC = () => {
 
       {/* Primary Font */}
       <div className="mb-16 bg-white/10 rounded-xl overflow-hidden backdrop-blur-sm">
-        <div className="p-8">
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold text-white mb-2">Your Top Font Recommendation</h2>
-            <p className="text-2xl font-bold text-white">{recommendations.primary.name}</p>
-            <p className="text-sm text-white/60 mt-2">Based on your answers, this Google Web Font is the best match for your brand. It's free to use and ready to download or embed today.</p>
+        <div className="bg-[#1C1F26] px-6 py-5">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-semibold text-white mb-2">Your Top Font Recommendation</h2>
+              <p className="text-2xl font-bold text-white">{recommendations.primary.name}</p>
+              <p className="text-sm text-white/60 mt-2 max-w-xl">
+                Based on your answers, this Google Web Font is the best match for your brand. It's free to use and ready to download or embed today.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {getTopTraits(recommendations.primary).map((trait) => (
+                <span key={trait} className="bg-emerald-500/10 text-emerald-400 text-xs font-medium px-3 py-1 rounded-full">
+                  {trait}
+                </span>
+              ))}
+            </div>
           </div>
+        </div>
 
+        <div className="p-8">
           <div className="flex gap-2 mb-8">
             <button
               onClick={shuffleCopyPack}
