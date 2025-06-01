@@ -25,11 +25,11 @@ interface RadarChartProps {
 }
 
 const traitDescriptions = {
-  Tone: 'Formal vs. Casual (your brand voice)',
-  Energy: 'Calm vs. Energetic (brand intensity)',
-  Design: 'Minimal vs. Expressive (visual styling)',
-  Era: 'Classic vs. Modern (timelessness)',
-  Structure: 'Organic vs. Geometric (typographic shape language)',
+  Tone: 'Your brand voice — formal or casual',
+  Energy: 'Brand intensity — calm or energetic',
+  Design: 'Visual styling — minimal or expressive',
+  Era: 'Timelessness — classic or modern',
+  Structure: 'Shape language — organic or geometric',
 };
 
 export const RadarChart: React.FC<RadarChartProps> = ({ scores }) => {
@@ -90,7 +90,7 @@ export const RadarChart: React.FC<RadarChartProps> = ({ scores }) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="text-center">
         <h2 className="text-xl font-semibold mb-2">Your Brand's Font Personality Profile</h2>
         <p className="text-white/60">
@@ -102,18 +102,24 @@ export const RadarChart: React.FC<RadarChartProps> = ({ scores }) => {
         <Radar data={data} options={options} />
       </div>
 
-      <div className="text-center">
+      <div className="text-center mb-4">
         <p className="text-sm text-white/60">
           Higher scores indicate your brand leans more toward that trait in its font personality.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-white/60 max-w-2xl mx-auto">
+      <div className="flex flex-wrap justify-center gap-4">
         {Object.entries(traitDescriptions).map(([trait, description]) => (
-          <div key={trait} className="bg-white/5 rounded-lg p-3">
-            <span className="font-medium text-white/80">{trait}:</span>
-            <br />
-            {description}
+          <div 
+            key={trait} 
+            className="flex-1 min-w-[180px] max-w-[200px] bg-white/5 rounded-lg p-4 hover:bg-white/10 transition-colors cursor-pointer"
+          >
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-white/80 mb-2">
+              {trait}
+            </h3>
+            <p className="text-sm text-white/60 leading-snug">
+              {description}
+            </p>
           </div>
         ))}
       </div>
