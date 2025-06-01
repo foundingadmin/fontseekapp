@@ -13,7 +13,16 @@ interface QuizStore {
   previousQuestion: () => void;
   calculateResults: () => void;
   resetQuiz: () => void;
+  skipToResults: () => void;
 }
+
+const generateRandomScores = (): UserScores => ({
+  tone: Math.floor(Math.random() * 5) + 1,
+  energy: Math.floor(Math.random() * 5) + 1,
+  design: Math.floor(Math.random() * 5) + 1,
+  era: Math.floor(Math.random() * 5) + 1,
+  structure: Math.floor(Math.random() * 5) + 1,
+});
 
 export const useQuizStore = create<QuizStore>((set, get) => ({
   currentQuestion: 1,
@@ -98,6 +107,16 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       answers: {},
       scores: null,
       recommendations: null
+    });
+  },
+
+  skipToResults: () => {
+    const randomScores = generateRandomScores();
+    const recommendations = calculateFontRecommendations(randomScores);
+    set({
+      answers: { 1: 'A', 2: 'A', 3: 'A', 4: 'A', 5: 'A', 6: 'A', 7: 'A', 8: 'A', 9: 'A', 10: 'A' },
+      scores: randomScores,
+      recommendations
     });
   }
 }));
