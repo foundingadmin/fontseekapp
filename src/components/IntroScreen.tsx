@@ -4,7 +4,6 @@ import { useQuizStore } from '../store/quizStore';
 export const IntroScreen: React.FC = () => {
   const { startQuiz, skipToResults } = useQuizStore();
   const [isFormLoaded, setIsFormLoaded] = useState(false);
-  const [email, setEmail] = useState('');
 
   useEffect(() => {
     // Load HubSpot script
@@ -18,11 +17,15 @@ export const IntroScreen: React.FC = () => {
           portalId: "242336861",
           formId: "5d375dfe-3d01-4816-9192-93063d111929",
           target: '#hubspot-form-container',
+          onFormReady: () => {
+            setIsFormLoaded(true);
+          },
           onFormSubmitted: (form) => {
             startQuiz(form.submittedAt);
-          }
+          },
+          cssClass: 'hubspot-form',
+          inlineMessage: "Starting quiz..."
         });
-        setIsFormLoaded(true);
       }
     };
     document.head.appendChild(script);
