@@ -66,10 +66,22 @@ export const QuizResults: React.FC = () => {
       img.onerror = reject;
     });
 
+    // Convert SVG to PNG using canvas
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0);
+    const pngDataUrl = canvas.toDataURL('image/png');
+
     // Add logo
     const logoWidth = 60;
     const logoHeight = (img.height / img.width) * logoWidth;
-    doc.addImage(img, 'PNG', margin, margin, logoWidth, logoHeight);
+    doc.addImage(pngDataUrl, 'PNG', margin, margin, logoWidth, logoHeight);
 
     // Title
     doc.setFontSize(24);
