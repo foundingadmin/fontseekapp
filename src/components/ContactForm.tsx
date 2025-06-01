@@ -24,10 +24,10 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
       if (!formRef.current) return;
 
       const result = await emailjs.sendForm(
-        'YOUR_SERVICE_ID', // Replace with your EmailJS service ID
-        'YOUR_TEMPLATE_ID', // Replace with your EmailJS template ID
+        'service_wxwzny7',
+        'template_bpieskn',
         formRef.current,
-        'YOUR_PUBLIC_KEY' // Replace with your EmailJS public key
+        'YOUR_PUBLIC_KEY' // You'll need to provide your public key
       );
 
       if (result.status === 200) {
