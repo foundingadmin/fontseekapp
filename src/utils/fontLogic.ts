@@ -4,9 +4,12 @@ import { fonts } from '../data/fonts';
 function determineAestheticStyle(scores: UserScores): string {
   const { tone, energy, design, era, structure } = scores;
 
+  // Immediately exclude Display/Bubbly if tone or structure is too low
+  const isDisplayBubblyEligible = tone > 2 && structure > 2;
+
   // Display / Bubbly
   // High energy, expressive designs with casual tone
-  if (tone >= 4 && energy >= 4 && design >= 4) {
+  if (isDisplayBubblyEligible && tone >= 4 && energy >= 4 && design >= 4) {
     return 'Display / Bubbly';
   }
 
@@ -65,10 +68,19 @@ function determineAestheticStyle(scores: UserScores): string {
 function calculateFontMatchScore(font: FontData, scores: UserScores): number {
   const traits = ['tone', 'energy', 'design', 'era', 'structure'] as const;
   
-  return traits.reduce((score, trait) => {
+  // Add penalty for Display/Bubbly fonts when tone or structure is low
+  let score = traits.reduce((total, trait) => {
     const difference = Math.abs(font[trait] - scores[trait]);
-    return score + (5 - difference);
+    return total + (5 - difference);
   }, 0);
+
+  // Apply penalties for Display/Bubbly fonts with low tone or structure
+  if (font.aestheticStyle === 'Display / Bubbly') {
+    if (scores.tone <= 2) score -= 10;
+    if (scores.structure <= 2) score -= 10;
+  }
+
+  return score;
 }
 
 function getFallbackFonts(scores: UserScores, usedFonts: Set<string>): FontData[] {
@@ -77,7 +89,8 @@ function getFallbackFonts(scores: UserScores, usedFonts: Set<string>): FontData[
   
   let fallbackStyles: string[] = [];
   
-  if (tone >= 4 && energy >= 3) {
+  // Exclude Display/Bubbly from fallbacks if tone or structure is low
+  if (tone > 2 && structure > 2 && energy >= 4) {
     fallbackStyles.push('Display / Bubbly', 'Rounded Sans');
   } else if (structure >= 4 && era >= 4) {
     fallbackStyles.push('Geometric Sans', 'Monospace');
@@ -90,7 +103,9 @@ function getFallbackFonts(scores: UserScores, usedFonts: Set<string>): FontData[
   return fonts
     .filter(font => 
       fallbackStyles.includes(font.aestheticStyle) && 
-      !usedFonts.has(font.name)
+      !usedFonts.has(font.name) &&
+      // Additional check to exclude Display/Bubbly fonts when inappropriate
+      !(font.aestheticStyle === 'Display / Bubbly' && (tone <= 2 || structure <= 2))
     )
     .sort((a, b) => calculateFontMatchScore(b, scores) - calculateFontMatchScore(a, scores));
 }
@@ -99,9 +114,17 @@ export function calculateFontRecommendations(scores: UserScores): FontRecommenda
   const aestheticStyle = determineAestheticStyle(scores);
   const usedFonts = new Set<string>();
 
+  // Filter out Display/Bubbly fonts if tone or structure is too low
+  const isDisplayBubblyEligible = scores.tone > 2 && scores.structure > 2;
+  
   // Get fonts matching the primary aesthetic style
   let matchingFonts = fonts
-    .filter(font => font.aestheticStyle === aestheticStyle)
+    .filter(font => {
+      if (font.aestheticStyle === 'Display / Bubbly' && !isDisplayBubblyEligible) {
+        return false;
+      }
+      return font.aestheticStyle === aestheticStyle;
+    })
     .sort((a, b) => calculateFontMatchScore(b, scores) - calculateFontMatchScore(a, scores));
 
   // Select primary font
