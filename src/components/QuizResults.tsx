@@ -96,8 +96,8 @@ export const QuizResults: React.FC = () => {
         <div className={`rounded-lg shadow-lg p-8 transition-colors duration-300 ${
           isDarkMode ? 'bg-neutral-900' : 'bg-white'
         }`}>
-          <div className="relative min-h-[600px]">
-            <div className="space-y-8 mb-16">
+          <div className="flex flex-col">
+            <div className="space-y-8 mb-8">
               <div>
                 {showLabels && <div className={`text-xs mb-1 ${
                   isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
@@ -177,7 +177,7 @@ export const QuizResults: React.FC = () => {
               </div>
             </div>
 
-            <div className="absolute bottom-0 left-0 right-0 flex flex-col md:grid md:grid-cols-3 gap-2">
+            <div className="flex flex-col gap-2 mt-8">
               <button
                 onClick={shuffleCopyPack}
                 disabled={isShuffling}
