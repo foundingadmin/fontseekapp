@@ -50,7 +50,7 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-xl font-semibold mb-2">Your Brand's Font Personality Profile</h2>
+        <h2 className="text-xl font-semibold mb-2">Your Brand Personality</h2>
         <p className="text-white/60">
           This chart shows how your brand expresses itself across 5 key personality traits based on your answers.
         </p>
@@ -60,7 +60,7 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
         {(Object.keys(traits) as Array<keyof UserScores>).map((traitKey) => {
           const trait = traits[traitKey];
           const score = scores[traitKey];
-          const percentage = ((score - 1) / 4) * 100; // Convert 1-5 score to 0-100%
+          const percentage = ((score - 1) / 4) * 100;
 
           return (
             <div key={traitKey} className="space-y-2">
