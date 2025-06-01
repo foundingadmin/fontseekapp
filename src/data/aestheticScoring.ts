@@ -16,30 +16,6 @@ interface AestheticScoring {
 }
 
 export const aestheticScoring: AestheticScoring = {
-  'Geometric Sans': {
-    toneMin: 2,
-    toneMax: 4,
-    energyMin: 2,
-    energyMax: 4,
-    designMin: 1,
-    designMax: 3,
-    eraMin: 4,
-    eraMax: 5,
-    structureMin: 4,
-    structureMax: 5
-  },
-  'Grotesque Sans': {
-    toneMin: 2,
-    toneMax: 4,
-    energyMin: 3,
-    energyMax: 4,
-    designMin: 2,
-    designMax: 3,
-    eraMin: 3,
-    eraMax: 5,
-    structureMin: 3,
-    structureMax: 5
-  },
   'Humanist Sans': {
     toneMin: 3,
     toneMax: 5,
@@ -52,17 +28,17 @@ export const aestheticScoring: AestheticScoring = {
     structureMin: 2,
     structureMax: 4
   },
-  'Rounded Sans': {
-    toneMin: 3,
-    toneMax: 5,
-    energyMin: 3,
-    energyMax: 5,
-    designMin: 3,
-    designMax: 4,
+  'Geometric Sans': {
+    toneMin: 2,
+    toneMax: 4,
+    energyMin: 2,
+    energyMax: 4,
+    designMin: 1,
+    designMax: 3,
     eraMin: 4,
     eraMax: 5,
-    structureMin: 2,
-    structureMax: 3
+    structureMin: 4,
+    structureMax: 5
   },
   'Condensed Sans': {
     toneMin: 3,
@@ -87,5 +63,17 @@ export const aestheticScoring: AestheticScoring = {
     eraMax: 5,
     structureMin: 4,
     structureMax: 5
+  },
+  'Rounded Sans': {
+    toneMin: 3,
+    toneMax: 5,
+    energyMin: 3,
+    energyMax: 5,
+    designMin: 3,
+    designMax: 4,
+    eraMin: 4,
+    eraMax: 5,
+    structureMin: 2,
+    structureMax: 3
   }
 };
