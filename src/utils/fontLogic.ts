@@ -17,13 +17,18 @@ const fallbackFont: FontData = {
   recommendedFor: ['Any Context']
 };
 
+// Keep track of recently used fonts to avoid repetition
+const recentlyUsedFonts = new Set<string>();
+
 export function calculateFontRecommendations(scores: UserScores): FontRecommendation {
-  // Calculate scores for all fonts
-  const fontScores = fonts.map(font => ({
-    font,
-    styleMatch: calculateStyleMatch(scores, font.aestheticStyle),
-    traitScore: calculateTraitScore(scores, font)
-  }));
+  // Calculate scores for all fonts, excluding recently used ones
+  const fontScores = fonts
+    .filter(font => !recentlyUsedFonts.has(font.name))
+    .map(font => ({
+      font,
+      styleMatch: calculateStyleMatch(scores, font.aestheticStyle),
+      traitScore: calculateTraitScore(scores, font)
+    }));
 
   // Sort by combined score (style match + trait score)
   fontScores.sort((a, b) => {
@@ -34,6 +39,17 @@ export function calculateFontRecommendations(scores: UserScores): FontRecommenda
 
   // Select fonts ensuring diversity in aesthetic styles
   const selectedFonts = selectDiverseFonts(fontScores);
+
+  // Update recently used fonts
+  selectedFonts.forEach(font => {
+    if (font) recentlyUsedFonts.add(font.name);
+  });
+
+  // Keep only the last 9 fonts (3 sets) in memory
+  if (recentlyUsedFonts.size > 9) {
+    const oldestFonts = Array.from(recentlyUsedFonts).slice(0, recentlyUsedFonts.size - 9);
+    oldestFonts.forEach(font => recentlyUsedFonts.delete(font));
+  }
 
   return {
     primary: selectedFonts[0] || fallbackFont,
@@ -47,6 +63,7 @@ function calculateStyleMatch(scores: UserScores, fontStyle: string): number {
   const styleRanges = aestheticScoring[fontStyle];
   if (!styleRanges) return 0;
 
+  // Calculate how well each trait matches the style's range
   const matches = [
     isInRange(scores.tone, styleRanges.toneMin, styleRanges.toneMax),
     isInRange(scores.energy, styleRanges.energyMin, styleRanges.energyMax),
@@ -89,23 +106,30 @@ function selectDiverseFonts(fontScores: { font: FontData; styleMatch: number; tr
   const selected: FontData[] = [];
   const usedStyles = new Set<string>();
 
+  // First, try to get fonts with different aesthetic styles
   for (const { font } of fontScores) {
-    // For the first font, just take the best match
-    if (selected.length === 0) {
-      selected.push(font);
-      usedStyles.add(font.aestheticStyle);
-      continue;
-    }
-
-    // For subsequent fonts, ensure different aesthetic style if possible
-    if (!usedStyles.has(font.aestheticStyle) || usedStyles.size >= 3) {
-      if (selected.every(selectedFont => selectedFont.name !== font.name)) {
-        selected.push(font);
-        usedStyles.add(font.aestheticStyle);
-      }
-    }
-
     if (selected.length === 3) break;
+
+    // Skip if we already have this style (unless we're desperate)
+    if (usedStyles.has(font.aestheticStyle) && usedStyles.size < fontScores.length) continue;
+
+    // Skip if we already have this font
+    if (selected.some(f => f.name === font.name)) continue;
+
+    selected.push(font);
+    usedStyles.add(font.aestheticStyle);
+  }
+
+  // If we still need more fonts, fill with best remaining matches
+  while (selected.length < 3 && fontScores.length > selected.length) {
+    const nextBest = fontScores.find(({ font }) => 
+      !selected.some(f => f.name === font.name)
+    );
+    if (nextBest) {
+      selected.push(nextBest.font);
+    } else {
+      break;
+    }
   }
 
   return selected;
