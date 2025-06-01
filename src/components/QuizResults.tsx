@@ -158,7 +158,7 @@ export const QuizResults: React.FC = () => {
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-colors font-medium w-fit"
           >
-            Use This Font on Google Fonts <ArrowRight className="w-4 h-4" />
+            Use This Font <ArrowRight className="w-4 h-4" />
           </a>
         </div>
       </div>
