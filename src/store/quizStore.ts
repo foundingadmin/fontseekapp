@@ -8,12 +8,15 @@ interface QuizStore {
   answers: Record<number, 'A' | 'B'>;
   scores: UserScores | null;
   recommendations: FontRecommendation | null;
+  email: string | null;
+  hasStarted: boolean;
   setAnswer: (questionNumber: number, answer: 'A' | 'B') => void;
   nextQuestion: () => void;
   previousQuestion: () => void;
   calculateResults: () => void;
   resetQuiz: () => void;
   skipToResults: () => void;
+  startQuiz: (email: string) => void;
 }
 
 const generateRandomScores = (): UserScores => ({
@@ -29,13 +32,14 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
   answers: {},
   scores: null,
   recommendations: null,
+  email: null,
+  hasStarted: false,
 
   setAnswer: (questionNumber, answer) => {
     set((state) => ({
       answers: { ...state.answers, [questionNumber]: answer }
     }));
 
-    // If this was the last question, calculate results immediately
     if (questionNumber === quizQuestions.length) {
       get().calculateResults();
     } else {
@@ -67,7 +71,6 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       structure: 0
     };
 
-    // Calculate scores based on answers
     Object.entries(answers).forEach(([questionNum, answer]) => {
       const question = quizQuestions[parseInt(questionNum) - 1];
       const score = answer === 'A' ? question.optionAScore : question.optionBScore;
@@ -91,7 +94,6 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       }
     });
 
-    // Average the scores for each trait
     Object.keys(scores).forEach((key) => {
       scores[key as keyof UserScores] = Math.round(scores[key as keyof UserScores] / 2);
     });
@@ -106,7 +108,9 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       currentQuestion: 1,
       answers: {},
       scores: null,
-      recommendations: null
+      recommendations: null,
+      hasStarted: false,
+      email: null
     });
   },
 
@@ -117,6 +121,13 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       answers: { 1: 'A', 2: 'A', 3: 'A', 4: 'A', 5: 'A', 6: 'A', 7: 'A', 8: 'A', 9: 'A', 10: 'A' },
       scores: randomScores,
       recommendations
+    });
+  },
+
+  startQuiz: (email: string) => {
+    set({
+      email,
+      hasStarted: true
     });
   }
 }));
