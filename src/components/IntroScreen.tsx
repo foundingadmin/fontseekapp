@@ -80,7 +80,13 @@ export const IntroScreen: React.FC = () => {
       
       <div className="relative z-10 min-h-screen flex items-center justify-center">
         <div className="max-w-3xl mx-auto px-4 py-16 text-center">
-          <img src="/Founding-v1-Brandmark-white.svg" alt="FontSeek" className="w-[145px] mx-auto mb-12" />
+          <a href="/" className="inline-block mb-12">
+            <img 
+              src="/Founding-v1-Brandmark-white.svg" 
+              alt="FontSeek - Strategy-Driven Font Recommendations" 
+              className="w-[140px] h-auto"
+            />
+          </a>
           
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
             Choose fonts on what they say. Not how they look.
