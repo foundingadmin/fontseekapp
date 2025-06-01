@@ -21,6 +21,10 @@ export const IntroScreen: React.FC = () => {
           {
             name: 'email',
             value: email
+          },
+          {
+            name: 'lead_source',
+            value: 'FontSeek Quiz'
           }
         ],
         context: {
