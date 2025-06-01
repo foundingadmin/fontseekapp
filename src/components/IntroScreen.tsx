@@ -5,12 +5,31 @@ export const IntroScreen: React.FC = () => {
   const [email, setEmail] = useState('');
   const { startQuiz, skipToResults } = useQuizStore();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      startQuiz(email);
-    }
-  };
+  useEffect(() => {
+    // Load HubSpot script
+    const script = document.createElement('script');
+    script.src = '//js.hsforms.net/forms/embed/v2.js';
+    document.body.appendChild(script);
+
+    script.onload = () => {
+      if ((window as any).hbspt) {
+        (window as any).hbspt.forms.create({
+          region: "na1",
+          portalId: "242336861",
+          formId: "5d375dfe-3d01-4816-9192-93063d111929",
+          target: '#hubspot-form-container',
+          onFormSubmit: (form: any) => {
+            const email = form.getField('email').value;
+            startQuiz(email);
+          }
+        });
+      }
+    };
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, [startQuiz]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -46,23 +65,9 @@ export const IntroScreen: React.FC = () => {
             Take our interactive quiz to discover the Google Web Font that best matches your brand's personality — with instant recommendations and usage guides.
           </p>
 
-          <form onSubmit={handleSubmit} className="max-w-[400px] mx-auto space-y-4">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email to start"
-              className="w-full rounded-full bg-[#0F111A] border border-[#2C2F3B] text-white px-6 py-3 text-sm placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-green-400"
-              required
-            />
-            
-            <button
-              type="submit"
-              className="w-full rounded-full bg-green-400 text-black font-semibold px-6 py-3 text-sm hover:bg-green-300 transition-colors"
-            >
-              Start Quiz
-            </button>
-          </form>
+          <div id="hubspot-form-container" className="max-w-[400px] mx-auto">
+            {/* HubSpot form will be injected here */}
+          </div>
         </div>
       </div>
     </div>
