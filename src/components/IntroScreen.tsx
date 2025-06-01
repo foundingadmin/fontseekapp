@@ -5,14 +5,7 @@ export const IntroScreen: React.FC = () => {
   const { skipToResults } = useQuizStore();
 
   useEffect(() => {
-    // Load HubSpot form script
-    const script = document.createElement('script');
-    script.src = 'https://js.hsforms.net/forms/embed/v2.js';
-    script.charset = 'utf-8';
-    script.type = 'text/javascript';
-    document.body.appendChild(script);
-
-    script.onload = () => {
+    const loadForm = () => {
       // @ts-ignore
       if (window.hbspt) {
         // @ts-ignore
@@ -21,12 +14,18 @@ export const IntroScreen: React.FC = () => {
           portalId: "242336861",
           formId: "5d375dfe-3d01-4816-9192-93063d111929",
           target: "#fontseek-email-form",
+          onFormSubmitted: () => {
+            // Handle form submission
+            skipToResults();
+          },
           css: `
             .hs-form {
               font-family: inherit;
+              max-width: 400px !important;
+              margin: 0 auto !important;
             }
             .hs-form-field label {
-              display: none;
+              display: none !important;
             }
             .hs-input {
               width: 100% !important;
@@ -37,9 +36,11 @@ export const IntroScreen: React.FC = () => {
               color: white !important;
               font-size: 0.875rem !important;
               margin-bottom: 1rem !important;
+              font-family: inherit !important;
             }
             .hs-input::placeholder {
               color: rgba(255, 255, 255, 0.4) !important;
+              opacity: 1 !important;
             }
             .hs-input:focus {
               outline: none !important;
@@ -56,6 +57,7 @@ export const IntroScreen: React.FC = () => {
               font-size: 0.875rem !important;
               cursor: pointer !important;
               transition: background-color 0.2s !important;
+              font-family: inherit !important;
             }
             .hs-button:hover {
               background-color: #3ac76b !important;
@@ -67,10 +69,22 @@ export const IntroScreen: React.FC = () => {
               margin-bottom: 0.5rem !important;
               padding-left: 1.5rem !important;
             }
+            .submitted-message {
+              color: white !important;
+              text-align: center !important;
+              padding: 1rem !important;
+            }
           `
         });
       }
     };
+
+    // Load HubSpot script
+    const script = document.createElement('script');
+    script.src = 'https://js.hsforms.net/forms/embed/v2.js';
+    script.async = true;
+    script.onload = loadForm;
+    document.body.appendChild(script);
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.altKey && e.key === 'Enter') {
@@ -108,9 +122,7 @@ export const IntroScreen: React.FC = () => {
             Take our interactive quiz to discover the Google Web Font that best matches your brand's personality — with instant recommendations and usage guides.
           </p>
 
-          <div className="max-w-[400px] mx-auto">
-            <div id="fontseek-email-form"></div>
-          </div>
+          <div id="fontseek-email-form" className="max-w-[400px] mx-auto"></div>
         </div>
       </div>
     </div>
