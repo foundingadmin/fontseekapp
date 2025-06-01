@@ -1,0 +1,36 @@
+Font Name,Aesthetic Style,Tone: Formal → Casual,Energy: Calm → Energetic,Design: Minimal → Expressive,Era: Classic → Modern,Structure: Organic → Geometric,User Tone Score,User Energy Score,User Design Score,User Era Score,User Structure Score,Distance to User (Sum of Abs Diff),Rank
+Raleway,Geometric Sans,2,3,2,4,4,,,,,,15,3
+Playfair Display,Classic Serif,1,2,4,1,2,,,,,,10,2
+Karla,Humanist Sans,4,2,2,4,3,,,,,,15,2
+Oswald,Condensed Sans,3,5,4,5,5,,,,,,22,1
+Barlow,Grotesque Sans,3,4,3,5,5,,,,,,20,1
+Lora,Transitional Serif,2,2,3,2,2,,,,,,11,1
+Montserrat,Geometric Sans,3,4,3,5,5,,,,,,20,1
+Bebas Neue,Display Sans,4,5,5,5,5,,,,,,24,1
+Fira Code,Monospace,2,3,2,5,4,,,,,,16,2
+Pacifico,Handwritten Script,5,5,5,4,2,,,,,,21,1
+IBM Plex Sans,Neo-grotesque Sans,3,3,2,4,5,,,,,,17,1
+DM Serif Display,High-contrast Serif,1,3,4,2,2,,,,,,12,1
+Work Sans,Grotesque Sans,3,3,2,5,4,,,,,,17,2
+Libre Baskerville,Transitional Serif,2,2,3,1,2,,,,,,10,3
+Manrope,Geometric Sans,3,3,2,5,5,,,,,,18,2
+Source Serif Pro,Transitional Serif,2,2,2,2,3,,,,,,11,1
+Rubik,Rounded Sans,3,4,3,5,5,,,,,,20,1
+Space Mono,Monospace,3,3,3,4,5,,,,,,18,1
+Great Vibes,Handwritten Script,4,4,5,3,2,,,,,,18,3
+Yeseva One,Display Serif,2,4,4,3,3,,,,,,16,1
+Chivo,Grotesque Sans,3,3,2,5,4,,,,,,17,2
+Courier Prime,Monospace,2,2,2,1,3,,,,,,10,3
+Dancing Script,Handwritten Script,4,5,5,3,2,,,,,,19,2
+Cormorant Garamond,Classic Serif,1,2,4,1,2,,,,,,10,2
+Crimson Pro,Classic Serif,2,2,3,1,3,,,,,,11,1
+Cabin,Humanist Sans,3,3,3,4,3,,,,,,16,1
+PT Sans,Humanist Sans,3,2,2,3,4,,,,,,14,3
+Anton,Condensed Sans,4,5,5,4,4,,,,,,22,1
+Teko,Condensed Sans,3,5,4,4,4,,,,,,20,3
+Chewy,Bubbly Display,5,5,5,4,2,,,,,,21,2
+Luckiest Guy,Bubbly Display,5,5,5,3,3,,,,,,21,2
+Titan One,Bubbly Display,4,5,5,4,4,,,,,,22,1
+Monoton,Funky Retro,5,5,5,2,3,,,,,,20,3
+Bungee,Funky Retro,4,5,5,3,4,,,,,,21,1
+Freckle Face,Funky Retro,5,5,5,3,3,,,,,,21,1
