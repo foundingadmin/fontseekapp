@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuizStore } from '../store/quizStore';
 
 export const IntroScreen: React.FC = () => {
-  const { startQuiz } = useQuizStore();
+  const { startQuiz, skipToResults } = useQuizStore();
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Check for Cmd (Meta) + Alt + Option (Alt) + Enter
+      if (e.metaKey && e.altKey && e.key === 'Enter') {
+        startQuiz('skip@fontseek.com');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [startQuiz]);
 
   const submitToHubSpot = async (email: string) => {
     const portalId = '242336861';
