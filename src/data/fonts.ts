@@ -81,5 +81,46 @@ export const fonts: FontData[] = [
     embedCode: "Fira Code', monospace",
     personalityTags: ['Technical', 'Precise', 'Efficient'],
     recommendedFor: ['Dev Tools', 'Engineering']
+  },
+
+  // Condensed Sans fonts
+  {
+    name: 'Roboto Condensed',
+    googleFontsLink: 'https://fonts.google.com/specimen/Roboto+Condensed',
+    tone: 2,
+    energy: 3,
+    design: 3,
+    era: 4,
+    structure: 4,
+    aestheticStyle: 'Condensed Sans',
+    embedCode: "Roboto Condensed', sans-serif",
+    personalityTags: ['Professional', 'Space-efficient', 'Modern'],
+    recommendedFor: ['Headlines', 'UI', 'Navigation']
+  },
+  {
+    name: 'Oswald',
+    googleFontsLink: 'https://fonts.google.com/specimen/Oswald',
+    tone: 3,
+    energy: 3,
+    design: 3,
+    era: 4,
+    structure: 4,
+    aestheticStyle: 'Condensed Sans',
+    embedCode: "Oswald', sans-serif",
+    personalityTags: ['Bold', 'Structured', 'Contemporary'],
+    recommendedFor: ['Headlines', 'Posters', 'Branding']
+  },
+  {
+    name: 'Barlow Condensed',
+    googleFontsLink: 'https://fonts.google.com/specimen/Barlow+Condensed',
+    tone: 2,
+    energy: 2,
+    design: 3,
+    era: 4,
+    structure: 4,
+    aestheticStyle: 'Condensed Sans',
+    embedCode: "Barlow Condensed', sans-serif",
+    personalityTags: ['Clean', 'Efficient', 'Versatile'],
+    recommendedFor: ['UI', 'Editorial', 'Technical']
   }
 ];
