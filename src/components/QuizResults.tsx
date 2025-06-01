@@ -14,7 +14,7 @@ function loadGoogleFont(fontName: string) {
 
 export const QuizResults: React.FC = () => {
   const { scores, recommendations, calculateResults, resetQuiz } = useQuizStore();
-  const [showLabels, setShowLabels] = useState(false);
+  const [showLabels, setShowLabels] = useState(true); // Default to true
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
   const [isShuffling, setIsShuffling] = useState(false);
 
@@ -83,33 +83,27 @@ export const QuizResults: React.FC = () => {
 
       {/* Primary Font */}
       <div className="mb-16 bg-white/10 rounded-xl p-8 backdrop-blur-sm">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-white">Primary Font: {recommendations.primary.name}</h2>
-          <div className="flex gap-4">
-            <button
-              onClick={shuffleCopyPack}
-              disabled={isShuffling}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Shuffle className="w-4 h-4" />
-              Shuffle Copy Style
-            </button>
-            <button
-              onClick={() => setShowLabels(!showLabels)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors text-sm"
-            >
-              {showLabels ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              {showLabels ? 'Hide specs' : 'Show specs'}
-            </button>
-            <a
-              href={recommendations.primary.googleFontsLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-colors font-medium"
-            >
-              View Font <ArrowRight className="w-4 h-4" />
-            </a>
-          </div>
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold text-white mb-2">Primary Font</h2>
+          <p className="text-2xl font-bold text-white">{recommendations.primary.name}</p>
+        </div>
+
+        <div className="flex items-center gap-4 mb-8">
+          <button
+            onClick={shuffleCopyPack}
+            disabled={isShuffling}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Shuffle className="w-4 h-4" />
+            Shuffle Copy Style
+          </button>
+          <button
+            onClick={() => setShowLabels(!showLabels)}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors text-sm"
+          >
+            {showLabels ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            {showLabels ? 'Hide specs' : 'Show specs'}
+          </button>
         </div>
 
         <p className="text-sm text-white/40 mb-8">Voice Style: {currentCopyPack.styleId}</p>
@@ -183,6 +177,17 @@ export const QuizResults: React.FC = () => {
               </p>
             )}
           </div>
+        </div>
+
+        <div className="mt-8 pt-8 border-t border-white/10">
+          <a
+            href={recommendations.primary.googleFontsLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-colors font-medium w-fit"
+          >
+            View Font <ArrowRight className="w-4 h-4" />
+          </a>
         </div>
       </div>
 
