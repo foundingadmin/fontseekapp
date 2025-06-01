@@ -1,91 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuizStore } from '../store/quizStore';
 
 export const IntroScreen: React.FC = () => {
-  const { skipToResults } = useQuizStore();
+  const [email, setEmail] = useState('');
+  const { startQuiz, skipToResults } = useQuizStore();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) {
+      startQuiz(email);
+    }
+  };
 
   useEffect(() => {
-    const loadForm = () => {
-      // @ts-ignore
-      if (window.hbspt) {
-        // @ts-ignore
-        window.hbspt.forms.create({
-          region: "na2",
-          portalId: "242336861",
-          formId: "5d375dfe-3d01-4816-9192-93063d111929",
-          target: "#fontseek-email-form",
-          onFormSubmitted: () => {
-            // Handle form submission
-            skipToResults();
-          },
-          css: `
-            .hs-form {
-              font-family: inherit;
-              max-width: 400px !important;
-              margin: 0 auto !important;
-            }
-            .hs-form-field label {
-              display: none !important;
-            }
-            .hs-input {
-              width: 100% !important;
-              padding: 0.75rem 1.5rem !important;
-              background-color: #0F111A !important;
-              border: 1px solid #2C2F3B !important;
-              border-radius: 9999px !important;
-              color: white !important;
-              font-size: 0.875rem !important;
-              margin-bottom: 1rem !important;
-              font-family: inherit !important;
-            }
-            .hs-input::placeholder {
-              color: rgba(255, 255, 255, 0.4) !important;
-              opacity: 1 !important;
-            }
-            .hs-input:focus {
-              outline: none !important;
-              box-shadow: 0 0 0 2px #43DA7A !important;
-            }
-            .hs-button {
-              width: 100% !important;
-              padding: 0.75rem 1.5rem !important;
-              background-color: #43DA7A !important;
-              border: none !important;
-              border-radius: 9999px !important;
-              color: black !important;
-              font-weight: 600 !important;
-              font-size: 0.875rem !important;
-              cursor: pointer !important;
-              transition: background-color 0.2s !important;
-              font-family: inherit !important;
-            }
-            .hs-button:hover {
-              background-color: #3ac76b !important;
-            }
-            .hs-error-msg {
-              color: #ef4444 !important;
-              font-size: 0.75rem !important;
-              margin-top: -0.5rem !important;
-              margin-bottom: 0.5rem !important;
-              padding-left: 1.5rem !important;
-            }
-            .submitted-message {
-              color: white !important;
-              text-align: center !important;
-              padding: 1rem !important;
-            }
-          `
-        });
-      }
-    };
-
-    // Load HubSpot script
-    const script = document.createElement('script');
-    script.src = 'https://js.hsforms.net/forms/embed/v2.js';
-    script.async = true;
-    script.onload = loadForm;
-    document.body.appendChild(script);
-
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.altKey && e.key === 'Enter') {
         skipToResults();
@@ -93,10 +20,7 @@ export const IntroScreen: React.FC = () => {
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      document.body.removeChild(script);
-    };
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [skipToResults]);
 
   return (
@@ -122,7 +46,23 @@ export const IntroScreen: React.FC = () => {
             Take our interactive quiz to discover the Google Web Font that best matches your brand's personality — with instant recommendations and usage guides.
           </p>
 
-          <div id="fontseek-email-form" className="max-w-[400px] mx-auto"></div>
+          <form onSubmit={handleSubmit} className="max-w-[400px] mx-auto space-y-4">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email to start"
+              className="w-full rounded-full bg-[#0F111A] border border-[#2C2F3B] text-white px-6 py-3 text-sm placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-green-400"
+              required
+            />
+            
+            <button
+              type="submit"
+              className="w-full rounded-full bg-green-400 text-black font-semibold px-6 py-3 text-sm hover:bg-green-300 transition-colors"
+            >
+              Start Quiz
+            </button>
+          </form>
         </div>
       </div>
     </div>
