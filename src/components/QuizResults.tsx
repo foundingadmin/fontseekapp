@@ -83,32 +83,32 @@ export const QuizResults: React.FC = () => {
         format: 'a4'
       });
 
-      // Load and add logo with proper SVG to PNG conversion
+      // Load and add logo
+      const img = new Image();
+      img.src = '/src/assets/Founding-v1-Wordmark-black.svg';
+      
       await new Promise((resolve, reject) => {
-        const logo = new Image();
-        logo.onload = () => {
+        img.onload = () => {
           try {
             const canvas = document.createElement('canvas');
-            canvas.width = logo.width;
-            canvas.height = logo.height;
+            canvas.width = img.width;
+            canvas.height = img.height;
             const ctx = canvas.getContext('2d');
             
             if (!ctx) {
               throw new Error('Failed to get canvas context');
             }
 
-            ctx.drawImage(logo, 0, 0);
+            ctx.drawImage(img, 0, 0);
             const pngDataUrl = canvas.toDataURL('image/png');
             
-            // Add the PNG image to the PDF in black
             doc.addImage(pngDataUrl, 'PNG', 150, 15, 40, 12);
             resolve(null);
           } catch (error) {
             reject(error);
           }
         };
-        logo.onerror = () => reject(new Error('Failed to load logo'));
-        logo.src = '/src/assets/Founding-v1-Wordmark-white.svg';
+        img.onerror = () => reject(new Error('Failed to load logo'));
       });
 
       // Header
