@@ -6,20 +6,6 @@ import { RadarChart } from './RadarChart';
 export const QuizResults: React.FC = () => {
   const { scores, recommendations, calculateResults, resetQuiz } = useQuizStore();
   
-  useEffect(() => {
-    if (!scores && !recommendations) {
-      calculateResults();
-    }
-  }, [scores, recommendations, calculateResults]);
-
-  if (!recommendations || !scores) {
-    return (
-      <div className="flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-      </div>
-    );
-  }
-
   const loadGoogleFont = (fontName: string) => {
     const link = document.createElement('link');
     const formattedName = fontName.replace(/ /g, '+');
@@ -29,6 +15,12 @@ export const QuizResults: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!scores && !recommendations) {
+      calculateResults();
+    }
+  }, [scores, recommendations, calculateResults]);
+
+  useEffect(() => {
     if (recommendations) {
       // Load fonts dynamically
       loadGoogleFont(recommendations.primary.name);
@@ -36,6 +28,14 @@ export const QuizResults: React.FC = () => {
       loadGoogleFont(recommendations.tertiary.name);
     }
   }, [recommendations]);
+
+  if (!recommendations || !scores) {
+    return (
+      <div className="flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-3xl mx-auto">
