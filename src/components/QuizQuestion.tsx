@@ -15,7 +15,7 @@ export const QuizQuestion: React.FC = () => {
     setTimeout(() => {
       setAnswer(currentQuestion, value);
       setSelectedAnswer(null);
-    }, 100);
+    }, 300);
   };
 
   useEffect(() => {
