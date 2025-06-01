@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useQuizStore } from '../store/quizStore';
 import { ArrowRight, RefreshCw, Share2 } from 'lucide-react';
 import { RadarChart } from './RadarChart';
@@ -6,31 +6,9 @@ import { RadarChart } from './RadarChart';
 export const QuizResults: React.FC = () => {
   const { scores, recommendations, calculateResults, resetQuiz } = useQuizStore();
   
-  useEffect(() => {
+  React.useEffect(() => {
     if (!scores && !recommendations) {
       calculateResults();
-    }
-
-    if (recommendations) {
-      const fonts = [
-        recommendations.primary,
-        recommendations.secondary,
-        recommendations.tertiary
-      ].filter((font, index, self) => 
-        index === self.findIndex((f) => f.name === font.name)
-      );
-
-      const link = document.createElement('link');
-      const fontFamilies = fonts
-        .map(font => `family=${font.name.replace(/\s+/g, '+')}:wght@400;500;700`)
-        .join('&');
-      link.href = `https://fonts.googleapis.com/css2?${fontFamilies}&display=swap`;
-      link.rel = 'stylesheet';
-      document.head.appendChild(link);
-
-      return () => {
-        document.head.removeChild(link);
-      };
     }
   }, [scores, recommendations, calculateResults]);
 
