@@ -35,7 +35,8 @@ export const QuizQuestion: React.FC = () => {
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4">
-      <div className="flex items-center justify-between mb-8">
+      {/* Fixed height container for navigation */}
+      <div className="h-12 flex items-center justify-between mb-8">
         {currentQuestion > 1 ? (
           <button
             onClick={previousQuestion}
@@ -49,7 +50,8 @@ export const QuizQuestion: React.FC = () => {
         )}
       </div>
       
-      <div className="min-h-[160px] flex flex-col justify-center mb-8">
+      {/* Fixed height container for question */}
+      <div className="h-32 flex items-center justify-center mb-8">
         <h2 className="text-2xl md:text-3xl font-semibold text-white text-center">
           {question.question}
         </h2>
