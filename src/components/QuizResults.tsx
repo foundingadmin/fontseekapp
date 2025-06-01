@@ -72,10 +72,20 @@ export const QuizResults: React.FC = () => {
         format: 'a4'
       });
 
-      // Add logo
-      const logo = new Image();
-      logo.src = '/src/assets/Founding-v1-Wordmark-white.svg';
-      doc.addImage(logo, 'SVG', 150, 15, 40, 12);
+      // Load and add logo with proper image handling
+      await new Promise((resolve, reject) => {
+        const logo = new Image();
+        logo.onload = () => {
+          try {
+            doc.addImage(logo, 'PNG', 150, 15, 40, 12);
+            resolve(null);
+          } catch (error) {
+            reject(error);
+          }
+        };
+        logo.onerror = () => reject(new Error('Failed to load logo'));
+        logo.src = '/src/assets/Founding-v1-Wordmark-white.svg';
+      });
 
       // Header
       doc.setFontSize(24);
