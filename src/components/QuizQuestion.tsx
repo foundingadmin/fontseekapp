@@ -12,11 +12,8 @@ export const QuizQuestion: React.FC = () => {
 
   const handleSelect = (value: 'A' | 'B') => {
     setSelectedAnswer(value);
-    // Reduced delay from 500ms to 300ms for faster transitions
-    setTimeout(() => {
-      setAnswer(currentQuestion, value);
-      setSelectedAnswer(null); // Reset for next question
-    }, 300);
+    setAnswer(currentQuestion, value);
+    setSelectedAnswer(null);
   };
 
   useEffect(() => {
