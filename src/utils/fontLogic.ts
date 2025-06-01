@@ -1,95 +1,81 @@
 import type { UserScores, FontRecommendation, FontData } from '../types';
 import { fonts } from '../data/fonts';
+import { aestheticScoring } from '../data/aestheticScoring';
 
 function calculateFontMatchScore(font: FontData, scores: UserScores): number {
-  // Calculate how well a font matches the user's preferences
   const traits = ['tone', 'energy', 'design', 'era', 'structure'] as const;
   
   return traits.reduce((score, trait) => {
-    // Lower difference means better match
     const difference = Math.abs(font[trait] - scores[trait]);
-    // Invert the difference so higher is better, max difference is 5
     return score + (5 - difference);
   }, 0);
 }
 
-function getSimilarStyles(aestheticStyle: string, scores: UserScores): string[] {
-  // Map of related aesthetic styles
-  const styleMap: Record<string, string[]> = {
-    'Geometric Sans': ['Humanist Sans', 'Neo-Grotesque'],
-    'Humanist Sans': ['Geometric Sans', 'Neo-Grotesque'],
-    'Neo-Grotesque': ['Geometric Sans', 'Humanist Sans'],
-    'Display / Bubbly': ['Geometric Sans'], // Fallback only if absolutely necessary
-    'Serif': ['Humanist Sans', 'Neo-Grotesque'],
-  };
+function getStyleMatchScore(scores: UserScores, style: string): number {
+  const ranges = aestheticScoring[style];
+  if (!ranges) return 0;
 
-  return styleMap[aestheticStyle] || ['Geometric Sans']; // Default fallback
+  let score = 0;
+  
+  // Check each trait against the style's ranges
+  if (scores.tone >= ranges.toneMin && scores.tone <= ranges.toneMax) score++;
+  if (scores.energy >= ranges.energyMin && scores.energy <= ranges.energyMax) score++;
+  if (scores.design >= ranges.designMin && scores.design <= ranges.designMax) score++;
+  if (scores.era >= ranges.eraMin && scores.era <= ranges.eraMax) score++;
+  if (scores.structure >= ranges.structureMin && scores.structure <= ranges.structureMax) score++;
+
+  return score;
 }
 
 function determineAestheticStyle(scores: UserScores): string {
-  // Display / Bubbly specific rules
-  if (scores.tone <= 2 && scores.energy >= 5 && scores.design >= 5 && scores.era >= 3 && scores.structure >= 3) {
-    return 'Display / Bubbly';
-  }
-  
-  if (scores.energy >= 4 && scores.design >= 4 && scores.tone >= 4) {
-    return 'Display / Bubbly';
+  let bestMatch = '';
+  let highestScore = -1;
+
+  for (const [style, ranges] of Object.entries(aestheticScoring)) {
+    const score = getStyleMatchScore(scores, style);
+    if (score > highestScore) {
+      highestScore = score;
+      bestMatch = style;
+    }
   }
 
-  // Rest of the existing style determination logic...
-  if (scores.design >= 4 && scores.energy >= 4 && scores.era <= 3) {
-    return 'Geometric Sans';
-  }
-  
-  // ... (rest of the existing conditions)
-
-  return 'Geometric Sans'; // Default fallback
+  return bestMatch;
 }
 
-function getMatchingFonts(aestheticStyle: string, scores: UserScores): FontData[] {
-  // Get fonts matching the aesthetic style
-  let matchingFonts = fonts.filter(font => font.aestheticStyle === aestheticStyle);
-
-  // For Display / Bubbly, we ONLY want fonts from that category
-  if (aestheticStyle === 'Display / Bubbly') {
-    return matchingFonts.sort((a, b) => calculateFontMatchScore(b, scores) - calculateFontMatchScore(a, scores));
-  }
-
-  // For other styles, continue with existing logic...
-  if (matchingFonts.length < 3) {
-    const similarStyles = getSimilarStyles(aestheticStyle, scores);
-    matchingFonts = [
-      ...matchingFonts,
-      ...fonts.filter(font => 
-        similarStyles.includes(font.aestheticStyle) && 
-        !matchingFonts.some(f => f.name === font.name)
-      )
-    ];
-  }
-
-  return matchingFonts.sort((a, b) => calculateFontMatchScore(b, scores) - calculateFontMatchScore(a, scores));
+function getFallbackFonts(scores: UserScores, usedFonts: Set<string>): FontData[] {
+  return fonts
+    .filter(font => !usedFonts.has(font.name))
+    .sort((a, b) => calculateFontMatchScore(b, scores) - calculateFontMatchScore(a, scores));
 }
 
 export function calculateFontRecommendations(scores: UserScores): FontRecommendation {
-  if (!scores) {
-    throw new Error('Scores are required to calculate font recommendations');
-  }
-
   const aestheticStyle = determineAestheticStyle(scores);
-  let matchingFonts = getMatchingFonts(aestheticStyle, scores);
+  const usedFonts = new Set<string>();
 
-  // Ensure we have at least one font to work with
-  if (matchingFonts.length === 0) {
-    // If no fonts match the aesthetic style, get all fonts and sort by score
-    matchingFonts = fonts.sort((a, b) => calculateFontMatchScore(b, scores) - calculateFontMatchScore(a, scores));
+  // Get fonts matching the primary aesthetic style
+  let matchingFonts = fonts
+    .filter(font => font.aestheticStyle === aestheticStyle)
+    .sort((a, b) => calculateFontMatchScore(b, scores) - calculateFontMatchScore(a, scores));
+
+  // Select primary font
+  const primary = matchingFonts[0] || fonts[0];
+  usedFonts.add(primary.name);
+
+  // Select secondary font
+  let secondary = matchingFonts.find(font => !usedFonts.has(font.name));
+  if (!secondary) {
+    const fallbackFonts = getFallbackFonts(scores, usedFonts);
+    secondary = fallbackFonts[0] || primary;
   }
+  usedFonts.add(secondary.name);
 
-  // Get the best matching font as our primary
-  const primary = matchingFonts[0];
-
-  // For secondary and tertiary, either use unique fonts if available, or fall back to the primary
-  const secondary = matchingFonts[1] || primary;
-  const tertiary = matchingFonts[2] || primary;
+  // Select tertiary font
+  let tertiary = matchingFonts.find(font => !usedFonts.has(font.name));
+  if (!tertiary) {
+    const fallbackFonts = getFallbackFonts(scores, usedFonts);
+    tertiary = fallbackFonts[0] || secondary;
+  }
+  usedFonts.add(tertiary.name);
 
   return {
     primary,
