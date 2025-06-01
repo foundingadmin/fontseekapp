@@ -88,8 +88,8 @@ export const QuizResults: React.FC = () => {
         </div>
       </div>
 
-      <div className="p-8">
-        <div className={`rounded-lg shadow-lg p-8 transition-colors duration-300 ${
+      <div className="p-4 md:p-8">
+        <div className={`rounded-lg shadow-lg p-4 md:p-8 transition-colors duration-300 ${
           isDarkMode ? 'bg-neutral-900' : 'bg-white'
         }`}>
           <div className="flex flex-col">
@@ -129,7 +129,7 @@ export const QuizResults: React.FC = () => {
               </button>
             </div>
 
-            <div className="space-y-8">
+            <div className="space-y-4">
               <div>
                 {showLabels && <div className={`text-xs mb-1 ${
                   isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
@@ -172,7 +172,7 @@ export const QuizResults: React.FC = () => {
                 </p>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {showLabels && <div className={`text-xs mb-1 ${
                   isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
                 }`}>Body Copy • 14px/16px • Regular</div>}
