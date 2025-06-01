@@ -45,6 +45,12 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
   return (
     <div className="mt-24 mb-16 bg-[#1C1F26] rounded-xl overflow-hidden">
       <div className="px-8 py-12 max-w-3xl mx-auto">
+        <img 
+          src="/src/assets/Founding-v1-Wordmark-white.svg" 
+          alt="Founding" 
+          className="h-8 mx-auto mb-8"
+        />
+        
         <h2 className="text-3xl font-bold text-white mb-4 text-center">
           Ready to bring your brand voice to life?
         </h2>
