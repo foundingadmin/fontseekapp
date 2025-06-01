@@ -45,6 +45,15 @@ function getRandomFonts(aestheticStyle: string): FontData[] {
   // Get all fonts matching the aesthetic style
   const styleFonts = fonts.filter(font => font.aestheticStyle === aestheticStyle);
   
+  // If no fonts found for the aesthetic style, use the first available font as fallback
+  if (styleFonts.length === 0) {
+    if (fonts.length === 0) {
+      throw new Error('No fonts available in the system');
+    }
+    const fallbackFont = fonts[0];
+    return [fallbackFont, fallbackFont, fallbackFont];
+  }
+  
   // For Monospace aesthetic, we should always have exactly 3 fonts
   if (aestheticStyle === 'Monospace' && styleFonts.length === 3) {
     return shuffleArray([...styleFonts]);
@@ -62,8 +71,9 @@ function getRandomFonts(aestheticStyle: string): FontData[] {
   
   // If we have fewer than 3 fonts, duplicate the last font to fill the slots
   const result = [...styleFonts];
+  const lastFont = result[result.length - 1];
   while (result.length < 3) {
-    result.push(result[result.length - 1]);
+    result.push(lastFont);
   }
   return result;
 }
