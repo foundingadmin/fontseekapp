@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useQuizStore } from '../store/quizStore';
-import { ArrowRight, RefreshCw, Share2, Eye, EyeOff } from 'lucide-react';
+import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle } from 'lucide-react';
 import { RadarChart } from './RadarChart';
+import { copyPacks, type CopyPack } from '../data/copyPacks';
 
 function loadGoogleFont(fontName: string) {
   const formatted = fontName.replace(/ /g, '+');
@@ -14,6 +15,8 @@ function loadGoogleFont(fontName: string) {
 export const QuizResults: React.FC = () => {
   const { scores, recommendations, calculateResults, resetQuiz } = useQuizStore();
   const [showLabels, setShowLabels] = useState(false);
+  const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
+  const [isShuffling, setIsShuffling] = useState(false);
 
   useEffect(() => {
     if (!scores && !recommendations) {
@@ -23,12 +26,26 @@ export const QuizResults: React.FC = () => {
 
   useEffect(() => {
     if (recommendations) {
-      // Load fonts when recommendations are available
       loadGoogleFont(recommendations.primary.name);
       loadGoogleFont(recommendations.secondary.name);
       loadGoogleFont(recommendations.tertiary.name);
     }
   }, [recommendations]);
+
+  const shuffleCopyPack = () => {
+    if (isShuffling) return;
+    
+    setIsShuffling(true);
+    const currentIndex = copyPacks.findIndex(pack => pack.styleId === currentCopyPack.styleId);
+    let nextIndex = currentIndex;
+    
+    while (nextIndex === currentIndex) {
+      nextIndex = Math.floor(Math.random() * copyPacks.length);
+    }
+    
+    setCurrentCopyPack(copyPacks[nextIndex]);
+    setTimeout(() => setIsShuffling(false), 500);
+  };
 
   if (!recommendations || !scores) {
     return (
@@ -70,6 +87,14 @@ export const QuizResults: React.FC = () => {
           <h2 className="text-xl font-semibold text-white">Primary Font: {recommendations.primary.name}</h2>
           <div className="flex gap-4">
             <button
+              onClick={shuffleCopyPack}
+              disabled={isShuffling}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Shuffle className="w-4 h-4" />
+              Shuffle Copy Style
+            </button>
+            <button
               onClick={() => setShowLabels(!showLabels)}
               className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors text-sm"
             >
@@ -86,11 +111,13 @@ export const QuizResults: React.FC = () => {
             </a>
           </div>
         </div>
+
+        <p className="text-sm text-white/40 mb-8">Voice Style: {currentCopyPack.styleId}</p>
         
         <div className="space-y-8">
           <div>
             <p style={{ fontFamily: recommendations.primary.name }} className="text-sm font-semibold uppercase tracking-wide text-white/90">
-              Brand Typography System
+              {currentCopyPack.eyebrow}
             </p>
             {showLabels && (
               <p className="font-sans text-xs text-white/40 mt-1">
@@ -101,7 +128,7 @@ export const QuizResults: React.FC = () => {
 
           <div>
             <h1 style={{ fontFamily: recommendations.primary.name }} className="text-5xl font-bold leading-tight">
-              The quick brown fox jumps over the lazy dog
+              {currentCopyPack.heading}
             </h1>
             {showLabels && (
               <p className="font-sans text-xs text-white/40 mt-1">
@@ -112,7 +139,7 @@ export const QuizResults: React.FC = () => {
 
           <div>
             <h2 style={{ fontFamily: recommendations.primary.name }} className="text-2xl font-medium leading-relaxed">
-              Pack my box with five dozen liquor jugs
+              {currentCopyPack.subheading}
             </h2>
             {showLabels && (
               <p className="font-sans text-xs text-white/40 mt-1">
@@ -123,7 +150,7 @@ export const QuizResults: React.FC = () => {
 
           <div>
             <p style={{ fontFamily: recommendations.primary.name }} className="text-xl font-normal leading-relaxed">
-              How vexingly quick daft zebras jump! The five boxing wizards jump quickly.
+              {currentCopyPack.leadParagraph}
             </p>
             {showLabels && (
               <p className="font-sans text-xs text-white/40 mt-1">
@@ -132,10 +159,12 @@ export const QuizResults: React.FC = () => {
             )}
           </div>
 
-          <div>
+          <div className="space-y-4">
             <p style={{ fontFamily: recommendations.primary.name }} className="text-base font-normal leading-loose">
-              The quick brown fox jumps over the lazy dog. A wizard's job is to vex chumps quickly in fog.
-              Pack my box with five dozen liquor jugs. How vexingly quick daft zebras jump!
+              {currentCopyPack.body1}
+            </p>
+            <p style={{ fontFamily: recommendations.primary.name }} className="text-base font-normal leading-loose">
+              {currentCopyPack.body2}
             </p>
             {showLabels && (
               <p className="font-sans text-xs text-white/40 mt-1">
@@ -146,7 +175,7 @@ export const QuizResults: React.FC = () => {
 
           <div>
             <small style={{ fontFamily: recommendations.primary.name }} className="text-xs font-light text-white/60 block">
-              © 2025 FontSeek. All rights reserved. The quick brown fox jumps over the lazy dog.
+              {currentCopyPack.finePrint}
             </small>
             {showLabels && (
               <p className="font-sans text-xs text-white/40 mt-1">
