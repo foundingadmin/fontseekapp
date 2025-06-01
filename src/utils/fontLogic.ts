@@ -2,7 +2,12 @@ import type { UserScores, FontRecommendation, FontData } from '../types';
 import { fonts } from '../data/fonts';
 
 function determineAestheticStyle(scores: UserScores): string {
-  // Monospace: structure = 5 AND design ≤ 2
+  // Display / Bubbly: high energy, design, and tone with low structure
+  if (scores.energy >= 4 && scores.design >= 4 && scores.tone >= 4 && scores.structure <= 2) {
+    return 'Display / Bubbly';
+  }
+  
+  // Monospace: high structure and low design
   if (scores.structure === 5 && scores.design <= 2) {
     return 'Monospace';
   }
@@ -33,49 +38,8 @@ function determineAestheticStyle(scores: UserScores): string {
     return 'Humanist Sans';
   }
   
-  if (scores.tone >= 4 && scores.structure <= 3) {
-    return 'Rounded Sans';
-  }
-  
   // Default to Grotesque Sans if no clear match
   return 'Grotesque Sans';
-}
-
-function getRandomFonts(aestheticStyle: string): FontData[] {
-  // Get all fonts matching the aesthetic style
-  const styleFonts = fonts.filter(font => font.aestheticStyle === aestheticStyle);
-  
-  // If no fonts found for the aesthetic style, use the first available font as fallback
-  if (styleFonts.length === 0) {
-    if (fonts.length === 0) {
-      throw new Error('No fonts available in the system');
-    }
-    const fallbackFont = fonts[0];
-    return [fallbackFont, fallbackFont, fallbackFont];
-  }
-  
-  // For Monospace aesthetic, we should always have exactly 3 fonts
-  if (aestheticStyle === 'Monospace' && styleFonts.length === 3) {
-    return shuffleArray([...styleFonts]);
-  }
-  
-  // If we have exactly 3 fonts, return them in random order
-  if (styleFonts.length === 3) {
-    return shuffleArray([...styleFonts]);
-  }
-  
-  // If we have more than 3 fonts, return 3 random ones
-  if (styleFonts.length > 3) {
-    return shuffleArray([...styleFonts]).slice(0, 3);
-  }
-  
-  // If we have fewer than 3 fonts, duplicate the last font to fill the slots
-  const result = [...styleFonts];
-  const lastFont = result[result.length - 1];
-  while (result.length < 3) {
-    result.push(lastFont);
-  }
-  return result;
 }
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -84,6 +48,41 @@ function shuffleArray<T>(array: T[]): T[] {
     const j = Math.floor(Math.random() * (i + 1));
     [result[i], result[j]] = [result[j], result[i]];
   }
+  return result;
+}
+
+function getRandomFonts(aestheticStyle: string): FontData[] {
+  // Get all fonts matching the aesthetic style
+  const matchingFonts = fonts.filter(font => font.aestheticStyle === aestheticStyle);
+  
+  if (matchingFonts.length === 0) {
+    throw new Error(`No fonts found for aesthetic style: ${aestheticStyle}`);
+  }
+  
+  // If we have exactly 3 fonts, shuffle them
+  if (matchingFonts.length === 3) {
+    return shuffleArray([...matchingFonts]);
+  }
+  
+  // If we have more than 3 fonts, return 3 random ones
+  if (matchingFonts.length > 3) {
+    return shuffleArray([...matchingFonts]).slice(0, 3);
+  }
+  
+  // If we have fewer than 3 fonts, fill with alternatives from similar styles
+  const result = [...matchingFonts];
+  const remainingCount = 3 - result.length;
+  
+  if (remainingCount > 0) {
+    const otherFonts = fonts.filter(font => 
+      font.aestheticStyle !== aestheticStyle &&
+      !result.includes(font)
+    );
+    
+    const alternatives = shuffleArray(otherFonts).slice(0, remainingCount);
+    result.push(...alternatives);
+  }
+  
   return result;
 }
 

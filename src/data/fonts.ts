@@ -1,7 +1,48 @@
 import { FontData } from '../types';
 
 export const fonts: FontData[] = [
-  // Monospace
+  // Display / Bubbly fonts
+  {
+    name: 'Fredoka',
+    googleFontsLink: 'https://fonts.google.com/specimen/Fredoka',
+    tone: 5,
+    energy: 5,
+    design: 5,
+    era: 5,
+    structure: 2,
+    aestheticStyle: 'Display / Bubbly',
+    embedCode: "Fredoka', sans-serif",
+    personalityTags: ['Playful', 'Friendly', 'Modern'],
+    recommendedFor: ['Kids', 'Entertainment', 'Food']
+  },
+  {
+    name: 'Rubik Bubbles',
+    googleFontsLink: 'https://fonts.google.com/specimen/Rubik+Bubbles',
+    tone: 5,
+    energy: 5,
+    design: 5,
+    era: 4,
+    structure: 2,
+    aestheticStyle: 'Display / Bubbly',
+    embedCode: "Rubik Bubbles', cursive",
+    personalityTags: ['Fun', 'Bold', 'Expressive'],
+    recommendedFor: ['Youth', 'Games', 'Creative']
+  },
+  {
+    name: 'Pacifico',
+    googleFontsLink: 'https://fonts.google.com/specimen/Pacifico',
+    tone: 5,
+    energy: 5,
+    design: 5,
+    era: 4,
+    structure: 1,
+    aestheticStyle: 'Display / Bubbly',
+    embedCode: "Pacifico', cursive",
+    personalityTags: ['Casual', 'Fun', 'Personal'],
+    recommendedFor: ['Lifestyle', 'Food & Bev']
+  },
+
+  // Monospace fonts
   {
     name: 'Roboto Mono',
     googleFontsLink: 'https://fonts.google.com/specimen/Roboto+Mono',
@@ -40,46 +81,5 @@ export const fonts: FontData[] = [
     embedCode: "Fira Code', monospace",
     personalityTags: ['Technical', 'Precise', 'Efficient'],
     recommendedFor: ['Dev Tools', 'Engineering']
-  },
-
-  // Existing fonts...
-  {
-    name: 'Barlow',
-    googleFontsLink: 'https://fonts.google.com/specimen/Barlow',
-    tone: 3,
-    energy: 3,
-    design: 3,
-    era: 3,
-    structure: 3,
-    aestheticStyle: 'Grotesque Sans',
-    embedCode: "Barlow', sans-serif",
-    personalityTags: ['Neutral', 'Clean', 'Versatile'],
-    recommendedFor: ['Corporate', 'SaaS']
-  },
-  {
-    name: 'IBM Plex Sans',
-    googleFontsLink: 'https://fonts.google.com/specimen/IBM+Plex+Sans',
-    tone: 3,
-    energy: 3,
-    design: 3,
-    era: 4,
-    structure: 4,
-    aestheticStyle: 'Grotesque Sans',
-    embedCode: "IBM Plex Sans', sans-serif",
-    personalityTags: ['Technical', 'Clear', 'Contemporary'],
-    recommendedFor: ['Tech', 'Data', 'SaaS']
-  },
-  {
-    name: 'Archivo',
-    googleFontsLink: 'https://fonts.google.com/specimen/Archivo',
-    tone: 3,
-    energy: 3,
-    design: 2,
-    era: 4,
-    structure: 4,
-    aestheticStyle: 'Grotesque Sans',
-    embedCode: "Archivo', sans-serif",
-    personalityTags: ['Modern', 'Professional', 'Universal'],
-    recommendedFor: ['Business', 'Technology']
   }
 ];
