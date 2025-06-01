@@ -14,7 +14,7 @@ function loadGoogleFont(fontName: string) {
 
 export const QuizResults: React.FC = () => {
   const { scores, recommendations, calculateResults, resetQuiz } = useQuizStore();
-  const [showLabels, setShowLabels] = useState(true);
+  const [showLabels, setShowLabels] = useState(false);
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
   const [isShuffling, setIsShuffling] = useState(false);
 
@@ -109,30 +109,35 @@ export const QuizResults: React.FC = () => {
         
         <div className="space-y-8">
           <div>
+            {showLabels && <div className="text-xs text-white/40 mb-1">Eyebrow • 12px • Semibold • Uppercase</div>}
             <p style={{ fontFamily: recommendations.primary.name }} className="text-sm font-semibold uppercase tracking-wide text-white/90">
               {currentCopyPack.eyebrow}
             </p>
           </div>
 
           <div>
+            {showLabels && <div className="text-xs text-white/40 mb-1">Heading • 48px • Bold</div>}
             <h1 style={{ fontFamily: recommendations.primary.name }} className="text-5xl font-bold leading-tight">
               {currentCopyPack.heading}
             </h1>
           </div>
 
           <div>
+            {showLabels && <div className="text-xs text-white/40 mb-1">Subheading • 24px • Medium</div>}
             <h2 style={{ fontFamily: recommendations.primary.name }} className="text-2xl font-medium leading-relaxed">
               {currentCopyPack.subheading}
             </h2>
           </div>
 
           <div>
+            {showLabels && <div className="text-xs text-white/40 mb-1">Lead Paragraph • 20px • Regular</div>}
             <p style={{ fontFamily: recommendations.primary.name }} className="text-xl font-normal leading-relaxed">
               {currentCopyPack.leadParagraph}
             </p>
           </div>
 
           <div className="space-y-4">
+            {showLabels && <div className="text-xs text-white/40 mb-1">Body Copy • 16px • Regular</div>}
             <p style={{ fontFamily: recommendations.primary.name }} className="text-base font-normal leading-loose">
               {currentCopyPack.body1}
             </p>
@@ -142,6 +147,7 @@ export const QuizResults: React.FC = () => {
           </div>
 
           <div>
+            {showLabels && <div className="text-xs text-white/40 mb-1">Fine Print • 12px • Light</div>}
             <small style={{ fontFamily: recommendations.primary.name }} className="text-xs font-light text-white/60 block">
               {currentCopyPack.finePrint}
             </small>
@@ -179,9 +185,11 @@ export const QuizResults: React.FC = () => {
               </a>
             </div>
             <div style={{ fontFamily: font.name }}>
+              {showLabels && <div className="text-xs text-white/40 mb-1">Display • 24px • Bold</div>}
               <p style={{ fontWeight: 700 }} className="text-2xl mb-4">
                 The quick brown fox jumps over the lazy dog
               </p>
+              {showLabels && <div className="text-xs text-white/40 mb-1">Body • 16px • Regular</div>}
               <p style={{ fontWeight: 400 }} className="text-base mb-1">
                 Pack my box with five dozen liquor jugs
               </p>
