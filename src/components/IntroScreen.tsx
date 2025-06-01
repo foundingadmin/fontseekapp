@@ -5,16 +5,49 @@ export const IntroScreen: React.FC = () => {
   const { startQuiz } = useQuizStore();
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
+  const submitToHubSpot = async (email: string) => {
+    const portalId = '242336861';
+    const formGuid = '5d375dfe-3d01-4816-9192-93063d111929';
+    
+    const response = await fetch(`https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formGuid}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        fields: [
+          {
+            name: 'email',
+            value: email
+          }
+        ],
+        context: {
+          pageUri: window.location.href,
+          pageName: document.title
+        }
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to submit to HubSpot');
+    }
+
+    return response.json();
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError('');
 
     try {
-      // Start the quiz with the email
+      await submitToHubSpot(email);
       startQuiz(email);
     } catch (error) {
-      console.error('Error starting quiz:', error);
+      console.error('Error submitting form:', error);
+      setError('Failed to submit form. Please try again.');
       setIsSubmitting(false);
     }
   };
@@ -50,7 +83,16 @@ export const IntroScreen: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-6 py-3 mb-4 bg-white/5 border border-white/20 rounded-full text-white placeholder-white/40 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleSubmit(e);
+                }
+              }}
             />
+            {error && (
+              <p className="text-red-500 text-sm mb-4">{error}</p>
+            )}
             <button
               type="submit"
               disabled={isSubmitting}
