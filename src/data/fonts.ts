@@ -7,7 +7,7 @@ export const fonts: FontData[] = [
     googleFontsLink: 'https://fonts.google.com/specimen/EB+Garamond',
     tone: 1,
     energy: 1,
-    design: 2,
+    design: 1,
     era: 1,
     structure: 2,
     aestheticStyle: 'Serif Old Style',
@@ -18,10 +18,10 @@ export const fonts: FontData[] = [
   {
     name: 'Lora',
     googleFontsLink: 'https://fonts.google.com/specimen/Lora',
-    tone: 2,
+    tone: 1,
     energy: 2,
-    design: 3,
-    era: 2,
+    design: 2,
+    era: 1,
     structure: 2,
     aestheticStyle: 'Serif Old Style',
     embedCode: "Lora', serif",
@@ -57,19 +57,6 @@ export const fonts: FontData[] = [
     recommendedFor: ['DTC', 'Services']
   },
   {
-    name: 'Work Sans',
-    googleFontsLink: 'https://fonts.google.com/specimen/Work+Sans',
-    tone: 3,
-    energy: 3,
-    design: 2,
-    era: 5,
-    structure: 4,
-    aestheticStyle: 'Humanist Sans',
-    embedCode: "Work Sans', sans-serif",
-    personalityTags: ['Versatile', 'Clean', 'Balanced'],
-    recommendedFor: ['Startups', 'Content', 'Marketing']
-  },
-  {
     name: 'Cabin',
     googleFontsLink: 'https://fonts.google.com/specimen/Cabin',
     tone: 3,
@@ -82,21 +69,21 @@ export const fonts: FontData[] = [
     personalityTags: ['Warm', 'Friendly', 'Contemporary'],
     recommendedFor: ['Startups', 'Nonprofits', 'Content']
   },
-
-  // Geometric Sans
   {
-    name: 'Raleway',
-    googleFontsLink: 'https://fonts.google.com/specimen/Raleway',
-    tone: 2,
+    name: 'Work Sans',
+    googleFontsLink: 'https://fonts.google.com/specimen/Work+Sans',
+    tone: 3,
     energy: 3,
     design: 2,
     era: 4,
-    structure: 4,
-    aestheticStyle: 'Geometric Sans',
-    embedCode: "Raleway', sans-serif",
-    personalityTags: ['Modern', 'Elegant', 'Minimalist'],
-    recommendedFor: ['Tech', 'Wellness']
+    structure: 3,
+    aestheticStyle: 'Humanist Sans',
+    embedCode: "Work Sans', sans-serif",
+    personalityTags: ['Versatile', 'Clean', 'Balanced'],
+    recommendedFor: ['Startups', 'Content', 'Marketing']
   },
+
+  // Geometric Sans
   {
     name: 'Montserrat',
     googleFontsLink: 'https://fonts.google.com/specimen/Montserrat',
@@ -122,6 +109,19 @@ export const fonts: FontData[] = [
     embedCode: "Nunito', sans-serif",
     personalityTags: ['Friendly', 'Modern', 'Balanced'],
     recommendedFor: ['Education', 'Healthcare']
+  },
+  {
+    name: 'Raleway',
+    googleFontsLink: 'https://fonts.google.com/specimen/Raleway',
+    tone: 2,
+    energy: 3,
+    design: 2,
+    era: 4,
+    structure: 4,
+    aestheticStyle: 'Geometric Sans',
+    embedCode: "Raleway', sans-serif",
+    personalityTags: ['Modern', 'Elegant', 'Minimalist'],
+    recommendedFor: ['Tech', 'Wellness']
   },
 
   // Condensed Sans
@@ -163,87 +163,5 @@ export const fonts: FontData[] = [
     embedCode: "Bebas Neue', sans-serif",
     personalityTags: ['Impactful', 'Loud', 'Youthful'],
     recommendedFor: ['Music', 'Fashion', 'Events']
-  },
-
-  // Monospace
-  {
-    name: 'Roboto Mono',
-    googleFontsLink: 'https://fonts.google.com/specimen/Roboto+Mono',
-    tone: 2,
-    energy: 2,
-    design: 2,
-    era: 5,
-    structure: 5,
-    aestheticStyle: 'Monospace',
-    embedCode: "Roboto Mono', monospace",
-    personalityTags: ['Technical', 'Precise', 'Modern'],
-    recommendedFor: ['Code', 'Tech', 'Documentation']
-  },
-  {
-    name: 'Space Mono',
-    googleFontsLink: 'https://fonts.google.com/specimen/Space+Mono',
-    tone: 3,
-    energy: 3,
-    design: 3,
-    era: 4,
-    structure: 5,
-    aestheticStyle: 'Monospace',
-    embedCode: "Space Mono', monospace",
-    personalityTags: ['Retro-futuristic', 'Quirky', 'Technical'],
-    recommendedFor: ['Tech', 'Creative Coding']
-  },
-  {
-    name: 'Fira Code',
-    googleFontsLink: 'https://fonts.google.com/specimen/Fira+Code',
-    tone: 2,
-    energy: 3,
-    design: 2,
-    era: 5,
-    structure: 4,
-    aestheticStyle: 'Monospace',
-    embedCode: "Fira Code', monospace",
-    personalityTags: ['Technical', 'Precise', 'Efficient'],
-    recommendedFor: ['Dev Tools', 'Engineering']
-  },
-
-  // Rounded Sans
-  {
-    name: 'Quicksand',
-    googleFontsLink: 'https://fonts.google.com/specimen/Quicksand',
-    tone: 4,
-    energy: 3,
-    design: 3,
-    era: 4,
-    structure: 3,
-    aestheticStyle: 'Rounded Sans',
-    embedCode: "Quicksand', sans-serif",
-    personalityTags: ['Friendly', 'Modern', 'Approachable'],
-    recommendedFor: ['Tech', 'Education']
-  },
-  {
-    name: 'Varela Round',
-    googleFontsLink: 'https://fonts.google.com/specimen/Varela+Round',
-    tone: 4,
-    energy: 3,
-    design: 3,
-    era: 4,
-    structure: 3,
-    aestheticStyle: 'Rounded Sans',
-    embedCode: "Varela Round', sans-serif",
-    personalityTags: ['Friendly', 'Clean', 'Approachable'],
-    recommendedFor: ['Tech', 'Education']
-  },
-  {
-    name: 'Comfortaa',
-    googleFontsLink: 'https://fonts.google.com/specimen/Comfortaa',
-    tone: 4,
-    energy: 3,
-    design: 4,
-    era: 4,
-    structure: 3,
-    aestheticStyle: 'Rounded Sans',
-    embedCode: "Comfortaa', sans-serif",
-    personalityTags: ['Playful', 'Modern', 'Friendly'],
-    recommendedFor: ['Kids', 'Education']
   }
 ];

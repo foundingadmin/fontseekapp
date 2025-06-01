@@ -3,52 +3,48 @@ import { fonts } from '../data/fonts';
 import { aestheticScoring } from '../data/aestheticScoring';
 
 export function calculateFontRecommendations(scores: UserScores): FontRecommendation {
-  // First, determine the aesthetic style based on trait ranges
-  const primaryStyle = determineAestheticStyle(scores);
-  
-  // Strictly filter fonts to ONLY those matching the primary aesthetic style
-  const matchingFonts = fonts.filter(font => font.aestheticStyle === primaryStyle);
-
-  // Calculate weighted distance scores for each matching font
-  const fontScores = matchingFonts.map(font => ({
-    font,
-    distance: calculateWeightedDistance(scores, font, primaryStyle)
-  }));
-
-  // Sort by distance (lower is better)
-  fontScores.sort((a, b) => a.distance - b.distance);
-
-  // Get unique fonts (no duplicates)
-  const uniqueFonts = getUniqueFonts(fontScores);
-
-  // If we don't have enough fonts, repeat from the top
-  while (uniqueFonts.length < 3 && matchingFonts.length > 0) {
-    uniqueFonts.push(matchingFonts[0]);
+  // Special case for all-1 scores
+  if (Object.values(scores).every(score => score === 1)) {
+    const serifOldStyleFonts = fonts.filter(font => font.aestheticStyle === 'Serif Old Style');
+    return {
+      primary: serifOldStyleFonts[0],
+      secondary: serifOldStyleFonts[1],
+      tertiary: serifOldStyleFonts[2],
+      aestheticStyle: 'Serif Old Style'
+    };
   }
 
+  // Determine aesthetic style based on trait ranges
+  const aestheticStyle = determineAestheticStyle(scores);
+  
+  // Filter fonts to ONLY those matching the aesthetic style
+  const matchingFonts = fonts.filter(font => font.aestheticStyle === aestheticStyle);
+
+  // Calculate distance scores for matching fonts
+  const fontScores = matchingFonts.map(font => ({
+    font,
+    score: calculateFontScore(scores, font)
+  }));
+
+  // Sort by score (higher is better)
+  fontScores.sort((a, b) => b.score - a.score);
+
   return {
-    primary: uniqueFonts[0],
-    secondary: uniqueFonts[1] || uniqueFonts[0],
-    tertiary: uniqueFonts[2] || uniqueFonts[1] || uniqueFonts[0],
-    aestheticStyle: primaryStyle
+    primary: fontScores[0].font,
+    secondary: fontScores[1]?.font || fontScores[0].font,
+    tertiary: fontScores[2]?.font || fontScores[1]?.font || fontScores[0].font,
+    aestheticStyle
   };
 }
 
 function determineAestheticStyle(scores: UserScores): string {
-  // Special case for all-1 scores
-  if (Object.values(scores).every(score => score === 1)) {
-    return 'Serif Old Style';
-  }
-
   let bestMatch = '';
-  let highestScore = -Infinity;
+  let bestScore = -Infinity;
 
-  // Calculate match score for each aesthetic style
   for (const [style, ranges] of Object.entries(aestheticScoring)) {
-    const score = calculateStyleMatchScore(scores, ranges);
-    
-    if (score > highestScore) {
-      highestScore = score;
+    const score = calculateStyleScore(scores, ranges);
+    if (score > bestScore) {
+      bestScore = score;
       bestMatch = style;
     }
   }
@@ -56,90 +52,56 @@ function determineAestheticStyle(scores: UserScores): string {
   return bestMatch;
 }
 
-function calculateStyleMatchScore(scores: UserScores, ranges: any): number {
+function calculateStyleScore(scores: UserScores, ranges: any): number {
   let score = 0;
-  const traits: Array<keyof UserScores> = ['tone', 'energy', 'design', 'era', 'structure'];
+  const traits = ['tone', 'energy', 'design', 'era', 'structure'] as const;
 
   for (const trait of traits) {
-    const userScore = scores[trait];
+    const value = scores[trait];
     const min = ranges[`${trait}Min`];
     const max = ranges[`${trait}Max`];
 
     // Perfect match within range
-    if (userScore >= min && userScore <= max) {
-      score += 10;
-    } else {
-      // Penalty for being outside range
-      const distance = Math.min(
-        Math.abs(userScore - min),
-        Math.abs(userScore - max)
-      );
-      score -= distance * distance;
+    if (value >= min && value <= max) {
+      score += 2;
+    }
+    // Close to range
+    else if (Math.abs(value - min) <= 1 || Math.abs(value - max) <= 1) {
+      score += 1;
+    }
+    // Far from range
+    else {
+      score -= 1;
     }
   }
 
   return score;
 }
 
-function calculateWeightedDistance(scores: UserScores, font: FontData, style: string): number {
-  let distance = 0;
-  const weights = getTraitWeights(style);
+function calculateFontScore(scores: UserScores, font: FontData): number {
+  let score = 0;
+  const traits = ['tone', 'energy', 'design', 'era', 'structure'] as const;
 
-  for (const [trait, weight] of Object.entries(weights)) {
-    const diff = Math.abs(scores[trait as keyof UserScores] - font[trait as keyof FontData]);
-    distance += diff * diff * weight;
-  }
-
-  return distance;
-}
-
-function getTraitWeights(style: string): Record<keyof UserScores, number> {
-  const weights = {
-    tone: 1,
-    energy: 1,
-    design: 1,
-    era: 1,
-    structure: 1
-  };
-
-  switch (style) {
-    case 'Serif Old Style':
-      weights.tone = 1.5;
-      weights.era = 1.25;
-      weights.design = 1.25;
-      break;
-    case 'Monospace':
-      weights.structure = 1.5;
-      weights.era = 1.25;
-      break;
-    case 'Rounded Sans':
-      weights.tone = 1.5;
-      weights.energy = 1.25;
-      break;
-    case 'Geometric Sans':
-      weights.design = 1.5;
-      weights.structure = 1.25;
-      break;
-    case 'Display / Bubbly':
-      weights.energy = 1.5;
-      weights.design = 1.25;
-      break;
-  }
-
-  return weights;
-}
-
-function getUniqueFonts(fontScores: { font: FontData; distance: number }[]): FontData[] {
-  const uniqueFonts: FontData[] = [];
-  const seenNames = new Set<string>();
-
-  for (const { font } of fontScores) {
-    if (!seenNames.has(font.name)) {
-      uniqueFonts.push(font);
-      seenNames.add(font.name);
-      if (uniqueFonts.length === 3) break;
+  for (const trait of traits) {
+    const diff = Math.abs(scores[trait] - font[trait]);
+    
+    // Perfect match
+    if (diff === 0) {
+      score += 3;
+    }
+    // Close match
+    else if (diff === 1) {
+      score += 2;
+    }
+    // Acceptable match
+    else if (diff === 2) {
+      score += 1;
+    }
+    // Poor match
+    else {
+      score -= 1;
     }
   }
 
-  return uniqueFonts;
+  return score;
 }
