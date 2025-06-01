@@ -87,69 +87,69 @@ export const QuizResults: React.FC = () => {
           </div>
         </div>
         
-        <div style={{ fontFamily: recommendations.primary.name }} className="space-y-8">
+        <div className="space-y-8">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-white/90">
+            <p style={{ fontFamily: recommendations.primary.name }} className="text-sm font-semibold uppercase tracking-wide text-white/90">
               Brand Typography System
             </p>
             {showLabels && (
-              <p className="text-xs text-white/40 mt-1">
+              <p className="font-sans text-xs text-white/40 mt-1">
                 Font size: Small (14px) • Weight: Semibold • Usage: Section label
               </p>
             )}
           </div>
 
           <div>
-            <h1 className="text-5xl font-bold leading-tight">
+            <h1 style={{ fontFamily: recommendations.primary.name }} className="text-5xl font-bold leading-tight">
               The quick brown fox jumps over the lazy dog
             </h1>
             {showLabels && (
-              <p className="text-xs text-white/40 mt-1">
+              <p className="font-sans text-xs text-white/40 mt-1">
                 Font size: Extra Large (48px) • Weight: Bold • Usage: Main heading
               </p>
             )}
           </div>
 
           <div>
-            <h2 className="text-2xl font-medium leading-relaxed">
+            <h2 style={{ fontFamily: recommendations.primary.name }} className="text-2xl font-medium leading-relaxed">
               Pack my box with five dozen liquor jugs
             </h2>
             {showLabels && (
-              <p className="text-xs text-white/40 mt-1">
+              <p className="font-sans text-xs text-white/40 mt-1">
                 Font size: Large (24px) • Weight: Medium • Usage: Subheading
               </p>
             )}
           </div>
 
           <div>
-            <p className="text-xl font-normal leading-relaxed">
+            <p style={{ fontFamily: recommendations.primary.name }} className="text-xl font-normal leading-relaxed">
               How vexingly quick daft zebras jump! The five boxing wizards jump quickly.
             </p>
             {showLabels && (
-              <p className="text-xs text-white/40 mt-1">
+              <p className="font-sans text-xs text-white/40 mt-1">
                 Font size: Medium (20px) • Weight: Regular • Usage: Lead paragraph
               </p>
             )}
           </div>
 
           <div>
-            <p className="text-base font-normal leading-loose">
+            <p style={{ fontFamily: recommendations.primary.name }} className="text-base font-normal leading-loose">
               The quick brown fox jumps over the lazy dog. A wizard's job is to vex chumps quickly in fog.
               Pack my box with five dozen liquor jugs. How vexingly quick daft zebras jump!
             </p>
             {showLabels && (
-              <p className="text-xs text-white/40 mt-1">
+              <p className="font-sans text-xs text-white/40 mt-1">
                 Font size: Normal (16px) • Weight: Regular • Usage: Body copy
               </p>
             )}
           </div>
 
           <div>
-            <small className="text-xs font-light text-white/60 block">
+            <small style={{ fontFamily: recommendations.primary.name }} className="text-xs font-light text-white/60 block">
               © 2025 FontSeek. All rights reserved. The quick brown fox jumps over the lazy dog.
             </small>
             {showLabels && (
-              <p className="text-xs text-white/40 mt-1">
+              <p className="font-sans text-xs text-white/40 mt-1">
                 Font size: Extra Small (12px) • Weight: Light • Usage: Fine print
               </p>
             )}
