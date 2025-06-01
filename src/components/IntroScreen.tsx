@@ -46,19 +46,19 @@ export const IntroScreen: React.FC = () => {
             Take our interactive quiz to discover the Google Web Font that best matches your brand's personality — with instant recommendations and usage guides.
           </p>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="max-w-[400px] mx-auto space-y-4">
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email to start"
-              className="w-full px-6 py-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent backdrop-blur-sm"
+              className="w-full px-6 py-4 rounded-full bg-[#1C2127] text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               required
             />
             
             <button
               type="submit"
-              className="w-full px-6 py-4 rounded-xl bg-emerald-500 text-black font-semibold hover:bg-emerald-400 transition-colors"
+              className="w-full px-6 py-4 rounded-full bg-emerald-500 text-black font-semibold hover:bg-emerald-400 transition-colors"
             >
               Start Quiz
             </button>
