@@ -18,132 +18,111 @@ const fallbackFont: FontData = {
 };
 
 export function calculateFontRecommendations(scores: UserScores): FontRecommendation {
-  // First, determine the aesthetic style based on the user's scores
-  const matchingStyles = determineAestheticStyles(scores);
-  
-  // Get fonts matching any of the matching aesthetic styles
-  let matchingFonts = fonts.filter(font => 
-    matchingStyles.includes(font.aestheticStyle)
-  );
-  
-  // If we don't have enough fonts, include fonts from similar styles
-  if (matchingFonts.length < 3) {
-    const similarStyles = getSimilarStyles(matchingStyles[0], scores);
-    matchingFonts = [
-      ...matchingFonts,
-      ...fonts.filter(font => 
-        similarStyles.includes(font.aestheticStyle) && 
-        !matchingFonts.some(f => f.name === font.name)
-      )
-    ];
-  }
-
-  // Calculate weighted distance scores for each matching font
-  const fontScores = matchingFonts.map(font => ({
+  // Calculate scores for all fonts
+  const fontScores = fonts.map(font => ({
     font,
-    score: calculateWeightedScore(scores, font)
+    styleMatch: calculateStyleMatch(scores, font.aestheticStyle),
+    traitScore: calculateTraitScore(scores, font)
   }));
 
-  // Sort by score (higher is better)
-  fontScores.sort((a, b) => b.score - a.score);
+  // Sort by combined score (style match + trait score)
+  fontScores.sort((a, b) => {
+    const totalScoreA = a.styleMatch + a.traitScore;
+    const totalScoreB = b.styleMatch + b.traitScore;
+    return totalScoreB - totalScoreA;
+  });
 
-  // Get unique fonts by selecting the best scoring fonts with different names
-  const uniqueFonts = getUniqueFonts(fontScores);
-
-  // Get the primary aesthetic style from the best matching font
-  const primaryStyle = uniqueFonts[0]?.aestheticStyle || matchingStyles[0];
+  // Select fonts ensuring diversity in aesthetic styles
+  const selectedFonts = selectDiverseFonts(fontScores);
 
   return {
-    primary: uniqueFonts[0] || fallbackFont,
-    secondary: uniqueFonts[1] || uniqueFonts[0] || fallbackFont,
-    tertiary: uniqueFonts[2] || uniqueFonts[1] || fallbackFont,
-    aestheticStyle: primaryStyle
+    primary: selectedFonts[0] || fallbackFont,
+    secondary: selectedFonts[1] || selectedFonts[0] || fallbackFont,
+    tertiary: selectedFonts[2] || selectedFonts[1] || fallbackFont,
+    aestheticStyle: determineOverallStyle(selectedFonts[0]?.aestheticStyle || '', scores)
   };
 }
 
-function getUniqueFonts(fontScores: { font: FontData; score: number }[]): FontData[] {
-  const uniqueFonts: FontData[] = [];
-  const seenNames = new Set<string>();
-  const seenStyles = new Set<string>();
+function calculateStyleMatch(scores: UserScores, fontStyle: string): number {
+  const styleRanges = aestheticScoring[fontStyle];
+  if (!styleRanges) return 0;
+
+  const matches = [
+    isInRange(scores.tone, styleRanges.toneMin, styleRanges.toneMax),
+    isInRange(scores.energy, styleRanges.energyMin, styleRanges.energyMax),
+    isInRange(scores.design, styleRanges.designMin, styleRanges.designMax),
+    isInRange(scores.era, styleRanges.eraMin, styleRanges.eraMax),
+    isInRange(scores.structure, styleRanges.structureMin, styleRanges.structureMax)
+  ];
+
+  return matches.filter(Boolean).length;
+}
+
+function isInRange(value: number, min: number, max: number): boolean {
+  return value >= min && value <= max;
+}
+
+function calculateTraitScore(scores: UserScores, font: FontData): number {
+  const weights = {
+    tone: 2.0,     // Highest weight - crucial for brand voice
+    energy: 1.8,   // Very important for personality
+    design: 1.5,   // Important for visual impact
+    era: 1.2,      // Less critical but still relevant
+    structure: 1.0 // Base weight for structural aspects
+  };
+
+  const getTraitScore = (userScore: number, fontScore: number): number => {
+    const diff = Math.abs(userScore - fontScore);
+    return Math.max(5 - diff, 0); // 5 is max score, decreases with difference
+  };
+
+  return (
+    getTraitScore(scores.tone, font.tone) * weights.tone +
+    getTraitScore(scores.energy, font.energy) * weights.energy +
+    getTraitScore(scores.design, font.design) * weights.design +
+    getTraitScore(scores.era, font.era) * weights.era +
+    getTraitScore(scores.structure, font.structure) * weights.structure
+  );
+}
+
+function selectDiverseFonts(fontScores: { font: FontData; styleMatch: number; traitScore: number }[]): FontData[] {
+  const selected: FontData[] = [];
+  const usedStyles = new Set<string>();
 
   for (const { font } of fontScores) {
-    // Ensure we get a mix of different aesthetic styles when possible
-    if (!seenNames.has(font.name) && 
-        (uniqueFonts.length < 2 || !seenStyles.has(font.aestheticStyle))) {
-      uniqueFonts.push(font);
-      seenNames.add(font.name);
-      seenStyles.add(font.aestheticStyle);
-      if (uniqueFonts.length === 3) break;
+    // For the first font, just take the best match
+    if (selected.length === 0) {
+      selected.push(font);
+      usedStyles.add(font.aestheticStyle);
+      continue;
     }
+
+    // For subsequent fonts, ensure different aesthetic style if possible
+    if (!usedStyles.has(font.aestheticStyle) || usedStyles.size >= 3) {
+      if (selected.every(selectedFont => selectedFont.name !== font.name)) {
+        selected.push(font);
+        usedStyles.add(font.aestheticStyle);
+      }
+    }
+
+    if (selected.length === 3) break;
   }
 
-  return uniqueFonts;
+  return selected;
 }
 
-function determineAestheticStyles(scores: UserScores): string[] {
+function determineOverallStyle(primaryStyle: string, scores: UserScores): string {
+  // If we have a valid primary style, use it
+  if (primaryStyle && primaryStyle !== 'System Default') {
+    return primaryStyle;
+  }
+
+  // Otherwise, determine style based on scores
   const styleScores = Object.entries(aestheticScoring).map(([style, ranges]) => ({
     style,
-    match: calculateStyleMatch(scores, ranges)
+    match: calculateStyleMatch(scores, style)
   }));
 
-  // Sort by match score (higher is better)
   styleScores.sort((a, b) => b.match - a.match);
-
-  // Return top 3 matching styles
-  return styleScores.slice(0, 3).map(s => s.style);
-}
-
-function calculateStyleMatch(scores: UserScores, ranges: any): number {
-  let matchScore = 0;
-  
-  // Check how well each trait matches the style's range
-  matchScore += getTraitMatchScore(scores.tone, ranges.toneMin, ranges.toneMax);
-  matchScore += getTraitMatchScore(scores.energy, ranges.energyMin, ranges.energyMax);
-  matchScore += getTraitMatchScore(scores.design, ranges.designMin, ranges.designMax);
-  matchScore += getTraitMatchScore(scores.era, ranges.eraMin, ranges.eraMax);
-  matchScore += getTraitMatchScore(scores.structure, ranges.structureMin, ranges.structureMax);
-  
-  return matchScore;
-}
-
-function getTraitMatchScore(score: number, min: number, max: number): number {
-  if (score >= min && score <= max) return 1; // Perfect match
-  const distanceToRange = Math.min(Math.abs(score - min), Math.abs(score - max));
-  return 1 / (1 + distanceToRange); // Score decreases with distance from range
-}
-
-function getSimilarStyles(primaryStyle: string, scores: UserScores): string[] {
-  // Calculate style match scores for all styles except the primary
-  const styleScores = Object.entries(aestheticScoring)
-    .filter(([style]) => style !== primaryStyle)
-    .map(([style, ranges]) => ({
-      style,
-      match: calculateStyleMatch(scores, ranges)
-    }));
-
-  // Sort by match score and return top 2 similar styles
-  return styleScores
-    .sort((a, b) => b.match - a.match)
-    .slice(0, 2)
-    .map(s => s.style);
-}
-
-function calculateWeightedScore(scores: UserScores, font: FontData): number {
-  const weights = {
-    tone: 1.2,     // Slightly higher weight for tone as it's crucial for brand voice
-    energy: 1.1,   // Energy level is important for brand personality
-    design: 1.0,   // Standard weight for design expressiveness
-    era: 0.9,      // Slightly lower weight as era can be more flexible
-    structure: 0.8 // Lower weight as structure can be more adaptable
-  };
-
-  // Calculate weighted trait matches
-  const toneMatch = (5 - Math.abs(scores.tone - font.tone)) * weights.tone;
-  const energyMatch = (5 - Math.abs(scores.energy - font.energy)) * weights.energy;
-  const designMatch = (5 - Math.abs(scores.design - font.design)) * weights.design;
-  const eraMatch = (5 - Math.abs(scores.era - font.era)) * weights.era;
-  const structureMatch = (5 - Math.abs(scores.structure - font.structure)) * weights.structure;
-
-  // Return total weighted score
-  return toneMatch + energyMatch + designMatch + eraMatch + structureMatch;
+  return styleScores[0]?.style || 'Geometric Sans'; // Fallback to Geometric Sans if no match
 }
