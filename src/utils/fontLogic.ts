@@ -59,14 +59,37 @@ function determineAestheticStyle(scores: UserScores): string {
     }
   }
 
-  return bestStyle || 'Modern Serif'; // Fallback to Modern Serif if no clear match
+  // If no clear match found, determine based on dominant traits
+  if (!bestStyle) {
+    if (scores.design >= 4 && scores.era >= 4) {
+      return 'Modern Serif';
+    }
+    if (scores.tone <= 2 && scores.era <= 2) {
+      return 'Serif Old Style';
+    }
+    if (scores.energy >= 4 && scores.design >= 4) {
+      return 'Display / Bubbly';
+    }
+    return 'Transitional Serif'; // Final fallback
+  }
+
+  return bestStyle;
 }
 
 function getMatchingFonts(aestheticStyle: string, scores: UserScores): FontData[] {
-  const matchingFonts = fonts.filter(font => font.aestheticStyle === aestheticStyle);
+  // Get fonts matching the primary aesthetic style
+  let matchingFonts = fonts.filter(font => font.aestheticStyle === aestheticStyle);
 
-  if (matchingFonts.length === 0) {
-    return fonts.filter(font => font.aestheticStyle === 'Modern Serif');
+  // If we don't have enough fonts, get fonts from similar styles
+  if (matchingFonts.length < 3) {
+    const similarStyles = getSimilarStyles(aestheticStyle, scores);
+    matchingFonts = [
+      ...matchingFonts,
+      ...fonts.filter(font => 
+        similarStyles.includes(font.aestheticStyle) && 
+        !matchingFonts.some(f => f.name === font.name)
+      )
+    ];
   }
 
   // Sort fonts by how well they match the scores
@@ -77,46 +100,69 @@ function getMatchingFonts(aestheticStyle: string, scores: UserScores): FontData[
   });
 }
 
+function getSimilarStyles(primaryStyle: string, scores: UserScores): string[] {
+  const styleGroups = {
+    'serif': ['Serif Old Style', 'Transitional Serif', 'Modern Serif'],
+    'sans': ['Geometric Sans', 'Grotesque Sans', 'Humanist Sans'],
+    'display': ['Display / Bubbly', 'Rounded Sans'],
+    'technical': ['Monospace']
+  };
+
+  // Find the group containing the primary style
+  const group = Object.values(styleGroups).find(g => g.includes(primaryStyle)) || [];
+  
+  // Return other styles from the same group
+  return group.filter(style => style !== primaryStyle);
+}
+
 function calculateFontMatchScore(font: FontData, scores: UserScores): number {
-  let totalScore = 0;
   const weights = {
     tone: 1.5,
     energy: 1.5,
-    design: 2,
-    era: 2,
+    design: 2.0,
+    era: 2.0,
     structure: 1.5
   };
 
-  for (const trait of Object.keys(scores) as Array<keyof UserScores>) {
-    const diff = Math.abs(font[trait] - scores[trait]);
-    totalScore += (4 - diff) * weights[trait];
-  }
-
-  return totalScore;
+  return Object.entries(scores).reduce((score, [trait, value]) => {
+    const traitKey = trait as keyof UserScores;
+    const diff = Math.abs(font[traitKey] - value);
+    return score + (5 - diff) * weights[traitKey];
+  }, 0);
 }
 
 export function calculateFontRecommendations(scores: UserScores): FontRecommendation {
-  const aestheticStyle = determineAestheticStyle(scores);
-  const matchingFonts = getMatchingFonts(aestheticStyle, scores);
-
-  // Ensure we have enough fonts by falling back to Modern Serif if needed
-  if (matchingFonts.length < 3) {
-    const modernSerifFonts = fonts.filter(font => font.aestheticStyle === 'Modern Serif');
-    const availableFonts = [...matchingFonts, ...modernSerifFonts];
-    
-    return {
-      primary: availableFonts[0],
-      secondary: availableFonts[1] || availableFonts[0],
-      tertiary: availableFonts[2] || availableFonts[1],
-      aestheticStyle
-    };
+  if (!scores) {
+    throw new Error('Scores are required to calculate font recommendations');
   }
 
-  // Return three unique fonts
+  const aestheticStyle = determineAestheticStyle(scores);
+  let matchingFonts = getMatchingFonts(aestheticStyle, scores);
+
+  // If we don't have enough fonts, get additional recommendations
+  if (matchingFonts.length < 3) {
+    const additionalFonts = fonts
+      .filter(font => !matchingFonts.some(f => f.name === font.name))
+      .sort((a, b) => calculateFontMatchScore(b, scores) - calculateFontMatchScore(a, scores))
+      .slice(0, 3 - matchingFonts.length);
+
+    matchingFonts = [...matchingFonts, ...additionalFonts];
+  }
+
+  // Ensure we have exactly three unique fonts
+  const uniqueFonts = Array.from(new Set(matchingFonts.map(font => font.name)))
+    .map(name => matchingFonts.find(font => font.name === name)!)
+    .slice(0, 3);
+
+  // If we somehow still don't have enough fonts, duplicate the best matches
+  while (uniqueFonts.length < 3) {
+    uniqueFonts.push(uniqueFonts[0]);
+  }
+
   return {
-    primary: matchingFonts[0],
-    secondary: matchingFonts[1],
-    tertiary: matchingFonts[2],
+    primary: uniqueFonts[0],
+    secondary: uniqueFonts[1],
+    tertiary: uniqueFonts[2],
     aestheticStyle
   };
 }
