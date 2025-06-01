@@ -4,6 +4,7 @@ import { useQuizStore } from '../store/quizStore';
 import { quizQuestions } from '../data/quiz';
 import { ArrowDown, ArrowUp, Check, ChevronLeft } from 'lucide-react';
 import clsx from 'clsx';
+import { QuizProgress } from './QuizProgress';
 
 export const QuizQuestion: React.FC = () => {
   const { currentQuestion, answers, setAnswer, previousQuestion } = useQuizStore();
@@ -35,15 +36,20 @@ export const QuizQuestion: React.FC = () => {
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4">
-      {currentQuestion > 1 && (
-        <button
-          onClick={previousQuestion}
-          className="flex items-center gap-1 text-white/60 hover:text-white mb-8 transition-colors group"
-        >
-          <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-          Back to previous question
-        </button>
-      )}
+      <div className="flex items-center justify-between mb-8">
+        {currentQuestion > 1 ? (
+          <button
+            onClick={previousQuestion}
+            className="flex items-center gap-1 text-white/60 hover:text-white transition-colors group"
+          >
+            <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+            Back
+          </button>
+        ) : (
+          <div /> {/* Empty div to maintain flex layout */}
+        )}
+        <QuizProgress />
+      </div>
       
       <h2 className="text-2xl md:text-3xl font-semibold text-white mb-8 text-center">
         {question.question}
