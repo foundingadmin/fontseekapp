@@ -82,9 +82,9 @@ export const QuizResults: React.FC = () => {
     <div className="mb-8 bg-[#1C1F26] rounded-xl overflow-hidden shadow-xl">
       <div className="px-6 py-5 border-b border-[#2A2D36]">
         <div>
-          <h2 className="text-xl font-semibold text-white mb-2 tracking-[0]">{title}</h2>
-          <p className="text-2xl font-bold text-white tracking-[0]">{font.name}</p>
-          <p className="text-sm text-white/60 mt-2 max-w-xl tracking-[0]">{description}</p>
+          <h2 className="text-xl font-semibold text-white mb-2 tracking-[-0.02em]">{title}</h2>
+          <p className="text-2xl font-bold text-white tracking-[-0.02em]">{font.name}</p>
+          <p className="text-sm text-white/60 mt-2 max-w-xl tracking-[-0.02em]">{description}</p>
         </div>
       </div>
 
@@ -136,7 +136,7 @@ export const QuizResults: React.FC = () => {
                 }`}>Heading • 36px/48px • Bold</div>}
                 <h1 
                   style={{ fontFamily: font.name }} 
-                  className={`text-3xl md:text-5xl font-bold transition-colors tracking-[0] ${
+                  className={`text-3xl md:text-5xl font-bold transition-colors tracking-[-0.02em] ${
                     isDarkMode ? 'text-white' : 'text-neutral-900'
                   }`}
                 >
@@ -150,7 +150,7 @@ export const QuizResults: React.FC = () => {
                 }`}>Subheading • 20px/24px • Medium</div>}
                 <h2 
                   style={{ fontFamily: font.name }} 
-                  className={`text-xl md:text-2xl font-medium transition-colors tracking-[0] ${
+                  className={`text-xl md:text-2xl font-medium transition-colors tracking-[-0.02em] ${
                     isDarkMode ? 'text-white' : 'text-neutral-900'
                   }`}
                 >
@@ -164,7 +164,7 @@ export const QuizResults: React.FC = () => {
                 }`}>Lead Paragraph • 18px/20px • Regular</div>}
                 <p 
                   style={{ fontFamily: font.name }} 
-                  className={`text-lg md:text-xl transition-colors tracking-[0] ${
+                  className={`text-lg md:text-xl transition-colors tracking-[-0.02em] ${
                     isDarkMode ? 'text-white' : 'text-neutral-900'
                   }`}
                 >
@@ -178,7 +178,7 @@ export const QuizResults: React.FC = () => {
                 }`}>Body Copy • 14px/16px • Regular</div>}
                 <p 
                   style={{ fontFamily: font.name }} 
-                  className={`text-sm md:text-base transition-colors tracking-[0] ${
+                  className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
                     isDarkMode ? 'text-white' : 'text-neutral-900'
                   }`}
                 >
@@ -186,7 +186,7 @@ export const QuizResults: React.FC = () => {
                 </p>
                 <p 
                   style={{ fontFamily: font.name }} 
-                  className={`text-sm md:text-base transition-colors tracking-[0] ${
+                  className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
                     isDarkMode ? 'text-white' : 'text-neutral-900'
                   }`}
                 >
@@ -200,7 +200,7 @@ export const QuizResults: React.FC = () => {
                 }`}>Fine Print • 11px/12px • Light</div>}
                 <small 
                   style={{ fontFamily: font.name }} 
-                  className={`text-[11px] md:text-xs font-light block transition-colors tracking-[0] ${
+                  className={`text-[11px] md:text-xs font-light block transition-colors tracking-[-0.02em] ${
                     isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
                   }`}
                 >
@@ -213,8 +213,8 @@ export const QuizResults: React.FC = () => {
       </div>
 
       <div className="px-6 py-5 border-t border-[#2A2D36]">
-        <h3 className="text-lg font-semibold mb-2 text-white tracking-[0]">Start Using This Font Right Now</h3>
-        <p className="text-white/80 text-sm mb-4 tracking-[0]">
+        <h3 className="text-lg font-semibold mb-2 text-white tracking-[-0.02em]">Start Using This Font Right Now</h3>
+        <p className="text-white/80 text-sm mb-4 tracking-[-0.02em]">
           This Google Web Font is free to use for your brand. You can download it to your computer or embed it in your website in seconds using the tools on Google Fonts.
         </p>
         <a
@@ -258,11 +258,11 @@ export const QuizResults: React.FC = () => {
 
       <div className="mb-12">
         <p className="text-white/60 uppercase tracking-wider mb-2 text-left">Your Brand's Aesthetic Style</p>
-        <h1 className="text-4xl font-bold text-white mb-4 text-left tracking-[0]">{recommendations.aestheticStyle}</h1>
+        <h1 className="text-4xl font-bold text-white mb-4 text-left tracking-[-0.02em]">{recommendations.aestheticStyle}</h1>
         
         <div className="flex flex-wrap gap-2 mb-8">
           {getTopTraits(recommendations.primary).map((trait) => (
-            <span key={trait} className="bg-emerald-500/10 text-emerald-400 text-xs font-medium px-3 py-1 rounded-full tracking-[0]">
+            <span key={trait} className="bg-emerald-500/10 text-emerald-400 text-xs font-medium px-3 py-1 rounded-full tracking-[-0.02em]">
               {trait}
             </span>
           ))}
