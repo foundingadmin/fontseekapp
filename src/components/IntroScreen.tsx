@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useQuizStore } from '../store/quizStore';
 
 export const IntroScreen: React.FC = () => {
-  const { startQuiz, skipToResults } = useQuizStore();
+  const { startQuiz } = useQuizStore();
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.metaKey && e.altKey && e.key === 'Enter') {
-        startQuiz('skip@fontseek.com');
+      if (e.ctrlKey && e.key === 'Enter') {
+        startQuiz('test@fontseek.com');
       }
     };
 
