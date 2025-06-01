@@ -17,50 +17,64 @@ const fallbackFont: FontData = {
   recommendedFor: ['Any Context']
 };
 
+function isExactNeutralScore(scores: UserScores): boolean {
+  return Object.values(scores).every(score => score === 3);
+}
+
 function determineAestheticStyle(scores: UserScores): string {
-  // Check Geometric Sans first (high structure + balanced traits)
-  if (scores.structure >= 5 && scores.design >= 3 && scores.tone >= 3) {
-    return 'Geometric Sans';
+  // Return System Default only for exact neutral scores
+  if (isExactNeutralScore(scores)) {
+    return 'System Default';
   }
 
-  // Check Grotesque Sans (neutral traits + modern era)
-  if (scores.structure >= 3 && scores.structure <= 4 && 
-      scores.era >= 4 && 
-      scores.tone <= 3 && 
-      scores.design <= 3) {
-    return 'Grotesque Sans';
+  // Modern Serif check (high design + high era + low structure)
+  if (scores.design >= 4 && scores.era >= 4 && scores.structure <= 2) {
+    return 'Modern Serif';
   }
 
   // Check other styles with strict matching
-  for (const [style, ranges] of Object.entries(aestheticScoring)) {
-    if (style === 'Geometric Sans' || style === 'Grotesque Sans') continue;
+  let bestMatch = '';
+  let bestMatchScore = -1;
 
-    let matches = true;
+  for (const [style, ranges] of Object.entries(aestheticScoring)) {
+    let matchScore = 0;
+    let isValid = true;
+
     for (const trait of ['tone', 'energy', 'design', 'era', 'structure'] as const) {
       const score = scores[trait];
       const min = ranges[`${trait}Min`];
       const max = ranges[`${trait}Max`];
 
       if (score < min || score > max) {
-        matches = false;
+        isValid = false;
         break;
       }
+
+      // Calculate how well this trait matches (closer to range center is better)
+      const center = (min + max) / 2;
+      const distance = Math.abs(score - center);
+      matchScore += 1 - (distance / 4); // Normalize to 0-1 range
     }
 
-    if (matches) return style;
+    if (isValid && matchScore > bestMatchScore) {
+      bestMatch = style;
+      bestMatchScore = matchScore;
+    }
   }
 
-  // Default to Grotesque Sans if no clear match
-  // (neutral, structured, modern fonts work well as a fallback)
-  return 'Grotesque Sans';
+  return bestMatch || 'Modern Serif'; // Fallback to Modern Serif if no match found
 }
 
 function getMatchingFonts(aestheticStyle: string, scores: UserScores): FontData[] {
+  if (aestheticStyle === 'System Default') {
+    return [fallbackFont];
+  }
+
   const matchingFonts = fonts.filter(font => font.aestheticStyle === aestheticStyle);
 
   if (matchingFonts.length === 0) {
-    console.warn(`No fonts found for style '${aestheticStyle}'. Falling back to Grotesque Sans.`);
-    return fonts.filter(font => font.aestheticStyle === 'Grotesque Sans');
+    console.warn(`No fonts found for style '${aestheticStyle}'. Falling back to Modern Serif.`);
+    return fonts.filter(font => font.aestheticStyle === 'Modern Serif');
   }
 
   // Sort fonts by how well they match the scores
@@ -72,25 +86,44 @@ function getMatchingFonts(aestheticStyle: string, scores: UserScores): FontData[
 }
 
 function calculateFontMatchScore(font: FontData, scores: UserScores): number {
-  return Object.keys(scores).reduce((total, trait) => {
-    const traitKey = trait as keyof UserScores;
-    const diff = Math.abs(font[traitKey] - scores[traitKey]);
-    return total - diff;
-  }, 0);
+  let totalScore = 0;
+  const weights = {
+    tone: 1,
+    energy: 1,
+    design: 1.5,
+    era: 1.5,
+    structure: 2
+  };
+
+  for (const trait of Object.keys(scores) as Array<keyof UserScores>) {
+    const diff = Math.abs(font[trait] - scores[trait]);
+    totalScore += (4 - diff) * weights[trait]; // 4 is max possible difference
+  }
+
+  return totalScore;
 }
 
 export function calculateFontRecommendations(scores: UserScores): FontRecommendation {
   const aestheticStyle = determineAestheticStyle(scores);
+  
+  if (aestheticStyle === 'System Default') {
+    return {
+      primary: fallbackFont,
+      secondary: fallbackFont,
+      tertiary: fallbackFont,
+      aestheticStyle
+    };
+  }
+
   const matchingFonts = getMatchingFonts(aestheticStyle, scores);
 
   if (matchingFonts.length < 3) {
-    console.warn(`Not enough fonts for style '${aestheticStyle}'. Using fallbacks.`);
-    const grotesqueFonts = fonts.filter(font => font.aestheticStyle === 'Grotesque Sans');
+    const modernSerifFonts = fonts.filter(font => font.aestheticStyle === 'Modern Serif');
     return {
-      primary: grotesqueFonts[0] || fallbackFont,
-      secondary: grotesqueFonts[1] || fallbackFont,
-      tertiary: grotesqueFonts[2] || fallbackFont,
-      aestheticStyle: 'Grotesque Sans'
+      primary: matchingFonts[0] || modernSerifFonts[0] || fallbackFont,
+      secondary: matchingFonts[1] || modernSerifFonts[1] || fallbackFont,
+      tertiary: matchingFonts[2] || modernSerifFonts[2] || fallbackFont,
+      aestheticStyle: matchingFonts.length > 0 ? aestheticStyle : 'Modern Serif'
     };
   }
 
