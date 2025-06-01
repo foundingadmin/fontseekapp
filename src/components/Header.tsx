@@ -1,5 +1,6 @@
 import React from 'react';
 import { Menu } from 'lucide-react';
+import brandmarkLogo from '/Founding-v1-Brandmark-white.svg';
 
 export const Header: React.FC = () => {
   return (
@@ -8,9 +9,13 @@ export const Header: React.FC = () => {
         <div className="flex items-center space-x-4">
           <a href="/" className="block">
             <img 
-              src="/Founding-v1-Brandmark-white.svg" 
+              src={brandmarkLogo}
               alt="FontSeek - Strategy-Driven Font Recommendations" 
               className="w-[140px] h-auto"
+              onError={(e) => {
+                const img = e.target as HTMLImageElement;
+                console.error('Failed to load image:', img.src);
+              }}
             />
           </a>
         </div>

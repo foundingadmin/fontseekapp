@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { useQuizStore } from '../store/quizStore';
 import emailjs from '@emailjs/browser';
+import brandmarkLogo from '/Founding-v1-Brandmark-white.svg';
 
 interface ContactFormProps {
   onDownloadReport: () => void;
@@ -50,7 +51,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
       <div className="px-8 py-12 max-w-3xl mx-auto">
         <a href="/" className="block mb-8">
           <img 
-            src="/Founding-v1-Brandmark-white.svg" 
+            src={brandmarkLogo}
             alt="FontSeek - Strategy-Driven Font Recommendations" 
             className="w-[140px] h-auto mx-auto"
             onError={(e) => {
