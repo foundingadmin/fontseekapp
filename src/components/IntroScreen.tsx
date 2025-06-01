@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuizStore } from '../store/quizStore';
 
 export const IntroScreen: React.FC = () => {
   const [email, setEmail] = useState('');
-  const { startQuiz } = useQuizStore();
+  const { startQuiz, skipToResults } = useQuizStore();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -12,16 +12,28 @@ export const IntroScreen: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.altKey && e.key === 'Enter') {
+        skipToResults();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [skipToResults]);
+
   return (
     <div 
       className="min-h-screen flex items-center justify-center relative overflow-hidden"
       style={{
         backgroundImage: 'url(/src/assets/Mograph-BG-C-1920x1080-optimized.gif)',
         backgroundSize: 'cover',
-        backgroundPosition: 'center'
+        backgroundPosition: 'center',
+        opacity: '0.2'
       }}
     >
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-black backdrop-blur-sm" />
       
       <div className="relative z-10 max-w-xl mx-auto px-4 py-16 text-center">
         <img src="/src/assets/Founding-v1-Wordmark-white.svg" alt="FontSeek" className="h-8 mx-auto mb-12" />
