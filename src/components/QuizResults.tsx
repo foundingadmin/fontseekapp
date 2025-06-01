@@ -49,6 +49,17 @@ export const QuizResults: React.FC = () => {
     setTimeout(() => setIsShuffling(false), 500);
   };
 
+  const getTraitDescription = (trait: string, score: number): string => {
+    const descriptions: Record<string, string[]> = {
+      tone: ['Very Formal', 'Formal', 'Balanced', 'Casual', 'Very Casual'],
+      energy: ['Very Calm', 'Calm', 'Balanced', 'Energetic', 'Very Energetic'],
+      design: ['Very Minimal', 'Minimal', 'Balanced', 'Expressive', 'Very Expressive'],
+      era: ['Very Classic', 'Classic', 'Balanced', 'Modern', 'Very Modern'],
+      structure: ['Very Organic', 'Organic', 'Balanced', 'Geometric', 'Very Geometric']
+    };
+    return descriptions[trait.toLowerCase()][score - 1];
+  };
+
   const generatePDF = async () => {
     if (!recommendations || !scores || isGeneratingPDF) return;
     
@@ -61,36 +72,54 @@ export const QuizResults: React.FC = () => {
         format: 'a4'
       });
 
+      // Add logo
+      const logo = new Image();
+      logo.src = '/src/assets/Founding-v1-Wordmark-white.svg';
+      doc.addImage(logo, 'SVG', 150, 15, 40, 12);
+
       // Header
       doc.setFontSize(24);
       doc.setTextColor(0, 0, 0);
-      doc.text('FontSeek Report', 20, 20);
+      doc.text('FontSeek Report', 20, 30);
       
       doc.setFontSize(14);
       doc.setTextColor(100, 100, 100);
-      doc.text('Font Personality Profile', 20, 30);
+      doc.text('Font Personality Profile', 20, 40);
 
-      // Trait Scores
+      // Trait Scores with visual bars
       doc.setFontSize(12);
       doc.setTextColor(0, 0, 0);
       const traits = [
-        { name: 'Tone', description: 'Formal → Casual' },
-        { name: 'Energy', description: 'Calm → Energetic' },
-        { name: 'Design', description: 'Minimal → Expressive' },
-        { name: 'Era', description: 'Classic → Modern' },
-        { name: 'Structure', description: 'Organic → Geometric' }
+        { name: 'Tone', description: getTraitDescription('tone', scores.tone) },
+        { name: 'Energy', description: getTraitDescription('energy', scores.energy) },
+        { name: 'Design', description: getTraitDescription('design', scores.design) },
+        { name: 'Era', description: getTraitDescription('era', scores.era) },
+        { name: 'Structure', description: getTraitDescription('structure', scores.structure) }
       ];
 
-      let y = 50;
-      traits.forEach((trait, index) => {
+      let y = 60;
+      traits.forEach((trait) => {
         const score = scores[trait.name.toLowerCase() as keyof typeof scores];
-        doc.text(`${trait.name}: ${score}/5`, 20, y);
-        doc.text(`(${trait.description})`, 70, y);
-        y += 10;
+        
+        // Trait name and description
+        doc.setFontSize(11);
+        doc.text(`${trait.name}: ${trait.description}`, 20, y);
+        
+        // Draw scale bar
+        y += 5;
+        doc.setFillColor(240, 240, 240);
+        doc.rect(20, y, 100, 3, 'F');
+        
+        // Draw position marker
+        const markerPosition = 20 + ((score - 1) / 4) * 100;
+        doc.setFillColor(67, 218, 122); // emerald-500
+        doc.circle(markerPosition, y + 1.5, 2, 'F');
+        
+        y += 12;
       });
 
       // Primary Font Recommendation
-      y += 20;
+      y += 10;
       doc.setFontSize(16);
       doc.text('Your Recommended Font', 20, y);
       
@@ -112,18 +141,19 @@ export const QuizResults: React.FC = () => {
       const embedCode = `<link href="https://fonts.googleapis.com/css2?family=${recommendations.primary.name.replace(/ /g, '+')}:wght@400;500;700&display=swap" rel="stylesheet">`;
       doc.text('Add to your HTML <head>:', 20, y);
       
-      y += 10;
+      // Code block with background
+      y += 7;
       doc.setFillColor(245, 245, 245);
-      doc.rect(20, y - 5, 170, 10, 'F');
-      doc.text(embedCode, 22, y);
+      doc.roundedRect(20, y - 5, 170, 12, 2, 2, 'F');
+      doc.text(embedCode, 23, y + 1);
 
       y += 15;
       doc.text('Use in your CSS:', 20, y);
       
-      y += 10;
+      y += 7;
       doc.setFillColor(245, 245, 245);
-      doc.rect(20, y - 5, 170, 10, 'F');
-      doc.text(`font-family: '${recommendations.primary.name}', sans-serif;`, 22, y);
+      doc.roundedRect(20, y - 5, 170, 12, 2, 2, 'F');
+      doc.text(`font-family: '${recommendations.primary.name}', sans-serif;`, 23, y + 1);
 
       // Call to Action
       y += 30;
