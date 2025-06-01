@@ -7,6 +7,14 @@ import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
 import { ContactForm } from './ContactForm';
 
+const traitLabels = {
+  tone: { low: "Formal", high: "Casual" },
+  energy: { low: "Calm", high: "Energetic" },
+  design: { low: "Minimal", high: "Expressive" },
+  era: { low: "Classic", high: "Modern" },
+  structure: { low: "Organic", high: "Geometric" }
+};
+
 function loadGoogleFont(fontName: string) {
   const formatted = fontName.replace(/ /g, '+');
   const link = document.createElement('link');
@@ -44,6 +52,35 @@ export const QuizResults: React.FC = () => {
     }
   }, [recommendations]);
 
+  const getTopTraits = () => {
+    if (!scores) return [];
+
+    const traitScores = [
+      { trait: 'tone', score: scores.tone },
+      { trait: 'energy', score: scores.energy },
+      { trait: 'design', score: scores.design },
+      { trait: 'era', score: scores.era },
+      { trait: 'structure', score: scores.structure }
+    ];
+
+    // Sort by score (descending) and break ties using priority order
+    traitScores.sort((a, b) => {
+      if (a.score !== b.score) return b.score - a.score;
+      
+      const priority = ['energy', 'design', 'tone', 'era', 'structure'];
+      return priority.indexOf(a.trait) - priority.indexOf(b.trait);
+    });
+
+    return traitScores
+      .filter(({ score }) => score !== 3) // Skip neutral scores
+      .slice(0, 3) // Take top 3
+      .map(({ trait, score }) => {
+        const label = traitLabels[trait as keyof typeof traitLabels];
+        return score >= 4 ? label.high : label.low;
+      })
+      .filter(Boolean); // Remove any undefined values
+  };
+
   const shuffleCopyPack = () => {
     const currentIndex = copyPacks.findIndex(pack => pack.styleId === currentCopyPack.styleId);
     let nextIndex = currentIndex;
@@ -55,26 +92,10 @@ export const QuizResults: React.FC = () => {
     setCurrentCopyPack(copyPacks[nextIndex]);
   };
 
-  const getTopTraits = (font: typeof recommendations.primary) => {
-    const traits = [
-      { name: 'Casual', value: font.tone },
-      { name: 'Energetic', value: font.energy },
-      { name: 'Expressive', value: font.design },
-      { name: 'Modern', value: font.era },
-      { name: 'Geometric', value: font.structure }
-    ];
-    
-    return traits
-      .sort((a, b) => b.value - a.value)
-      .slice(0, 3)
-      .filter(trait => trait.value >= 3)
-      .map(trait => trait.name);
-  };
-
   const handleDownloadReport = () => {
     if (!recommendations || !scores) return;
 
-    const traits = getTopTraits(recommendations.primary);
+    const traits = getTopTraits();
     const doc = generateFontReport({
       font: recommendations.primary,
       scores,
@@ -308,13 +329,13 @@ export const QuizResults: React.FC = () => {
         <h1 className="text-4xl font-bold text-white mb-4 tracking-[-0.02em]">{recommendations.aestheticStyle}</h1>
         <p className="text-white/60 text-lg mb-8">
           Based on your answers, your brand's font personality aligns with the {recommendations.aestheticStyle.toLowerCase()} style.
-          This aesthetic combines {getTopTraits(recommendations.primary).map((trait, i, arr) => 
+          This aesthetic combines {getTopTraits().map((trait, i, arr) => 
             i === arr.length - 1 ? `and ${trait.toLowerCase()}` : `${trait.toLowerCase()}, `
           )} to create a distinctive visual voice.
         </p>
         
         <div className="flex flex-wrap gap-2 mb-8">
-          {getTopTraits(recommendations.primary).map((trait) => (
+          {getTopTraits().map((trait) => (
             <span key={trait} className="bg-emerald-500/10 text-emerald-400 text-xs font-medium px-3 py-1 rounded-full tracking-[-0.02em]">
               {trait}
             </span>
