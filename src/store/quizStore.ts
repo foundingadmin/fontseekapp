@@ -25,6 +25,13 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
     set((state) => ({
       answers: { ...state.answers, [questionNumber]: answer }
     }));
+
+    // If this was the last question, calculate results immediately
+    if (questionNumber === quizQuestions.length) {
+      setTimeout(() => get().calculateResults(), 500);
+    } else {
+      setTimeout(() => get().nextQuestion(), 500);
+    }
   },
 
   nextQuestion: () => {
