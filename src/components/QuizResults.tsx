@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useQuizStore } from '../store/quizStore';
 import { quizQuestions } from '../data/quiz';
-import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon } from 'lucide-react';
+import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon, Wand2 } from 'lucide-react';
 import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
@@ -16,7 +16,7 @@ function loadGoogleFont(fontName: string) {
 }
 
 export const QuizResults: React.FC = () => {
-  const { scores, recommendations, calculateResults, resetQuiz } = useQuizStore();
+  const { scores, recommendations, calculateResults, resetQuiz, skipToResults } = useQuizStore();
   const [showLabels, setShowLabels] = useState(false);
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -267,6 +267,14 @@ export const QuizResults: React.FC = () => {
           Retake Quiz
         </button>
         <div className="flex gap-2">
+          <button
+            onClick={() => skipToResults()}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
+            title="Generate random results"
+          >
+            <Wand2 className="w-4 h-4" />
+            Debug
+          </button>
           <button
             onClick={handleDownloadReport}
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
