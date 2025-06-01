@@ -1,10 +1,62 @@
 import React, { useEffect, useState } from 'react';
 import { useQuizStore } from '../store/quizStore';
 import { quizQuestions } from '../data/quiz';
-import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon } from 'lucide-react';
+import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon, Bug } from 'lucide-react';
 import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
+import { ContactForm } from './ContactForm';
+
+const aestheticDescriptions: Record<string, { emoji: string; description: string }> = {
+  'Display / Bubbly': {
+    emoji: '🧃',
+    description: "Your font match reflects a brand that's playful, expressive, and packed with energy. This aesthetic thrives on personality—ideal for brands that want to stand out, charm audiences, or inject a sense of fun into their communications. It's a bold look for bold brands."
+  },
+  'Humanist Sans': {
+    emoji: '🧠',
+    description: 'This match reflects a balanced tone—friendly, professional, and adaptable. Humanist sans fonts work beautifully for approachable brands that still need to be taken seriously. Think clarity with a touch of warmth.'
+  },
+  'Geometric Sans': {
+    emoji: '🛰',
+    description: 'Your brand values precision, clarity, and modernity. Geometric sans fonts are minimalist, clean, and calculated—ideal for tech-forward, future-facing, or design-savvy organizations.'
+  },
+  'Grotesque Sans': {
+    emoji: '🗂',
+    description: 'You favor practicality and structure with just enough personality to keep things interesting. This timeless sans-serif style is perfect for brands that want to feel grounded, neutral, and built to last.'
+  },
+  'Rounded Sans': {
+    emoji: '🫧',
+    description: 'Friendly, casual, and fresh. Rounded sans fonts are approachable and informal without being childish. This is the right pick for brands that want to feel helpful, human, and easygoing.'
+  },
+  'Monospace': {
+    emoji: '📎',
+    description: "This aesthetic says you're systematic, technical, or maybe even a bit rebellious. Monospace fonts evoke code, grids, and exactitude—perfect for developer tools, unconventional brands, or documentation-heavy environments."
+  },
+  'Transitional Serif': {
+    emoji: '📚',
+    description: 'A modern classic. This match tells us your brand appreciates structure and elegance but isn\'t stuck in the past. These fonts blend sharpness with sophistication—great for editorial, education, or premium service brands.'
+  },
+  'Modern Serif': {
+    emoji: '🪞',
+    description: "You're polished, progressive, and professional. This match blends traditional serif elements with clean, contemporary shapes—ideal for modern luxury, fashion, and creative industries that value both elegance and edge."
+  },
+  'Old Style Serif': {
+    emoji: '📖',
+    description: 'You lean into tradition, trust, and storytelling. This serif style fits brands with heritage, depth, and a classic sense of professionalism. Ideal for long-form content and legacy vibes.'
+  },
+  'System Default': {
+    emoji: '🧰',
+    description: 'Your brand values simplicity, speed, or versatility across platforms. Using system fonts means no-frills performance and familiarity—ideal for internal apps, OS-native tools, or lightweight branding.'
+  }
+};
+
+const traitLabels = {
+  tone: { low: "Formal", high: "Casual" },
+  energy: { low: "Calm", high: "Energetic" },
+  design: { low: "Minimal", high: "Expressive" },
+  era: { low: "Classic", high: "Modern" },
+  structure: { low: "Organic", high: "Geometric" }
+};
 
 function loadGoogleFont(fontName: string) {
   const formatted = fontName.replace(/ /g, '+');
@@ -19,6 +71,8 @@ export const QuizResults: React.FC = () => {
   const [showLabels, setShowLabels] = useState(false);
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [showFallbackMessage, setShowFallbackMessage] = useState(false);
+  const [showDebug, setShowDebug] = useState(false);
 
   useEffect(() => {
     if (!scores && !recommendations) {
@@ -31,8 +85,44 @@ export const QuizResults: React.FC = () => {
       loadGoogleFont(recommendations.primary.name);
       loadGoogleFont(recommendations.secondary.name);
       loadGoogleFont(recommendations.tertiary.name);
+      
+      setShowFallbackMessage(
+        recommendations.aestheticStyle === 'Humanist Sans' &&
+        recommendations.primary.name === 'Karla' &&
+        recommendations.secondary.name === 'Work Sans' &&
+        recommendations.tertiary.name === 'Cabin'
+      );
     }
   }, [recommendations]);
+
+  const getTopTraits = () => {
+    if (!scores) return [];
+
+    const traitScores = [
+      { trait: 'tone', score: scores.tone },
+      { trait: 'energy', score: scores.energy },
+      { trait: 'design', score: scores.design },
+      { trait: 'era', score: scores.era },
+      { trait: 'structure', score: scores.structure }
+    ];
+
+    // Sort by score (descending) and break ties using priority order
+    traitScores.sort((a, b) => {
+      if (a.score !== b.score) return b.score - a.score;
+      
+      const priority = ['energy', 'design', 'tone', 'era', 'structure'];
+      return priority.indexOf(a.trait) - priority.indexOf(b.trait);
+    });
+
+    return traitScores
+      .filter(({ score }) => score !== 3) // Skip neutral scores
+      .slice(0, 3) // Take top 3
+      .map(({ trait, score }) => {
+        const label = traitLabels[trait as keyof typeof traitLabels];
+        return score >= 4 ? label.high : label.low;
+      })
+      .filter(Boolean); // Remove any undefined values
+  };
 
   const shuffleCopyPack = () => {
     const currentIndex = copyPacks.findIndex(pack => pack.styleId === currentCopyPack.styleId);
@@ -45,26 +135,10 @@ export const QuizResults: React.FC = () => {
     setCurrentCopyPack(copyPacks[nextIndex]);
   };
 
-  const getTopTraits = (font: typeof recommendations.primary) => {
-    const traits = [
-      { name: 'Casual', value: font.tone },
-      { name: 'Energetic', value: font.energy },
-      { name: 'Expressive', value: font.design },
-      { name: 'Modern', value: font.era },
-      { name: 'Geometric', value: font.structure }
-    ];
-    
-    return traits
-      .sort((a, b) => b.value - a.value)
-      .slice(0, 3)
-      .filter(trait => trait.value >= 3)
-      .map(trait => trait.name);
-  };
-
   const handleDownloadReport = () => {
     if (!recommendations || !scores) return;
 
-    const traits = getTopTraits(recommendations.primary);
+    const traits = getTopTraits();
     const doc = generateFontReport({
       font: recommendations.primary,
       scores,
@@ -74,17 +148,20 @@ export const QuizResults: React.FC = () => {
     doc.save('FontSeek-Report.pdf');
   };
 
-  const FontPreviewCard = ({ font, title, description }: { 
+  const FontPreviewCard = ({ font, index }: { 
     font: typeof recommendations.primary;
-    title: string;
-    description: string;
+    index: number;
   }) => (
     <div className="mb-8 bg-[#1C1F26] rounded-xl overflow-hidden shadow-xl">
       <div className="px-6 py-5 border-b border-[#2A2D36]">
         <div>
-          <h2 className="text-xl font-semibold text-white mb-2 tracking-[-0.02em]">{title}</h2>
+          <h2 className="text-xl font-semibold text-white mb-2 tracking-[-0.02em]">
+            Suggested Font Option {index + 1}
+          </h2>
           <p className="text-2xl font-bold text-white tracking-[-0.02em]">{font.name}</p>
-          <p className="text-sm text-white/60 mt-2 max-w-xl tracking-[-0.02em]">{description}</p>
+          <p className="text-sm text-white/60 mt-2 max-w-xl tracking-[-0.02em]">
+            A {font.aestheticStyle.toLowerCase()} typeface that aligns with your brand's personality.
+          </p>
         </div>
       </div>
 
@@ -239,29 +316,69 @@ export const QuizResults: React.FC = () => {
 
   return (
     <div className="w-full max-w-3xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
+      {showFallbackMessage && (
+        <div className="mb-8 px-4 py-3 bg-white/5 rounded-lg text-white/60 text-sm text-center">
+          We had a little trouble finding a perfect match for your font style, so we've shown the closest match instead.
+        </div>
+      )}
+      
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4 mb-8">
         <button
           onClick={resetQuiz}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 text-black font-medium hover:bg-emerald-400 transition-colors"
+          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 text-black font-medium hover:bg-emerald-400 transition-colors w-full md:w-auto"
         >
           <RefreshCw className="w-4 h-4" />
           Retake Quiz
         </button>
+        
         <button
           onClick={handleDownloadReport}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
+          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full md:w-auto"
         >
           <Share2 className="w-4 h-4" />
           Download Report
         </button>
+        
+        <button
+          onClick={() => setShowDebug(!showDebug)}
+          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full md:w-auto order-last md:order-none"
+        >
+          <Bug className="w-4 h-4" />
+          Debug
+        </button>
       </div>
 
+      {showDebug && (
+        <div className="mb-8 p-4 bg-white/5 rounded-lg overflow-x-auto">
+          <h3 className="text-lg font-semibold mb-4 text-white">Debug Information</h3>
+          <div className="space-y-4">
+            <div>
+              <h4 className="text-sm font-medium text-white/80 mb-2">User Scores:</h4>
+              <pre className="text-xs text-white/60 font-mono">
+                {JSON.stringify(scores, null, 2)}
+              </pre>
+            </div>
+            <div>
+              <h4 className="text-sm font-medium text-white/80 mb-2">Font Recommendations:</h4>
+              <pre className="text-xs text-white/60 font-mono">
+                {JSON.stringify(recommendations, null, 2)}
+              </pre>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="mb-12">
-        <p className="text-white/60 uppercase tracking-wider mb-2 text-left">Your Brand's Aesthetic Style</p>
-        <h1 className="text-4xl font-bold text-white mb-4 text-left tracking-[-0.02em]">{recommendations.aestheticStyle}</h1>
+        <h1 className="text-4xl font-bold text-white mb-4 tracking-[-0.02em]">
+          {aestheticDescriptions[recommendations.aestheticStyle]?.emoji} {recommendations.aestheticStyle}
+        </h1>
+        <p className="text-white/60 text-lg mb-8">
+          {aestheticDescriptions[recommendations.aestheticStyle]?.description || 
+           `Based on your answers, your brand's font personality aligns with the ${recommendations.aestheticStyle.toLowerCase()} style.`}
+        </p>
         
         <div className="flex flex-wrap gap-2 mb-8">
-          {getTopTraits(recommendations.primary).map((trait) => (
+          {getTopTraits().map((trait) => (
             <span key={trait} className="bg-emerald-500/10 text-emerald-400 text-xs font-medium px-3 py-1 rounded-full tracking-[-0.02em]">
               {trait}
             </span>
@@ -271,23 +388,11 @@ export const QuizResults: React.FC = () => {
         {scores && <TraitScales scores={scores} />}
       </div>
 
-      <FontPreviewCard 
-        font={recommendations.primary}
-        title="Your Top Font Recommendation"
-        description="Based on your answers, this Google Web Font is the best match for your brand. It's free to use and ready to download or embed today."
-      />
+      <FontPreviewCard font={recommendations.primary} index={0} />
+      <FontPreviewCard font={recommendations.secondary} index={1} />
+      <FontPreviewCard font={recommendations.tertiary} index={2} />
 
-      <FontPreviewCard 
-        font={recommendations.secondary}
-        title="Your Second Font Option"
-        description="This alternative font matches your brand's personality while offering a slightly different aesthetic approach."
-      />
-
-      <FontPreviewCard 
-        font={recommendations.tertiary}
-        title="Your Third Font Option"
-        description="Another strong match for your brand's personality, providing a distinct visual alternative."
-      />
+      <ContactForm onDownloadReport={handleDownloadReport} />
     </div>
   );
 };

@@ -19,13 +19,25 @@ interface QuizStore {
   startQuiz: (email: string) => void;
 }
 
-const generateRandomScores = (): UserScores => ({
-  tone: Math.floor(Math.random() * 5) + 1,
-  energy: Math.floor(Math.random() * 5) + 1,
-  design: Math.floor(Math.random() * 5) + 1,
-  era: Math.floor(Math.random() * 5) + 1,
-  structure: Math.floor(Math.random() * 5) + 1,
-});
+// Keep track of recently used fonts to avoid repetition
+const recentlyUsedFonts = new Set<string>();
+
+const generateRandomScores = (): UserScores => {
+  // Generate more diverse scores to get different font recommendations
+  const getRandomScore = () => {
+    const weights = [1, 2, 3, 4, 5];
+    const randomIndex = Math.floor(Math.random() * weights.length);
+    return weights[randomIndex];
+  };
+
+  return {
+    tone: getRandomScore(),
+    energy: getRandomScore(),
+    design: getRandomScore(),
+    era: getRandomScore(),
+    structure: getRandomScore()
+  };
+};
 
 export const useQuizStore = create<QuizStore>((set, get) => ({
   currentQuestion: 1,
@@ -100,11 +112,25 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       }
     });
 
+    // Average the scores for each trait
     Object.keys(scores).forEach((key) => {
       scores[key as keyof UserScores] = Math.round(scores[key as keyof UserScores] / 2);
     });
 
     const recommendations = calculateFontRecommendations(scores);
+    
+    // Update recently used fonts
+    if (recommendations) {
+      recentlyUsedFonts.add(recommendations.primary.name);
+      recentlyUsedFonts.add(recommendations.secondary.name);
+      recentlyUsedFonts.add(recommendations.tertiary.name);
+      
+      // Keep only the last 9 fonts (3 sets) in memory
+      if (recentlyUsedFonts.size > 9) {
+        const oldestFonts = Array.from(recentlyUsedFonts).slice(0, recentlyUsedFonts.size - 9);
+        oldestFonts.forEach(font => recentlyUsedFonts.delete(font));
+      }
+    }
     
     set({ scores, recommendations });
   },

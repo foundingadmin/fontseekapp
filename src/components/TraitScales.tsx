@@ -50,9 +50,9 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-xl font-semibold mb-2 text-left">Your Brand's Font Personality Profile</h2>
-        <p className="text-white/60 text-left">
-          Based on your answers, these scales show how your brand expresses itself across five strategic traits.
+        <h2 className="text-xl font-semibold mb-2">Your Brand Personality</h2>
+        <p className="text-white/60">
+          This chart shows how your brand expresses itself across 5 key personality traits based on your answers.
         </p>
       </div>
 
@@ -60,7 +60,7 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
         {(Object.keys(traits) as Array<keyof UserScores>).map((traitKey) => {
           const trait = traits[traitKey];
           const score = scores[traitKey];
-          const percentage = ((score - 1) / 4) * 100; // Convert 1-5 score to 0-100%
+          const percentage = ((score - 1) / 4) * 100;
 
           return (
             <div key={traitKey} className="space-y-2">
@@ -80,9 +80,7 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
                   <span>{trait.rightLabel}</span>
                 </div>
 
-                {/* Track with tick marks */}
                 <div className="h-1.5 bg-neutral-700 rounded-full relative">
-                  {/* Tick marks */}
                   {[0, 25, 50, 75, 100].map((tick) => (
                     <div
                       key={tick}
@@ -91,7 +89,6 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
                     />
                   ))}
                   
-                  {/* Position indicator */}
                   <div 
                     className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/20 ring-4 ring-emerald-400/20 transition-all duration-500"
                     style={{ left: `${percentage}%` }}
@@ -101,12 +98,6 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
             </div>
           );
         })}
-      </div>
-
-      <div>
-        <p className="text-sm text-white/60 text-left">
-          The position of each marker shows where your brand falls between two style extremes.
-        </p>
       </div>
     </div>
   );

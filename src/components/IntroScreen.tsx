@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useQuizStore } from '../store/quizStore';
+import wordmarkLogo from '../assets/Founding-v1-Wordmark-white.svg';
 
 export const IntroScreen: React.FC = () => {
-  const { startQuiz, skipToResults } = useQuizStore();
+  const { startQuiz } = useQuizStore();
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.metaKey && e.altKey && e.key === 'Enter') {
-        startQuiz('skip@fontseek.com');
+      if (e.ctrlKey && e.key === 'Enter') {
+        startQuiz('test@fontseek.com');
       }
     };
 
@@ -72,15 +73,25 @@ export const IntroScreen: React.FC = () => {
       <div 
         className="absolute inset-0 opacity-20"
         style={{
-          backgroundImage: 'url(/src/assets/Mograph-BG-C-1920x1080-optimized.gif)',
+          backgroundImage: 'url(/Mograph-BG-C-1920x1080-optimized.gif)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       />
       
       <div className="relative z-10 min-h-screen flex items-center justify-center">
-        <div className="max-w-xl mx-auto px-4 py-16 text-center">
-          <img src="/src/assets/Founding-v1-Wordmark-white.svg" alt="FontSeek" className="w-[145px] mx-auto mb-12" />
+        <div className="max-w-3xl mx-auto px-4 py-16 text-center">
+          <a href="/" className="inline-block mb-12">
+            <img 
+              src={wordmarkLogo}
+              alt="FontSeek - Strategy-Driven Font Recommendations" 
+              className="w-[140px] h-auto"
+              onError={(e) => {
+                const img = e.target as HTMLImageElement;
+                console.error('Failed to load image:', img.src);
+              }}
+            />
+          </a>
           
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
             Choose fonts on what they say. Not how they look.
