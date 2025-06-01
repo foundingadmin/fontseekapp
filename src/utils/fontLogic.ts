@@ -2,30 +2,6 @@ import type { UserScores, FontRecommendation, FontData } from '../types';
 import { fonts } from '../data/fonts';
 import { aestheticScoring } from '../data/aestheticScoring';
 
-// Aesthetic style trait weights
-const aestheticWeights: Record<string, Partial<Record<keyof UserScores, number>>> = {
-  'Monospace': {
-    structure: 1.5,
-    era: 1.25,
-  },
-  'Rounded Sans': {
-    tone: 1.5,
-    energy: 1.25,
-  },
-  'Geometric Sans': {
-    design: 1.5,
-    structure: 1.25,
-  },
-  'Classic Serif': {
-    era: 1.5,
-    design: 1.25,
-  },
-  'Display Sans': {
-    energy: 1.5,
-    design: 1.25,
-  }
-};
-
 // Default fallback font
 const fallbackFont: FontData = {
   name: 'System UI',
@@ -45,71 +21,42 @@ export function calculateFontRecommendations(scores: UserScores): FontRecommenda
   // First, determine the aesthetic style based on the user's scores
   const primaryStyle = determineAestheticStyle(scores);
   
-  // Strictly filter fonts to only those matching the primary style
-  let matchingFonts = fonts.filter(font => font.aestheticStyle === primaryStyle);
+  // Strictly filter fonts to ONLY those matching the primary aesthetic style
+  const matchingFonts = fonts.filter(font => font.aestheticStyle === primaryStyle);
 
-  // Calculate weighted scores for each font
+  // If we don't have any fonts in this style, use fallback
+  if (matchingFonts.length === 0) {
+    return {
+      primary: fallbackFont,
+      secondary: fallbackFont,
+      tertiary: fallbackFont,
+      aestheticStyle: primaryStyle
+    };
+  }
+
+  // Calculate distance scores for each matching font
   const fontScores = matchingFonts.map(font => ({
     font,
-    score: calculateWeightedScore(scores, font, primaryStyle)
+    distance: calculateDistance(scores, font)
   }));
 
-  // Sort by score (higher is better)
-  fontScores.sort((a, b) => b.score - a.score);
+  // Sort by distance (lower is better)
+  fontScores.sort((a, b) => a.distance - b.distance);
 
-  // Get unique top fonts
-  const selectedFonts = getUniqueFonts(fontScores);
+  // Get unique fonts (no duplicates)
+  const uniqueFonts = getUniqueFonts(fontScores);
 
-  // If we don't have enough fonts, get fonts from similar styles
-  if (selectedFonts.length < 3) {
-    const similarStyles = getSimilarStyles(primaryStyle, scores);
-    for (const style of similarStyles) {
-      const additionalFonts = fonts
-        .filter(font => 
-          font.aestheticStyle === style && 
-          !selectedFonts.some(selected => selected.name === font.name)
-        )
-        .map(font => ({
-          font,
-          score: calculateWeightedScore(scores, font, style)
-        }))
-        .sort((a, b) => b.score - a.score);
-
-      selectedFonts.push(...getUniqueFonts(additionalFonts, 3 - selectedFonts.length));
-      
-      if (selectedFonts.length >= 3) break;
-    }
+  // If we don't have enough fonts, repeat the last one
+  while (uniqueFonts.length < 3) {
+    uniqueFonts.push(uniqueFonts[uniqueFonts.length - 1] || fallbackFont);
   }
 
   return {
-    primary: selectedFonts[0] || fallbackFont,
-    secondary: selectedFonts[1] || selectedFonts[0] || fallbackFont,
-    tertiary: selectedFonts[2] || selectedFonts[1] || fallbackFont,
+    primary: uniqueFonts[0],
+    secondary: uniqueFonts[1],
+    tertiary: uniqueFonts[2],
     aestheticStyle: primaryStyle
   };
-}
-
-function calculateWeightedScore(scores: UserScores, font: FontData, style: string): number {
-  const weights = aestheticWeights[style] || {};
-  let totalScore = 0;
-  let totalWeight = 0;
-
-  const calculateTraitScore = (trait: keyof UserScores) => {
-    const weight = weights[trait] || 1;
-    const diff = Math.abs(scores[trait] - font[trait]);
-    // Exponential penalty for larger differences
-    const penalty = diff * diff;
-    return (5 - penalty) * weight;
-  };
-
-  // Calculate weighted scores for each trait
-  Object.keys(scores).forEach(trait => {
-    const weight = weights[trait as keyof UserScores] || 1;
-    totalScore += calculateTraitScore(trait as keyof UserScores);
-    totalWeight += weight;
-  });
-
-  return totalScore / totalWeight;
 }
 
 function determineAestheticStyle(scores: UserScores): string {
@@ -142,30 +89,31 @@ function calculateStyleMatchScore(scores: UserScores, ranges: any): number {
   for (const { trait, min, max } of traits) {
     const score = scores[trait as keyof UserScores];
     if (score >= min && score <= max) {
-      totalScore += 1;
+      totalScore += 2; // Bonus for being in range
     } else {
       // Exponential penalty for being outside the range
       const distance = Math.min(Math.abs(score - min), Math.abs(score - max));
-      totalScore -= (distance * distance) / 10;
+      totalScore -= distance * distance;
     }
   }
 
   return totalScore;
 }
 
-function getSimilarStyles(currentStyle: string, scores: UserScores): string[] {
-  return Object.entries(aestheticScoring)
-    .filter(([style]) => style !== currentStyle)
-    .map(([style, ranges]) => ({
-      style,
-      score: calculateStyleMatchScore(scores, ranges)
-    }))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 2)
-    .map(result => result.style);
+function calculateDistance(scores: UserScores, font: FontData): number {
+  let totalDistance = 0;
+  const traits: (keyof UserScores)[] = ['tone', 'energy', 'design', 'era', 'structure'];
+
+  for (const trait of traits) {
+    const diff = Math.abs(scores[trait] - font[trait]);
+    // Exponential penalty for larger differences
+    totalDistance += diff * diff;
+  }
+
+  return totalDistance;
 }
 
-function getUniqueFonts(fontScores: { font: FontData; score: number }[], limit = 3): FontData[] {
+function getUniqueFonts(fontScores: { font: FontData; distance: number }[]): FontData[] {
   const uniqueFonts: FontData[] = [];
   const seenNames = new Set<string>();
 
@@ -173,7 +121,7 @@ function getUniqueFonts(fontScores: { font: FontData; score: number }[], limit =
     if (!seenNames.has(font.name)) {
       uniqueFonts.push(font);
       seenNames.add(font.name);
-      if (uniqueFonts.length === limit) break;
+      if (uniqueFonts.length === 3) break;
     }
   }
 
