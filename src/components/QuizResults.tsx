@@ -74,9 +74,9 @@ export const QuizResults: React.FC = () => {
         </button>
       </div>
 
-      <div className="mb-12 text-center">
-        <p className="text-white/60 uppercase tracking-wider mb-2">Your Brand's Aesthetic Style</p>
-        <h1 className="text-4xl font-bold text-white mb-8">{recommendations.aestheticStyle}</h1>
+      <div className="mb-12">
+        <p className="text-white/60 uppercase tracking-wider mb-2 text-left">Your Brand's Aesthetic Style</p>
+        <h1 className="text-4xl font-bold text-white mb-8 text-left">{recommendations.aestheticStyle}</h1>
         
         {scores && <TraitScales scores={scores} />}
       </div>
