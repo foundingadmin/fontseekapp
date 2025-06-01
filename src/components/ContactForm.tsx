@@ -65,42 +65,12 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
           onSubmit={handleSubmit} 
           className="space-y-6"
         >
-          {/* Hidden fields for font results */}
-          <input 
-            type="hidden" 
-            name="primary_font" 
-            value={recommendations?.primary.name || ''}
-          />
-          <input 
-            type="hidden" 
-            name="aesthetic_style" 
-            value={recommendations?.aestheticStyle || ''}
-          />
-          <input 
-            type="hidden" 
-            name="tone_score" 
-            value={scores?.tone.toString() || ''}
-          />
-          <input 
-            type="hidden" 
-            name="energy_score" 
-            value={scores?.energy.toString() || ''}
-          />
-          <input 
-            type="hidden" 
-            name="design_score" 
-            value={scores?.design.toString() || ''}
-          />
-          <input 
-            type="hidden" 
-            name="era_score" 
-            value={scores?.era.toString() || ''}
-          />
-          <input 
-            type="hidden" 
-            name="structure_score" 
-            value={scores?.structure.toString() || ''}
-          />
+          <input type="hidden" name="subject" value="I Found My Font!" />
+          <input type="hidden" name="email" value={email || ''} />
+          <input type="hidden" name="aesthetic" value={recommendations?.aestheticStyle || ''} />
+          <input type="hidden" name="option1" value={recommendations?.primary.name || ''} />
+          <input type="hidden" name="option2" value={recommendations?.secondary.name || ''} />
+          <input type="hidden" name="option3" value={recommendations?.tertiary.name || ''} />
 
           <div>
             <input
