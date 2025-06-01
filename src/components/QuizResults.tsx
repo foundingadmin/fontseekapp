@@ -14,7 +14,7 @@ function loadGoogleFont(fontName: string) {
 
 export const QuizResults: React.FC = () => {
   const { scores, recommendations, calculateResults, resetQuiz } = useQuizStore();
-  const [showLabels, setShowLabels] = useState(true); // Default to true
+  const [showLabels, setShowLabels] = useState(true);
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
   const [isShuffling, setIsShuffling] = useState(false);
 
@@ -81,32 +81,34 @@ export const QuizResults: React.FC = () => {
         {scores && <RadarChart scores={scores} />}
       </div>
 
-      {/* Primary Font */}
+      {/* First Font Suggestion */}
       <div className="mb-16 bg-white/10 rounded-xl p-8 backdrop-blur-sm">
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold text-white mb-2">Primary Font</h2>
-          <p className="text-2xl font-bold text-white">{recommendations.primary.name}</p>
+        <div className="flex justify-between items-start mb-8">
+          <div>
+            <h2 className="text-xl font-semibold text-white mb-2">First Font Suggestion</h2>
+            <p className="text-2xl font-bold text-white">{recommendations.primary.name}</p>
+          </div>
+          <div className="flex flex-col items-end gap-4">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={shuffleCopyPack}
+                disabled={isShuffling}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Shuffle className="w-4 h-4" />
+                Shuffle Copy Style
+              </button>
+              <button
+                onClick={() => setShowLabels(!showLabels)}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors text-sm"
+              >
+                {showLabels ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {showLabels ? 'Hide specs' : 'Show specs'}
+              </button>
+            </div>
+            <p className="text-sm text-white/40">Voice Style: {currentCopyPack.styleId}</p>
+          </div>
         </div>
-
-        <div className="flex items-center gap-4 mb-8">
-          <button
-            onClick={shuffleCopyPack}
-            disabled={isShuffling}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Shuffle className="w-4 h-4" />
-            Shuffle Copy Style
-          </button>
-          <button
-            onClick={() => setShowLabels(!showLabels)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors text-sm"
-          >
-            {showLabels ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            {showLabels ? 'Hide specs' : 'Show specs'}
-          </button>
-        </div>
-
-        <p className="text-sm text-white/40 mb-8">Voice Style: {currentCopyPack.styleId}</p>
         
         <div className="space-y-8">
           <div>
@@ -191,11 +193,11 @@ export const QuizResults: React.FC = () => {
         </div>
       </div>
 
-      {/* Secondary & Tertiary Fonts */}
+      {/* Second and Third Options */}
       <div className="grid md:grid-cols-2 gap-6">
         {[
-          { title: 'Secondary Font', font: recommendations.secondary },
-          { title: 'Tertiary Font', font: recommendations.tertiary }
+          { title: 'Second Option', font: recommendations.secondary },
+          { title: 'Third Option', font: recommendations.tertiary }
         ].map(({ title, font }) => (
           <div key={font.name} className="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-4">
