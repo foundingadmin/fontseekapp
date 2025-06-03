@@ -1,65 +1,84 @@
-{Previous content remains the same until the font preview section, where we modify the spec labels}
+import React from 'react';
 
-                <div>
-                  {showLabels && <div className="font-sans text-xs mb-1 text-neutral-400">Heading • 36px/48px • Bold</div>}
-                  <h1 
-                    className={`text-3xl md:text-5xl font-bold transition-colors tracking-[-0.02em] ${
-                      isDarkMode ? 'text-white' : 'text-neutral-900'
-                    }`}
-                  >
-                    {currentCopyPack.heading}
-                  </h1>
-                </div>
+interface QuizResultsProps {
+  showLabels: boolean;
+  isDarkMode: boolean;
+  currentCopyPack: {
+    heading: string;
+    subheading: string;
+    leadParagraph: string;
+    body1: string;
+    body2: string;
+    finePrint: string;
+  };
+}
 
-                <div>
-                  {showLabels && <div className="font-sans text-xs mb-1 text-neutral-400">Subheading • 20px/24px • Medium</div>}
-                  <h2 
-                    className={`text-xl md:text-2xl font-medium transition-colors tracking-[-0.02em] ${
-                      isDarkMode ? 'text-white' : 'text-neutral-900'
-                    }`}
-                  >
-                    {currentCopyPack.subheading}
-                  </h2>
-                </div>
+const QuizResults: React.FC<QuizResultsProps> = ({ showLabels, isDarkMode, currentCopyPack }) => {
+  return (
+    <>
+      <div>
+        {showLabels && <div className="font-sans text-xs mb-1 text-neutral-400">Heading • 36px/48px • Bold</div>}
+        <h1 
+          className={`text-3xl md:text-5xl font-bold transition-colors tracking-[-0.02em] ${
+            isDarkMode ? 'text-white' : 'text-neutral-900'
+          }`}
+        >
+          {currentCopyPack.heading}
+        </h1>
+      </div>
 
-                <div>
-                  {showLabels && <div className="font-sans text-xs mb-1 text-neutral-400">Lead Paragraph • 18px/20px • Regular</div>}
-                  <p 
-                    className={`text-lg md:text-xl transition-colors tracking-[-0.02em] ${
-                      isDarkMode ? 'text-white' : 'text-neutral-900'
-                    }`}
-                  >
-                    {currentCopyPack.leadParagraph}
-                  </p>
-                </div>
+      <div>
+        {showLabels && <div className="font-sans text-xs mb-1 text-neutral-400">Subheading • 20px/24px • Medium</div>}
+        <h2 
+          className={`text-xl md:text-2xl font-medium transition-colors tracking-[-0.02em] ${
+            isDarkMode ? 'text-white' : 'text-neutral-900'
+          }`}
+        >
+          {currentCopyPack.subheading}
+        </h2>
+      </div>
 
-                <div className="space-y-2">
-                  {showLabels && <div className="font-sans text-xs mb-1 text-neutral-400">Body Copy • 14px/16px • Regular</div>}
-                  <p 
-                    className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
-                      isDarkMode ? 'text-white' : 'text-neutral-900'
-                    }`}
-                  >
-                    {currentCopyPack.body1}
-                  </p>
-                  <p 
-                    className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
-                      isDarkMode ? 'text-white' : 'text-neutral-900'
-                    }`}
-                  >
-                    {currentCopyPack.body2}
-                  </p>
-                </div>
+      <div>
+        {showLabels && <div className="font-sans text-xs mb-1 text-neutral-400">Lead Paragraph • 18px/20px • Regular</div>}
+        <p 
+          className={`text-lg md:text-xl transition-colors tracking-[-0.02em] ${
+            isDarkMode ? 'text-white' : 'text-neutral-900'
+          }`}
+        >
+          {currentCopyPack.leadParagraph}
+        </p>
+      </div>
 
-                <div>
-                  {showLabels && <div className="font-sans text-xs mb-1 text-neutral-400">Fine Print • 11px/12px • Light</div>}
-                  <small 
-                    className={`text-[11px] md:text-xs font-light block transition-colors tracking-[-0.02em] ${
-                      isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                    }`}
-                  >
-                    {currentCopyPack.finePrint}
-                  </small>
-                </div>
+      <div className="space-y-2">
+        {showLabels && <div className="font-sans text-xs mb-1 text-neutral-400">Body Copy • 14px/16px • Regular</div>}
+        <p 
+          className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
+            isDarkMode ? 'text-white' : 'text-neutral-900'
+          }`}
+        >
+          {currentCopyPack.body1}
+        </p>
+        <p 
+          className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
+            isDarkMode ? 'text-white' : 'text-neutral-900'
+          }`}
+        >
+          {currentCopyPack.body2}
+        </p>
+      </div>
 
-{Rest of the file remains the same}
+      <div>
+        {showLabels && <div className="font-sans text-xs mb-1 text-neutral-400">Fine Print • 11px/12px • Light</div>}
+        <small 
+          className={`text-[11px] md:text-xs font-light block transition-colors tracking-[-0.02em] ${
+            isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+          }`}
+        >
+          {currentCopyPack.finePrint}
+        </small>
+      </div>
+    </>
+  );
+};
+
+export default QuizResults;
