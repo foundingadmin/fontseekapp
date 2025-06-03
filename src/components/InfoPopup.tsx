@@ -56,8 +56,7 @@ export const InfoPopup: React.FC = () => {
 
               <div className="space-y-6 text-lg text-white/80">
                 <p className="font-medium text-emerald-400">
-                  Most font tools start with how a font looks.<br />
-                  We start instead with what your brand feels like.
+                  Most font tools start with how a font looks. We start instead with what your brand feels like.
                 </p>
 
                 <p>
@@ -73,13 +72,12 @@ export const InfoPopup: React.FC = () => {
                 </p>
 
                 <p className="font-medium text-emerald-400">
-                  FontSeek doesn't just suggest fonts.<br />
-                  It helps bring your website and your brand to life with purpose.
+                  FontSeek doesn't just suggest fonts. It helps bring your website and your brand to life with purpose.
                 </p>
 
                 <div className="pt-8 border-t border-white/10">
                   <p className="text-white/60 mb-4">
-                    Need help bringing your website and brand to life with purpose?
+                    Need help bringing your website and brand to life with purpose.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4">
                     <a
