@@ -160,6 +160,14 @@ export const QuizResults: React.FC = () => {
       setCurrentCopyPack(copyPacks[nextIndex]);
     };
 
+    const SpecLabel = ({ children }: { children: React.ReactNode }) => (
+      <div className={`font-sans text-xs mb-1 ${
+        isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+      }`}>
+        {children}
+      </div>
+    );
+
     return (
       <div className="mb-8 bg-[#1C1F26] rounded-xl overflow-hidden shadow-xl">
         <div className="px-6 py-5 border-b border-[#2A2D36]">
@@ -226,9 +234,7 @@ export const QuizResults: React.FC = () => {
                 className="space-y-4"
               >
                 <div>
-                  {showLabels && <div className={`text-xs mb-1 ${
-                    isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                  }`}>Heading • 36px/48px • Bold</div>}
+                  {showLabels && <SpecLabel>Heading • 36px/48px • Bold</SpecLabel>}
                   <h1 
                     className={`text-3xl md:text-5xl font-bold transition-colors tracking-[-0.02em] ${
                       isDarkMode ? 'text-white' : 'text-neutral-900'
@@ -239,9 +245,7 @@ export const QuizResults: React.FC = () => {
                 </div>
 
                 <div>
-                  {showLabels && <div className={`text-xs mb-1 ${
-                    isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                  }`}>Subheading • 20px/24px • Medium</div>}
+                  {showLabels && <SpecLabel>Subheading • 20px/24px • Medium</SpecLabel>}
                   <h2 
                     className={`text-xl md:text-2xl font-medium transition-colors tracking-[-0.02em] ${
                       isDarkMode ? 'text-white' : 'text-neutral-900'
@@ -252,9 +256,7 @@ export const QuizResults: React.FC = () => {
                 </div>
 
                 <div>
-                  {showLabels && <div className={`text-xs mb-1 ${
-                    isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                  }`}>Lead Paragraph • 18px/20px • Regular</div>}
+                  {showLabels && <SpecLabel>Lead Paragraph • 18px/20px • Regular</SpecLabel>}
                   <p 
                     className={`text-lg md:text-xl transition-colors tracking-[-0.02em] ${
                       isDarkMode ? 'text-white' : 'text-neutral-900'
@@ -265,9 +267,7 @@ export const QuizResults: React.FC = () => {
                 </div>
 
                 <div className="space-y-2">
-                  {showLabels && <div className={`text-xs mb-1 ${
-                    isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                  }`}>Body Copy • 14px/16px • Regular</div>}
+                  {showLabels && <SpecLabel>Body Copy • 14px/16px • Regular</SpecLabel>}
                   <p 
                     className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
                       isDarkMode ? 'text-white' : 'text-neutral-900'
@@ -285,9 +285,7 @@ export const QuizResults: React.FC = () => {
                 </div>
 
                 <div>
-                  {showLabels && <div className={`text-xs mb-1 ${
-                    isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                  }`}>Fine Print • 11px/12px • Light</div>}
+                  {showLabels && <SpecLabel>Fine Print • 11px/12px • Light</SpecLabel>}
                   <small 
                     className={`text-[11px] md:text-xs font-light block transition-colors tracking-[-0.02em] ${
                       isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
