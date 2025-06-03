@@ -3,34 +3,53 @@ import { Info, X, ArrowUpRight } from 'lucide-react';
 
 export const InfoPopup: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsOpen(false);
+      setIsClosing(false);
+    }, 200);
+  };
 
   return (
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed top-4 right-4 z-50 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+        className="fixed top-4 right-4 z-50 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 hover:scale-110"
         aria-label="About FontSeek"
       >
         <Info className="w-5 h-5 text-white" />
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div 
+          className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-200 ${
+            isClosing 
+              ? 'bg-black/0 backdrop-blur-none' 
+              : 'bg-black/80 backdrop-blur-sm'
+          }`}
+        >
           <div 
-            className="relative w-full max-w-2xl max-h-[90vh] bg-[#1C1F26] rounded-xl shadow-xl overflow-hidden"
+            className={`relative w-full max-w-2xl max-h-[90vh] bg-[#1C1F26] rounded-xl shadow-xl overflow-hidden transition-all duration-200 ${
+              isClosing
+                ? 'opacity-0 scale-95 translate-y-4'
+                : 'opacity-100 scale-100 translate-y-0'
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="absolute top-4 right-4">
               <button
-                onClick={() => setIsOpen(false)}
-                className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                onClick={handleClose}
+                className="p-2 rounded-lg hover:bg-white/10 transition-colors group"
                 aria-label="Close popup"
               >
-                <X className="w-5 h-5 text-white" />
+                <X className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-90" />
               </button>
             </div>
 
-            <div className="p-8 overflow-y-auto max-h-[90vh]">
+            <div className="p-8 overflow-y-auto max-h-[90vh] custom-scrollbar">
               <h2 className="text-3xl font-bold text-white mb-8">
                 Why we built FontSeek
               </h2>
@@ -67,17 +86,17 @@ export const InfoPopup: React.FC = () => {
                       href="https://foundingcreative.com"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-colors font-medium"
+                      className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-all duration-200 hover:scale-105 font-medium group"
                     >
                       Visit foundingcreative.com
-                      <ArrowUpRight className="w-4 h-4" />
+                      <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                     </a>
                     <a
                       href="mailto:admin@foundingcreative.com"
-                      className="flex items-center gap-2 px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors"
+                      className="flex items-center gap-2 px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105 group"
                     >
                       Email us directly
-                      <ArrowUpRight className="w-4 h-4" />
+                      <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                     </a>
                   </div>
                 </div>
@@ -89,8 +108,10 @@ export const InfoPopup: React.FC = () => {
 
       {isOpen && (
         <div
-          className="fixed inset-0 z-40"
-          onClick={() => setIsOpen(false)}
+          className={`fixed inset-0 z-40 transition-opacity duration-200 ${
+            isClosing ? 'opacity-0' : 'opacity-100'
+          }`}
+          onClick={handleClose}
         />
       )}
     </>
