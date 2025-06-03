@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useQuizStore } from '../store/quizStore';
 import { quizQuestions } from '../data/quiz';
-import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon, Bug } from 'lucide-react';
+import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon } from 'lucide-react';
 import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
@@ -66,7 +66,6 @@ export const QuizResults: React.FC = () => {
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showFallbackMessage, setShowFallbackMessage] = useState(false);
-  const [showDebug, setShowDebug] = useState(false);
 
   useEffect(() => {
     if (!scores && !recommendations) {
@@ -351,35 +350,7 @@ export const QuizResults: React.FC = () => {
           <Share2 className="w-4 h-4" />
           Download Report
         </button>
-        
-        <button
-          onClick={() => setShowDebug(!showDebug)}
-          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full md:w-auto order-last md:order-none"
-        >
-          <Bug className="w-4 h-4" />
-          Debug
-        </button>
       </div>
-
-      {showDebug && (
-        <div className="mb-8 p-4 bg-white/5 rounded-lg overflow-x-auto">
-          <h3 className="text-lg font-semibold mb-4 text-white">Debug Information</h3>
-          <div className="space-y-4">
-            <div>
-              <h4 className="text-sm font-medium text-white/80 mb-2">User Scores:</h4>
-              <pre className="text-xs text-white/60 font-mono">
-                {JSON.stringify(scores, null, 2)}
-              </pre>
-            </div>
-            <div>
-              <h4 className="text-sm font-medium text-white/80 mb-2">Font Recommendations:</h4>
-              <pre className="text-xs text-white/60 font-mono">
-                {JSON.stringify(recommendations, null, 2)}
-              </pre>
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className="mb-12">
         <h1 className="text-4xl font-bold text-white mb-4 tracking-[-0.02em]">
