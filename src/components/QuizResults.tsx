@@ -6,47 +6,40 @@ import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
 import { ContactForm } from './ContactForm';
+import { getDisplayName } from '../utils/aestheticStyles';
 
 const aestheticDescriptions: Record<string, { emoji: string; description: string }> = {
-  'Display / Bubbly': {
+  'Bold & Expressive': {
     emoji: '🧃',
-    description: "Your font match reflects a brand that's playful, expressive, and packed with energy. This aesthetic thrives on personality—ideal for brands that want to stand out, charm audiences, or inject a sense of fun into their communications. It's a bold look for bold brands."
+    description: "Your brand match reflects a personality that's bold, expressive, and packed with energy. This aesthetic thrives on making statements—ideal for brands that want to stand out, charm audiences, or inject a sense of fun into their communications."
   },
-  'Humanist Sans': {
+  'Warm & Approachable': {
     emoji: '🧠',
-    description: 'This match reflects a balanced tone—friendly, professional, and adaptable. Humanist sans fonts work beautifully for approachable brands that still need to be taken seriously. Think clarity with a touch of warmth.'
+    description: 'This match reflects a balanced tone—friendly, professional, and adaptable. These fonts work beautifully for approachable brands that still need to be taken seriously. Think clarity with a touch of warmth.'
   },
-  'Geometric Sans': {
+  'Modern & Minimal': {
     emoji: '🛰',
-    description: 'Your brand values precision, clarity, and modernity. Geometric sans fonts are minimalist, clean, and calculated—ideal for tech-forward, future-facing, or design-savvy organizations.'
+    description: 'Your brand values precision, clarity, and modernity. These fonts are minimalist, clean, and calculated—ideal for tech-forward, future-facing, or design-savvy organizations.'
   },
-  'Grotesque Sans': {
-    emoji: '🗂',
-    description: 'You favor practicality and structure with just enough personality to keep things interesting. This timeless sans-serif style is perfect for brands that want to feel grounded, neutral, and built to last.'
-  },
-  'Rounded Sans': {
+  'Friendly & Playful': {
     emoji: '🫧',
-    description: 'Friendly, casual, and fresh. Rounded sans fonts are approachable and informal without being childish. This is the right pick for brands that want to feel helpful, human, and easygoing.'
+    description: 'Friendly, casual, and fresh. These fonts are approachable and informal without being childish. This is the right pick for brands that want to feel helpful, human, and easygoing.'
   },
-  'Monospace': {
-    emoji: '📎',
-    description: "This aesthetic says you're systematic, technical, or maybe even a bit rebellious. Monospace fonts evoke code, grids, and exactitude—perfect for developer tools, unconventional brands, or documentation-heavy environments."
+  'Universal & Neutral': {
+    emoji: '🧰',
+    description: 'Your brand values simplicity, speed, or versatility across platforms. This approach means no-frills performance and familiarity—ideal for internal apps, OS-native tools, or lightweight branding.'
   },
-  'Transitional Serif': {
+  'Classic & Credible': {
     emoji: '📚',
     description: 'A modern classic. This match tells us your brand appreciates structure and elegance but isn\'t stuck in the past. These fonts blend sharpness with sophistication—great for editorial, education, or premium service brands.'
   },
-  'Modern Serif': {
-    emoji: '🪞',
-    description: "You're polished, progressive, and professional. This match blends traditional serif elements with clean, contemporary shapes—ideal for modern luxury, fashion, and creative industries that value both elegance and edge."
-  },
-  'Old Style Serif': {
+  'Elegant & Literary': {
     emoji: '📖',
-    description: 'You lean into tradition, trust, and storytelling. This serif style fits brands with heritage, depth, and a classic sense of professionalism. Ideal for long-form content and legacy vibes.'
+    description: 'You lean into tradition, trust, and storytelling. This style fits brands with heritage, depth, and a classic sense of professionalism. Ideal for long-form content and legacy vibes.'
   },
-  'System Default': {
-    emoji: '🧰',
-    description: 'Your brand values simplicity, speed, or versatility across platforms. Using system fonts means no-frills performance and familiarity—ideal for internal apps, OS-native tools, or lightweight branding.'
+  'Structured & Professional': {
+    emoji: '🗂',
+    description: 'You favor practicality and structure with just enough personality to keep things interesting. This timeless style is perfect for brands that want to feel grounded, neutral, and built to last.'
   }
 };
 
@@ -160,7 +153,7 @@ export const QuizResults: React.FC = () => {
           </h2>
           <p className="text-2xl font-bold text-white tracking-[-0.02em]">{font.name}</p>
           <p className="text-sm text-white/60 mt-2 max-w-xl tracking-[-0.02em]">
-            A {font.aestheticStyle.toLowerCase()} typeface that aligns with your brand's personality.
+            A {getDisplayName(font.aestheticStyle).toLowerCase()} typeface that aligns with your brand's personality.
           </p>
         </div>
       </div>
@@ -314,6 +307,8 @@ export const QuizResults: React.FC = () => {
     );
   }
 
+  const displayName = getDisplayName(recommendations.aestheticStyle);
+
   return (
     <div className="w-full max-w-3xl mx-auto">
       {showFallbackMessage && (
@@ -370,11 +365,11 @@ export const QuizResults: React.FC = () => {
 
       <div className="mb-12">
         <h1 className="text-4xl font-bold text-white mb-4 tracking-[-0.02em]">
-          {aestheticDescriptions[recommendations.aestheticStyle]?.emoji} {recommendations.aestheticStyle}
+          {aestheticDescriptions[displayName]?.emoji} {displayName}
         </h1>
         <p className="text-white/60 text-lg mb-8">
-          {aestheticDescriptions[recommendations.aestheticStyle]?.description || 
-           `Based on your answers, your brand's font personality aligns with the ${recommendations.aestheticStyle.toLowerCase()} style.`}
+          {aestheticDescriptions[displayName]?.description || 
+           `Based on your answers, your brand's font personality aligns with the ${displayName.toLowerCase()} style.`}
         </p>
         
         <div className="flex flex-wrap gap-2 mb-8">

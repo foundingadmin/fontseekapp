@@ -1,5 +1,6 @@
 import { jsPDF } from "jspdf";
 import type { FontData, UserScores } from "../types";
+import { getDisplayName } from './aestheticStyles';
 
 interface GeneratePDFOptions {
   font: FontData;
@@ -27,10 +28,13 @@ export function generateFontReport({ font, scores, traits }: GeneratePDFOptions)
   doc.text("FontSeek Report", margin, y);
   y += 60;
 
-  // Font Name & Traits
+  // Font Name & Style
   doc.setFontSize(24);
   doc.text(font.name, margin, y);
   y += 20;
+  doc.setFontSize(18);
+  doc.text(getDisplayName(font.aestheticStyle), margin, y);
+  y += 40;
 
   // Trait badges
   doc.setFontSize(12);
