@@ -117,7 +117,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
             disabled={isSubmitting}
             className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-500 text-black font-semibold rounded-lg hover:bg-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? 'Sending...' : 'Ready to elevate your digital presence? Let\'s discuss your website project.'}
+            {isSubmitting ? 'Sending...' : 'Send Message'}
             <ArrowRight className="w-5 h-5" />
           </button>
 
