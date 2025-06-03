@@ -1,204 +1,153 @@
 import type { UserScores, FontRecommendation, FontData } from '../types';
 import { fonts } from '../data/fonts';
+import { aestheticScoring } from '../data/aestheticScoring';
 
-function calculateTraitScore(answers: Record<number, 'A' | 'B'>, questionPair: [number, number]): number {
-  const score1 = answers[questionPair[0]] === 'A' ? 1 : 5;
-  const score2 = answers[questionPair[1]] === 'A' ? 1 : 5;
-  return Math.round((score1 + score2) / 2);
+interface StyleRange {
+  toneMin: number;
+  toneMax: number;
+  energyMin: number;
+  energyMax: number;
+  designMin: number;
+  designMax: number;
+  eraMin: number;
+  eraMax: number;
+  structureMin: number;
+  structureMax: number;
 }
 
-function matchesAestheticStyle(scores: UserScores, ranges: Record<string, [number, number]>): boolean {
-  return Object.entries(ranges).every(([trait, [min, max]]) => {
-    const score = scores[trait as keyof UserScores];
-    return score >= min && score <= max;
-  });
+function matchesStyleRange(scores: UserScores, range: StyleRange): boolean {
+  return (
+    scores.tone >= range.toneMin && scores.tone <= range.toneMax &&
+    scores.energy >= range.energyMin && scores.energy <= range.energyMax &&
+    scores.design >= range.designMin && scores.design <= range.designMax &&
+    scores.era >= range.eraMin && scores.era <= range.eraMax &&
+    scores.structure >= range.structureMin && scores.structure <= range.structureMax
+  );
+}
+
+function calculateStyleDistance(scores: UserScores, range: StyleRange): number {
+  const getMidpoint = (min: number, max: number) => (min + max) / 2;
+  
+  return (
+    Math.abs(scores.tone - getMidpoint(range.toneMin, range.toneMax)) +
+    Math.abs(scores.energy - getMidpoint(range.energyMin, range.energyMax)) +
+    Math.abs(scores.design - getMidpoint(range.designMin, range.designMax)) +
+    Math.abs(scores.era - getMidpoint(range.eraMin, range.eraMax)) +
+    Math.abs(scores.structure - getMidpoint(range.structureMin, range.structureMax))
+  );
+}
+
+function calculateRangeGap(scores: UserScores, range: StyleRange): number {
+  return (
+    (range.toneMax - range.toneMin) +
+    (range.energyMax - range.energyMin) +
+    (range.designMax - range.designMin) +
+    (range.eraMax - range.eraMin) +
+    (range.structureMax - range.structureMin)
+  );
 }
 
 function determineAestheticStyle(scores: UserScores): string {
-  const styleRanges = [
-    {
-      name: 'Grotesque Sans',
-      ranges: {
-        tone: [2, 4],
-        energy: [2, 4],
-        design: [1, 3],
-        era: [3, 5],
-        structure: [3, 5]
-      }
-    },
-    {
-      name: 'Geometric Sans',
-      ranges: {
-        tone: [3, 5],
-        energy: [3, 5],
-        design: [2, 4],
-        era: [3, 5],
-        structure: [4, 5]
-      }
-    },
-    {
-      name: 'Humanist Sans',
-      ranges: {
-        tone: [3, 5],
-        energy: [2, 4],
-        design: [2, 3],
-        era: [2, 4],
-        structure: [1, 3]
-      }
-    },
-    {
-      name: 'Rounded Sans',
-      ranges: {
-        tone: [3, 5],
-        energy: [3, 5],
-        design: [3, 5],
-        era: [2, 4],
-        structure: [1, 2]
-      }
-    },
-    {
-      name: 'Monospace',
-      ranges: {
-        tone: [2, 3],
-        energy: [1, 2],
-        design: [1, 2],
-        era: [2, 3],
-        structure: [5, 5]
-      }
-    },
-    {
-      name: 'Display / Bubbly',
-      ranges: {
-        tone: [4, 5],
-        energy: [4, 5],
-        design: [4, 5],
-        era: [3, 5],
-        structure: [1, 3]
-      }
-    },
-    {
-      name: 'Transitional Serif',
-      ranges: {
-        tone: [1, 3],
-        energy: [1, 3],
-        design: [2, 4],
-        era: [3, 5],
-        structure: [2, 4]
-      }
-    },
-    {
-      name: 'Serif Old Style',
-      ranges: {
-        tone: [1, 2],
-        energy: [1, 3],
-        design: [2, 3],
-        era: [1, 3],
-        structure: [1, 3]
-      }
-    }
-  ];
+  // Step 1: Try exact range matches
+  const exactMatches = Object.entries(aestheticScoring)
+    .filter(([_, range]) => matchesStyleRange(scores, range))
+    .sort((a, b) => calculateRangeGap(scores, a[1]) - calculateRangeGap(scores, b[1]));
 
-  // Try to find an exact match first
-  for (const style of styleRanges) {
-    if (matchesAestheticStyle(scores, style.ranges)) {
-      return style.name;
-    }
+  if (exactMatches.length > 0) {
+    return exactMatches[0][0]; // Return style with tightest fit
   }
 
-  // If no exact match, find closest match by calculating distance to range midpoints
-  let closestStyle = styleRanges[0];
+  // Step 2: Find closest match by trait distance
+  let closestStyle = '';
   let smallestDistance = Infinity;
 
-  for (const style of styleRanges) {
-    let distance = 0;
-    Object.entries(style.ranges).forEach(([trait, [min, max]]) => {
-      const midpoint = (min + max) / 2;
-      const score = scores[trait as keyof UserScores];
-      distance += Math.abs(score - midpoint);
-    });
-
+  Object.entries(aestheticScoring).forEach(([style, range]) => {
+    const distance = calculateStyleDistance(scores, range);
     if (distance < smallestDistance) {
       smallestDistance = distance;
       closestStyle = style;
     }
-  }
+  });
 
-  return closestStyle.name;
+  return closestStyle;
 }
 
 function calculateFontDistance(font: FontData, scores: UserScores): number {
-  return Math.abs(font.tone - scores.tone) +
-         Math.abs(font.energy - scores.energy) +
-         Math.abs(font.design - scores.design) +
-         Math.abs(font.era - scores.era) +
-         Math.abs(font.structure - scores.structure);
-}
-
-function getSystemDefaultFont(): FontData {
-  return {
-    name: 'System UI',
-    googleFontsLink: '',
-    tone: 3,
-    energy: 3,
-    design: 3,
-    era: 3,
-    structure: 3,
-    aestheticStyle: 'System Default',
-    embedCode: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-    personalityTags: ['Clean', 'Universal', 'Reliable'],
-    recommendedFor: ['Apps', 'Interfaces', 'System Tools']
+  const weights = {
+    tone: 1.2,    // Slightly higher weight for tone
+    energy: 1.1,  // Slightly higher weight for energy
+    design: 1.0,  // Standard weight
+    era: 0.9,     // Slightly lower weight
+    structure: 0.8 // Slightly lower weight
   };
+
+  return (
+    Math.abs(font.tone - scores.tone) * weights.tone +
+    Math.abs(font.energy - scores.energy) * weights.energy +
+    Math.abs(font.design - scores.design) * weights.design +
+    Math.abs(font.era - scores.era) * weights.era +
+    Math.abs(font.structure - scores.structure) * weights.structure
+  );
 }
 
 export function calculateFontRecommendations(scores: UserScores): FontRecommendation {
-  const aestheticStyle = determineAestheticStyle(scores);
-  
-  // Filter fonts by aesthetic style
-  let matchingFonts = fonts.filter(font => font.aestheticStyle === aestheticStyle);
+  try {
+    const aestheticStyle = determineAestheticStyle(scores);
+    
+    // Filter fonts by aesthetic style
+    let matchingFonts = fonts.filter(font => font.aestheticStyle === aestheticStyle);
 
-  // If no matching fonts found, return system defaults
-  if (matchingFonts.length === 0) {
-    const systemFont = getSystemDefaultFont();
+    // Sort fonts by weighted distance score
+    matchingFonts.sort((a, b) => calculateFontDistance(a, scores) - calculateFontDistance(b, scores));
+
+    // Ensure we have enough unique fonts
+    if (matchingFonts.length >= 3) {
+      return {
+        aestheticStyle,
+        primary: matchingFonts[0],
+        secondary: matchingFonts[1],
+        tertiary: matchingFonts[2]
+      };
+    }
+
+    // If we don't have enough fonts in the primary style, find close alternatives
+    const alternativeFonts = fonts
+      .filter(font => font.aestheticStyle !== aestheticStyle)
+      .sort((a, b) => calculateFontDistance(a, scores) - calculateFontDistance(b, scores));
+
+    while (matchingFonts.length < 3 && alternativeFonts.length > 0) {
+      matchingFonts.push(alternativeFonts.shift()!);
+    }
+
     return {
-      aestheticStyle: 'System Default',
-      primary: systemFont,
-      secondary: systemFont,
-      tertiary: systemFont
+      aestheticStyle,
+      primary: matchingFonts[0],
+      secondary: matchingFonts[1],
+      tertiary: matchingFonts[2]
     };
+
+  } catch (error) {
+    console.error('Error calculating font recommendations:', error);
+    throw new Error('Failed to calculate font recommendations. Please try again.');
   }
-
-  // Sort fonts by distance score (ascending)
-  matchingFonts.sort((a, b) => calculateFontDistance(a, scores) - calculateFontDistance(b, scores));
-
-  // Ensure we have enough fonts, pad with system defaults if needed
-  while (matchingFonts.length < 3) {
-    matchingFonts.push(getSystemDefaultFont());
-  }
-
-  return {
-    aestheticStyle,
-    primary: matchingFonts[0],
-    secondary: matchingFonts[1],
-    tertiary: matchingFonts[2]
-  };
 }
 
 export function getTopTraits(scores: UserScores): string[] {
-  const traits = [
-    { name: 'Formal', score: 6 - scores.tone },
-    { name: 'Casual', score: scores.tone },
-    { name: 'Calm', score: 6 - scores.energy },
-    { name: 'Energetic', score: scores.energy },
-    { name: 'Minimal', score: 6 - scores.design },
-    { name: 'Expressive', score: scores.design },
-    { name: 'Classic', score: 6 - scores.era },
-    { name: 'Modern', score: scores.era },
-    { name: 'Organic', score: 6 - scores.structure },
-    { name: 'Geometric', score: scores.structure }
+  const traitScores = [
+    { trait: 'Formal', score: 6 - scores.tone },
+    { trait: 'Casual', score: scores.tone },
+    { trait: 'Calm', score: 6 - scores.energy },
+    { trait: 'Energetic', score: scores.energy },
+    { trait: 'Minimal', score: 6 - scores.design },
+    { trait: 'Expressive', score: scores.design },
+    { trait: 'Classic', score: 6 - scores.era },
+    { trait: 'Modern', score: scores.era },
+    { trait: 'Organic', score: 6 - scores.structure },
+    { trait: 'Geometric', score: scores.structure }
   ];
 
-  return traits
+  return traitScores
     .sort((a, b) => b.score - a.score)
     .slice(0, 3)
-    .map(trait => trait.name);
+    .map(t => t.trait);
 }
