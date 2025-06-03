@@ -5,6 +5,7 @@ import { QuizResults } from './components/QuizResults';
 import { QuizProgress } from './components/QuizProgress';
 import { InfoPopup } from './components/InfoPopup';
 import { useQuizStore } from './store/quizStore';
+import { Heart } from 'lucide-react';
 
 function App() {
   const { currentQuestion, answers, skipToResults, hasStarted } = useQuizStore();
@@ -36,6 +37,19 @@ function App() {
           </div>
         )}
       </main>
+      <footer className="fixed bottom-0 left-0 right-0 py-4 bg-black/95 backdrop-blur-sm z-50">
+        <div className="container mx-auto px-4 flex items-center justify-center text-sm text-white/60">
+          Built with <Heart className="w-4 h-4 mx-2 text-emerald-500" /> by{' '}
+          <a 
+            href="https://foundingcreative.com" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="ml-2 text-white hover:text-emerald-400 transition-colors"
+          >
+            Founding Creative
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }
