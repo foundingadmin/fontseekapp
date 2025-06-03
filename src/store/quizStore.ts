@@ -33,13 +33,9 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       answers: { ...state.answers, [questionNumber]: answer }
     }));
 
-    const current = get().currentQuestion;
-    
-    // Calculate results if this is the last question
-    if (current === quizQuestions.length) {
-      setTimeout(() => {
-        get().calculateResults();
-      }, 0);
+    // Only calculate results if this is the last question
+    if (questionNumber === quizQuestions.length) {
+      get().calculateResults();
     } else {
       get().nextQuestion();
     }
@@ -74,19 +70,28 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       structure: 0
     };
 
-    // Calculate scores for each trait based on question pairs
-    const questionPairs = {
-      tone: [1, 6],
-      energy: [2, 7],
-      design: [3, 8],
-      era: [4, 9],
-      structure: [5, 10]
-    };
-
-    Object.entries(questionPairs).forEach(([trait, [q1, q2]]) => {
-      const score1 = answers[q1] === 'A' ? 1 : 5;
-      const score2 = answers[q2] === 'A' ? 1 : 5;
-      scores[trait as keyof UserScores] = Math.round((score1 + score2) / 2);
+    // Calculate scores from answers
+    Object.entries(answers).forEach(([questionNum, answer]) => {
+      const question = quizQuestions[parseInt(questionNum) - 1];
+      const score = answer === 'A' ? question.optionAScore : question.optionBScore;
+      
+      switch (question.traitAxis.toLowerCase()) {
+        case 'tone':
+          scores.tone = score;
+          break;
+        case 'energy':
+          scores.energy = score;
+          break;
+        case 'design':
+          scores.design = score;
+          break;
+        case 'era':
+          scores.era = score;
+          break;
+        case 'structure':
+          scores.structure = score;
+          break;
+      }
     });
 
     try {
@@ -96,10 +101,16 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       set({ scores, recommendations, topTraits });
     } catch (error) {
       console.error('Error calculating recommendations:', error);
+      // Set default recommendations if calculation fails
       set({ 
-        scores: null,
-        recommendations: null,
-        topTraits: []
+        scores,
+        recommendations: {
+          aestheticStyle: 'Modern & Minimal',
+          primary: fonts[0],
+          secondary: fonts[1],
+          tertiary: fonts[2]
+        },
+        topTraits: ['Modern', 'Professional', 'Clean']
       });
     }
   },
