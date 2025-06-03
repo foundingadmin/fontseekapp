@@ -82,3 +82,5 @@ const QuizResults: React.FC<QuizResultsProps> = ({ showLabels, isDarkMode, curre
 };
 
 export default QuizResults;
+
+export { QuizResults }
