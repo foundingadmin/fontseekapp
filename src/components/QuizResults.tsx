@@ -171,9 +171,6 @@ export const QuizResults: React.FC = () => {
       <div className="mb-8 bg-[#1C1F26] rounded-xl overflow-hidden shadow-xl">
         <div className="px-6 py-5 border-b border-[#2A2D36]">
           <div>
-            <h2 className="text-xl font-semibold text-white mb-2 tracking-[-0.02em]">
-              Suggested Font Option {index + 1}
-            </h2>
             <p className="text-2xl font-bold text-white tracking-[-0.02em]">{font.name}</p>
             <p className="text-sm text-white/60 mt-2 max-w-xl tracking-[-0.02em]">
               A {getDisplayName(font.aestheticStyle).toLowerCase()} typeface that aligns with your brand's personality.
