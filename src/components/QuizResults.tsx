@@ -1,19 +1,23 @@
 import React from 'react';
+import { useQuizStore } from '../store/quizStore';
+import { copyPacks } from '../data/copyPacks';
 
-interface QuizResultsProps {
-  showLabels: boolean;
-  isDarkMode: boolean;
-  currentCopyPack: {
-    heading: string;
-    subheading: string;
-    leadParagraph: string;
-    body1: string;
-    body2: string;
-    finePrint: string;
-  };
-}
+const QuizResults: React.FC = () => {
+  const { scores, recommendations } = useQuizStore();
+  
+  // Default to the first copy pack if no matching aesthetic style is found
+  const currentCopyPack = copyPacks[recommendations?.aestheticStyle || 'default'] || copyPacks.default;
+  const isDarkMode = recommendations?.aestheticStyle === 'dark';
+  const showLabels = false; // We can make this dynamic later if needed
 
-const QuizResults: React.FC<QuizResultsProps> = ({ showLabels, isDarkMode, currentCopyPack }) => {
+  if (!recommendations || !currentCopyPack) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <p className="text-lg text-neutral-500">Loading results...</p>
+      </div>
+    );
+  }
+
   return (
     <>
       <div>
@@ -82,5 +86,3 @@ const QuizResults: React.FC<QuizResultsProps> = ({ showLabels, isDarkMode, curre
 };
 
 export default QuizResults;
-
-export { QuizResults }
