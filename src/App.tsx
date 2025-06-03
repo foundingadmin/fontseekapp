@@ -37,7 +37,7 @@ function App() {
           </div>
         )}
       </main>
-      <footer className="fixed bottom-0 left-0 right-0 py-4 bg-black/95 backdrop-blur-sm z-50">
+      <footer className="py-4">
         <div className="container mx-auto px-4 flex items-center justify-center text-sm text-white/60">
           Built with <Heart className="w-4 h-4 mx-2 text-emerald-500" /> by{' '}
           <a 
