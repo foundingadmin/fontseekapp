@@ -302,7 +302,7 @@ export const QuizResults: React.FC = () => {
         <div className="px-6 py-5 border-t border-[#2A2D36]">
           <h3 className="text-lg font-semibold mb-2 text-white tracking-[-0.02em]">Get this free font</h3>
           <p className="text-white/80 text-sm mb-4 tracking-[-0.02em]">
-            Install it to your computer or embed it on your website in seconds. All available from Google WebFonts.
+            Install it to your computer or embed it on your website in seconds.
           </p>
           <a
             href={font.googleFontsLink}
