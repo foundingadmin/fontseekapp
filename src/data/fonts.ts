@@ -1,115 +1,96 @@
 import { FontData } from '../types';
 
 export const fonts: FontData[] = [
-  // Display / Bubbly fonts
-  {
-    name: 'Fredoka',
-    googleFontsLink: 'https://fonts.google.com/specimen/Fredoka',
-    tone: 5,
-    energy: 5,
-    design: 5,
-    era: 5,
-    structure: 2,
-    aestheticStyle: 'Display / Bubbly',
-    embedCode: "'Fredoka', sans-serif",
-    personalityTags: ['Playful', 'Friendly', 'Modern'],
-    recommendedFor: ['Kids', 'Entertainment', 'Food']
-  },
-  {
-    name: 'Baloo 2',
-    googleFontsLink: 'https://fonts.google.com/specimen/Baloo+2',
-    tone: 5,
-    energy: 5,
-    design: 5,
-    era: 4,
-    structure: 2,
-    aestheticStyle: 'Display / Bubbly',
-    embedCode: "'Baloo\\ 2', cursive",
-    personalityTags: ['Fun', 'Bold', 'Energetic'],
-    recommendedFor: ['Kids Brands', 'Entertainment', 'Casual Food']
-  },
-  // Modern Sans-Serif
-  {
-    name: 'Inter',
-    googleFontsLink: 'https://fonts.google.com/specimen/Inter',
-    tone: 3,
-    energy: 3,
-    design: 4,
-    era: 5,
-    structure: 4,
-    aestheticStyle: 'Modern Sans-Serif',
-    embedCode: "'Inter', sans-serif",
-    personalityTags: ['Professional', 'Clean', 'Modern'],
-    recommendedFor: ['Tech', 'Business', 'Digital Products']
-  },
-  // Elegant Serif
-  {
-    name: 'Playfair Display',
-    googleFontsLink: 'https://fonts.google.com/specimen/Playfair+Display',
-    tone: 2,
-    energy: 2,
-    design: 5,
-    era: 3,
-    structure: 5,
-    aestheticStyle: 'Elegant Serif',
-    embedCode: "'Playfair Display', serif",
-    personalityTags: ['Elegant', 'Sophisticated', 'Classic'],
-    recommendedFor: ['Luxury', 'Editorial', 'Fashion']
-  },
-  // Geometric Sans
-  {
-    name: 'Poppins',
-    googleFontsLink: 'https://fonts.google.com/specimen/Poppins',
-    tone: 4,
-    energy: 4,
-    design: 4,
-    era: 5,
-    structure: 3,
-    aestheticStyle: 'Geometric Sans',
-    embedCode: "'Poppins', sans-serif",
-    personalityTags: ['Modern', 'Friendly', 'Versatile'],
-    recommendedFor: ['Startups', 'Digital Products', 'Modern Brands']
-  },
-  // Humanist Sans
-  {
-    name: 'Source Sans Pro',
-    googleFontsLink: 'https://fonts.google.com/specimen/Source+Sans+Pro',
-    tone: 3,
-    energy: 3,
-    design: 4,
-    era: 4,
-    structure: 4,
-    aestheticStyle: 'Humanist Sans',
-    embedCode: "'Source Sans Pro', sans-serif",
-    personalityTags: ['Professional', 'Readable', 'Versatile'],
-    recommendedFor: ['Corporate', 'Education', 'Government']
-  },
-  // Modern Serif
+  // Classic Editorial Fonts
   {
     name: 'Merriweather',
     googleFontsLink: 'https://fonts.google.com/specimen/Merriweather',
     tone: 2,
     energy: 2,
-    design: 4,
-    era: 4,
-    structure: 5,
-    aestheticStyle: 'Modern Serif',
+    design: 3,
+    era: 2,
+    structure: 3,
+    aestheticStyle: 'Classic Editorial',
     embedCode: "'Merriweather', serif",
-    personalityTags: ['Traditional', 'Serious', 'Reliable'],
+    personalityTags: ['Traditional', 'Serious', 'Authoritative'],
     recommendedFor: ['Publishing', 'Academia', 'Legal']
   },
-  // Creative Display
   {
-    name: 'Outfit',
-    googleFontsLink: 'https://fonts.google.com/specimen/Outfit',
-    tone: 4,
-    energy: 4,
-    design: 5,
-    era: 5,
+    name: 'Playfair Display',
+    googleFontsLink: 'https://fonts.google.com/specimen/Playfair+Display',
+    tone: 2,
+    energy: 2,
+    design: 4,
+    era: 2,
     structure: 3,
-    aestheticStyle: 'Creative Display',
-    embedCode: "'Outfit', sans-serif",
-    personalityTags: ['Creative', 'Modern', 'Distinctive'],
-    recommendedFor: ['Creative Agencies', 'Design', 'Innovation']
+    aestheticStyle: 'Classic Editorial',
+    embedCode: "'Playfair Display', serif",
+    personalityTags: ['Elegant', 'Literary', 'Classic'],
+    recommendedFor: ['Editorial', 'Publishing', 'Education']
+  },
+  {
+    name: 'Lora',
+    googleFontsLink: 'https://fonts.google.com/specimen/Lora',
+    tone: 2,
+    energy: 2,
+    design: 3,
+    era: 2,
+    structure: 2,
+    aestheticStyle: 'Classic Editorial',
+    embedCode: "'Lora', serif",
+    personalityTags: ['Refined', 'Balanced', 'Traditional'],
+    recommendedFor: ['Publishing', 'Editorial', 'Academia']
+  },
+  {
+    name: 'EB Garamond',
+    googleFontsLink: 'https://fonts.google.com/specimen/EB+Garamond',
+    tone: 1,
+    energy: 1,
+    design: 3,
+    era: 1,
+    structure: 2,
+    aestheticStyle: 'Classic Editorial',
+    embedCode: "'EB Garamond', serif",
+    personalityTags: ['Historical', 'Scholarly', 'Refined'],
+    recommendedFor: ['Academia', 'Publishing', 'Legal']
+  },
+  {
+    name: 'Libre Baskerville',
+    googleFontsLink: 'https://fonts.google.com/specimen/Libre+Baskerville',
+    tone: 1,
+    energy: 1,
+    design: 3,
+    era: 2,
+    structure: 2,
+    aestheticStyle: 'Classic Editorial',
+    embedCode: "'Libre Baskerville', serif",
+    personalityTags: ['Traditional', 'Literary', 'Professional'],
+    recommendedFor: ['Publishing', 'Academia', 'Legal']
+  },
+  {
+    name: 'Crimson Pro',
+    googleFontsLink: 'https://fonts.google.com/specimen/Crimson+Pro',
+    tone: 2,
+    energy: 2,
+    design: 3,
+    era: 2,
+    structure: 2,
+    aestheticStyle: 'Classic Editorial',
+    embedCode: "'Crimson Pro', serif",
+    personalityTags: ['Refined', 'Literary', 'Professional'],
+    recommendedFor: ['Academia', 'Publishing', 'Legal']
+  },
+  {
+    name: 'Domine',
+    googleFontsLink: 'https://fonts.google.com/specimen/Domine',
+    tone: 2,
+    energy: 2,
+    design: 3,
+    era: 2,
+    structure: 2,
+    aestheticStyle: 'Classic Editorial',
+    embedCode: "'Domine', serif",
+    personalityTags: ['Traditional', 'Readable', 'Professional'],
+    recommendedFor: ['Publishing', 'Education', 'Editorial']
   }
 ];
