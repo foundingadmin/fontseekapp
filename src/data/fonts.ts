@@ -16,15 +16,15 @@ export const fonts: FontData[] = [
     recommendedFor: ['Kids', 'Entertainment', 'Food']
   },
   {
-    name: 'Rubik Bubbles',
-    googleFontsLink: 'https://fonts.google.com/specimen/Rubik+Bubbles',
+    name: 'Baloo 2',
+    googleFontsLink: 'https://fonts.google.com/specimen/Baloo+2',
     tone: 5,
     energy: 5,
     design: 5,
     era: 4,
     structure: 2,
     aestheticStyle: 'Display / Bubbly',
-    embedCode: "Rubik Bubbles', cursive",
+    embedCode: "'Baloo 2', cursive",
     personalityTags: ['Fun', 'Bold', 'Energetic'],
     recommendedFor: ['Kids Brands', 'Entertainment', 'Casual Food']
   },
