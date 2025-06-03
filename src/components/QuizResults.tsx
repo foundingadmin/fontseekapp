@@ -7,6 +7,7 @@ import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
 import { ContactForm } from './ContactForm';
 import { getDisplayName } from '../utils/aestheticStyles';
+import clsx from 'clsx';
 
 const aestheticDescriptions: Record<string, { emoji: string; description: string }> = {
   'Bold & Expressive': {
@@ -143,159 +144,180 @@ export const QuizResults: React.FC = () => {
   const FontPreviewCard = ({ font, index }: { 
     font: typeof recommendations.primary;
     index: number;
-  }) => (
-    <div className="mb-8 bg-[#1C1F26] rounded-xl overflow-hidden shadow-xl">
-      <div className="px-6 py-5 border-b border-[#2A2D36]">
-        <div>
-          <h2 className="text-xl font-semibold text-white mb-2 tracking-[-0.02em]">
-            Suggested Font Option {index + 1}
-          </h2>
-          <p className="text-2xl font-bold text-white tracking-[-0.02em]">{font.name}</p>
-          <p className="text-sm text-white/60 mt-2 max-w-xl tracking-[-0.02em]">
-            A {getDisplayName(font.aestheticStyle).toLowerCase()} typeface that aligns with your brand's personality.
-          </p>
+  }) => {
+    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [showLabels, setShowLabels] = useState(false);
+    const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
+
+    const shuffleCopyPack = () => {
+      const currentIndex = copyPacks.findIndex(pack => pack.styleId === currentCopyPack.styleId);
+      let nextIndex = currentIndex;
+      
+      while (nextIndex === currentIndex) {
+        nextIndex = Math.floor(Math.random() * copyPacks.length);
+      }
+      
+      setCurrentCopyPack(copyPacks[nextIndex]);
+    };
+
+    return (
+      <div className="mb-8 bg-[#1C1F26] rounded-xl overflow-hidden shadow-xl">
+        <div className="px-6 py-5 border-b border-[#2A2D36]">
+          <div>
+            <h2 className="text-xl font-semibold text-white mb-2 tracking-[-0.02em]">
+              Suggested Font Option {index + 1}
+            </h2>
+            <p className="text-2xl font-bold text-white tracking-[-0.02em]">{font.name}</p>
+            <p className="text-sm text-white/60 mt-2 max-w-xl tracking-[-0.02em]">
+              A {getDisplayName(font.aestheticStyle).toLowerCase()} typeface that aligns with your brand's personality.
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div className="p-4 md:p-8">
-        <div className={`rounded-lg shadow-lg p-4 md:p-8 transition-colors duration-300 ${
-          isDarkMode ? 'bg-neutral-900' : 'bg-white'
-        }`}>
-          <div className="flex flex-col">
-            <div className="flex flex-col md:flex-row gap-2 mb-8">
-              <button
-                onClick={shuffleCopyPack}
-                className={`flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm ${
-                  isDarkMode 
-                    ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
-                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
-                }`}
+        <div className="p-4 md:p-8">
+          <div className={clsx(
+            'rounded-lg shadow-lg p-4 md:p-8 transition-colors duration-300',
+            isDarkMode ? 'bg-neutral-900' : 'bg-white'
+          )}>
+            <div className="flex flex-col">
+              <div className="flex flex-col md:flex-row gap-2 mb-8">
+                <button
+                  onClick={shuffleCopyPack}
+                  className={clsx(
+                    'flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm',
+                    isDarkMode 
+                      ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                      : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
+                  )}
+                >
+                  <Shuffle className="w-4 h-4" />
+                  Shuffle copy
+                </button>
+                <button
+                  onClick={() => setShowLabels(!showLabels)}
+                  className={clsx(
+                    'flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm',
+                    isDarkMode 
+                      ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                      : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
+                  )}
+                >
+                  {showLabels ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showLabels ? 'Hide specs' : 'Show specs'}
+                </button>
+                <button
+                  onClick={() => setIsDarkMode(!isDarkMode)}
+                  className={clsx(
+                    'flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm',
+                    isDarkMode 
+                      ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                      : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
+                  )}
+                >
+                  {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                  {isDarkMode ? 'Light mode' : 'Dark mode'}
+                </button>
+              </div>
+
+              <div 
+                style={{ 
+                  fontFamily: font.name === 'Baloo 2' ? "'Baloo\\ 2', cursive" : font.embedCode 
+                }}
+                className="space-y-4"
               >
-                <Shuffle className="w-4 h-4" />
-                Shuffle copy
-              </button>
-              <button
-                onClick={() => setShowLabels(!showLabels)}
-                className={`flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm ${
-                  isDarkMode 
-                    ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
-                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
-                }`}
-              >
-                {showLabels ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                {showLabels ? 'Hide specs' : 'Show specs'}
-              </button>
-              <button
-                onClick={() => setIsDarkMode(!isDarkMode)}
-                className={`flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm ${
-                  isDarkMode 
-                    ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
-                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
-                }`}
-              >
-                {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                {isDarkMode ? 'Light mode' : 'Dark mode'}
-              </button>
-            </div>
-
-            <div 
-              style={{ 
-                fontFamily: font.name === 'Baloo 2' ? "'Baloo\\ 2', cursive" : font.embedCode 
-              }}
-              className="space-y-4"
-            >
-              <div>
-                {showLabels && <div className={`text-xs mb-1 ${
-                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                }`}>Heading • 36px/48px • Bold</div>}
-                <h1 
-                  className={`text-3xl md:text-5xl font-bold transition-colors tracking-[-0.02em] ${
-                    isDarkMode ? 'text-white' : 'text-neutral-900'
-                  }`}
-                >
-                  {currentCopyPack.heading}
-                </h1>
-              </div>
-
-              <div>
-                {showLabels && <div className={`text-xs mb-1 ${
-                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                }`}>Subheading • 20px/24px • Medium</div>}
-                <h2 
-                  className={`text-xl md:text-2xl font-medium transition-colors tracking-[-0.02em] ${
-                    isDarkMode ? 'text-white' : 'text-neutral-900'
-                  }`}
-                >
-                  {currentCopyPack.subheading}
-                </h2>
-              </div>
-
-              <div>
-                {showLabels && <div className={`text-xs mb-1 ${
-                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                }`}>Lead Paragraph • 18px/20px • Regular</div>}
-                <p 
-                  className={`text-lg md:text-xl transition-colors tracking-[-0.02em] ${
-                    isDarkMode ? 'text-white' : 'text-neutral-900'
-                  }`}
-                >
-                  {currentCopyPack.leadParagraph}
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                {showLabels && <div className={`text-xs mb-1 ${
-                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                }`}>Body Copy • 14px/16px • Regular</div>}
-                <p 
-                  className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
-                    isDarkMode ? 'text-white' : 'text-neutral-900'
-                  }`}
-                >
-                  {currentCopyPack.body1}
-                </p>
-                <p 
-                  className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
-                    isDarkMode ? 'text-white' : 'text-neutral-900'
-                  }`}
-                >
-                  {currentCopyPack.body2}
-                </p>
-              </div>
-
-              <div>
-                {showLabels && <div className={`text-xs mb-1 ${
-                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                }`}>Fine Print • 11px/12px • Light</div>}
-                <small 
-                  className={`text-[11px] md:text-xs font-light block transition-colors tracking-[-0.02em] ${
+                <div>
+                  {showLabels && <div className={`text-xs mb-1 ${
                     isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                  }`}
-                >
-                  {currentCopyPack.finePrint}
-                </small>
+                  }`}>Heading • 36px/48px • Bold</div>}
+                  <h1 
+                    className={`text-3xl md:text-5xl font-bold transition-colors tracking-[-0.02em] ${
+                      isDarkMode ? 'text-white' : 'text-neutral-900'
+                    }`}
+                  >
+                    {currentCopyPack.heading}
+                  </h1>
+                </div>
+
+                <div>
+                  {showLabels && <div className={`text-xs mb-1 ${
+                    isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+                  }`}>Subheading • 20px/24px • Medium</div>}
+                  <h2 
+                    className={`text-xl md:text-2xl font-medium transition-colors tracking-[-0.02em] ${
+                      isDarkMode ? 'text-white' : 'text-neutral-900'
+                    }`}
+                  >
+                    {currentCopyPack.subheading}
+                  </h2>
+                </div>
+
+                <div>
+                  {showLabels && <div className={`text-xs mb-1 ${
+                    isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+                  }`}>Lead Paragraph • 18px/20px • Regular</div>}
+                  <p 
+                    className={`text-lg md:text-xl transition-colors tracking-[-0.02em] ${
+                      isDarkMode ? 'text-white' : 'text-neutral-900'
+                    }`}
+                  >
+                    {currentCopyPack.leadParagraph}
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  {showLabels && <div className={`text-xs mb-1 ${
+                    isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+                  }`}>Body Copy • 14px/16px • Regular</div>}
+                  <p 
+                    className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
+                      isDarkMode ? 'text-white' : 'text-neutral-900'
+                    }`}
+                  >
+                    {currentCopyPack.body1}
+                  </p>
+                  <p 
+                    className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
+                      isDarkMode ? 'text-white' : 'text-neutral-900'
+                    }`}
+                  >
+                    {currentCopyPack.body2}
+                  </p>
+                </div>
+
+                <div>
+                  {showLabels && <div className={`text-xs mb-1 ${
+                    isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+                  }`}>Fine Print • 11px/12px • Light</div>}
+                  <small 
+                    className={`text-[11px] md:text-xs font-light block transition-colors tracking-[-0.02em] ${
+                      isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+                    }`}
+                  >
+                    {currentCopyPack.finePrint}
+                  </small>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="px-6 py-5 border-t border-[#2A2D36]">
-        <h3 className="text-lg font-semibold mb-2 text-white tracking-[-0.02em]">Start Using This Font Right Now</h3>
-        <p className="text-white/80 text-sm mb-4 tracking-[-0.02em]">
-          This Google Web Font is free to use for your brand. You can download it to your computer or embed it in your website in seconds using the tools on Google Fonts.
-        </p>
-        <a
-          href={font.googleFontsLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-colors font-semibold w-fit"
-        >
-          Use {font.name} <ArrowRight className="w-4 h-4" />
-        </a>
+        <div className="px-6 py-5 border-t border-[#2A2D36]">
+          <h3 className="text-lg font-semibold mb-2 text-white tracking-[-0.02em]">Start Using This Font Right Now</h3>
+          <p className="text-white/80 text-sm mb-4 tracking-[-0.02em]">
+            This Google Web Font is free to use for your brand. You can download it to your computer or embed it in your website in seconds using the tools on Google Fonts.
+          </p>
+          <a
+            href={font.googleFontsLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-colors font-semibold w-fit"
+          >
+            Use {font.name} <ArrowRight className="w-4 h-4" />
+          </a>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   if (!recommendations || !scores) {
     return (
