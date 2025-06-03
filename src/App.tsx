@@ -3,6 +3,7 @@ import { IntroScreen } from './components/IntroScreen';
 import { QuizQuestion } from './components/QuizQuestion';
 import { QuizResults } from './components/QuizResults';
 import { QuizProgress } from './components/QuizProgress';
+import { InfoPopup } from './components/InfoPopup';
 import { useQuizStore } from './store/quizStore';
 
 function App() {
@@ -20,16 +21,19 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [skipToResults]);
 
-  if (!hasStarted) {
-    return <IntroScreen />;
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+      <InfoPopup />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
-          {!isComplete && <QuizProgress />}
-          {isComplete ? <QuizResults /> : <QuizQuestion />}
+          {!hasStarted ? (
+            <IntroScreen />
+          ) : (
+            <>
+              {!isComplete && <QuizProgress />}
+              {isComplete ? <QuizResults /> : <QuizQuestion />}
+            </>
+          )}
         </div>
       </main>
     </div>
