@@ -1,52 +1,46 @@
 import React, { useEffect, useState } from 'react';
 import { useQuizStore } from '../store/quizStore';
 import { quizQuestions } from '../data/quiz';
-import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon, Bug } from 'lucide-react';
+import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon } from 'lucide-react';
 import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
 import { ContactForm } from './ContactForm';
+import { getDisplayName } from '../utils/aestheticStyles';
+import clsx from 'clsx';
 
 const aestheticDescriptions: Record<string, { emoji: string; description: string }> = {
-  'Display / Bubbly': {
+  'Bold & Expressive': {
     emoji: '🧃',
-    description: "Your font match reflects a brand that's playful, expressive, and packed with energy. This aesthetic thrives on personality—ideal for brands that want to stand out, charm audiences, or inject a sense of fun into their communications. It's a bold look for bold brands."
+    description: "Your brand match reflects a personality that's bold, expressive, and packed with energy. This aesthetic thrives on making statements—ideal for brands that want to stand out, charm audiences, or inject a sense of fun into their communications."
   },
-  'Humanist Sans': {
+  'Warm & Approachable': {
     emoji: '🧠',
-    description: 'This match reflects a balanced tone—friendly, professional, and adaptable. Humanist sans fonts work beautifully for approachable brands that still need to be taken seriously. Think clarity with a touch of warmth.'
+    description: 'This match reflects a balanced tone—friendly, professional, and adaptable. These fonts work beautifully for approachable brands that still need to be taken seriously. Think clarity with a touch of warmth.'
   },
-  'Geometric Sans': {
+  'Modern & Minimal': {
     emoji: '🛰',
-    description: 'Your brand values precision, clarity, and modernity. Geometric sans fonts are minimalist, clean, and calculated—ideal for tech-forward, future-facing, or design-savvy organizations.'
+    description: 'Your brand values precision, clarity, and modernity. These fonts are minimalist, clean, and calculated—ideal for tech-forward, future-facing, or design-savvy organizations.'
   },
-  'Grotesque Sans': {
-    emoji: '🗂',
-    description: 'You favor practicality and structure with just enough personality to keep things interesting. This timeless sans-serif style is perfect for brands that want to feel grounded, neutral, and built to last.'
-  },
-  'Rounded Sans': {
+  'Friendly & Playful': {
     emoji: '🫧',
-    description: 'Friendly, casual, and fresh. Rounded sans fonts are approachable and informal without being childish. This is the right pick for brands that want to feel helpful, human, and easygoing.'
+    description: 'Friendly, casual, and fresh. These fonts are approachable and informal without being childish. This is the right pick for brands that want to feel helpful, human, and easygoing.'
   },
-  'Monospace': {
-    emoji: '📎',
-    description: "This aesthetic says you're systematic, technical, or maybe even a bit rebellious. Monospace fonts evoke code, grids, and exactitude—perfect for developer tools, unconventional brands, or documentation-heavy environments."
+  'Universal & Neutral': {
+    emoji: '🧰',
+    description: 'Your brand values simplicity, speed, or versatility across platforms. This approach means no-frills performance and familiarity—ideal for internal apps, OS-native tools, or lightweight branding.'
   },
-  'Transitional Serif': {
+  'Classic & Credible': {
     emoji: '📚',
     description: 'A modern classic. This match tells us your brand appreciates structure and elegance but isn\'t stuck in the past. These fonts blend sharpness with sophistication—great for editorial, education, or premium service brands.'
   },
-  'Modern Serif': {
-    emoji: '🪞',
-    description: "You're polished, progressive, and professional. This match blends traditional serif elements with clean, contemporary shapes—ideal for modern luxury, fashion, and creative industries that value both elegance and edge."
-  },
-  'Old Style Serif': {
+  'Elegant & Literary': {
     emoji: '📖',
-    description: 'You lean into tradition, trust, and storytelling. This serif style fits brands with heritage, depth, and a classic sense of professionalism. Ideal for long-form content and legacy vibes.'
+    description: 'You lean into tradition, trust, and storytelling. This style fits brands with heritage, depth, and a classic sense of professionalism. Ideal for long-form content and legacy vibes.'
   },
-  'System Default': {
-    emoji: '🧰',
-    description: 'Your brand values simplicity, speed, or versatility across platforms. Using system fonts means no-frills performance and familiarity—ideal for internal apps, OS-native tools, or lightweight branding.'
+  'Structured & Professional': {
+    emoji: '🗂',
+    description: 'You favor practicality and structure with just enough personality to keep things interesting. This timeless style is perfect for brands that want to feel grounded, neutral, and built to last.'
   }
 };
 
@@ -72,7 +66,6 @@ export const QuizResults: React.FC = () => {
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showFallbackMessage, setShowFallbackMessage] = useState(false);
-  const [showDebug, setShowDebug] = useState(false);
 
   useEffect(() => {
     if (!scores && !recommendations) {
@@ -106,7 +99,6 @@ export const QuizResults: React.FC = () => {
       { trait: 'structure', score: scores.structure }
     ];
 
-    // Sort by score (descending) and break ties using priority order
     traitScores.sort((a, b) => {
       if (a.score !== b.score) return b.score - a.score;
       
@@ -115,13 +107,13 @@ export const QuizResults: React.FC = () => {
     });
 
     return traitScores
-      .filter(({ score }) => score !== 3) // Skip neutral scores
-      .slice(0, 3) // Take top 3
+      .filter(({ score }) => score !== 3)
+      .slice(0, 3)
       .map(({ trait, score }) => {
         const label = traitLabels[trait as keyof typeof traitLabels];
         return score >= 4 ? label.high : label.low;
       })
-      .filter(Boolean); // Remove any undefined values
+      .filter(Boolean);
   };
 
   const shuffleCopyPack = () => {
@@ -151,160 +143,175 @@ export const QuizResults: React.FC = () => {
   const FontPreviewCard = ({ font, index }: { 
     font: typeof recommendations.primary;
     index: number;
-  }) => (
-    <div className="mb-8 bg-[#1C1F26] rounded-xl overflow-hidden shadow-xl">
-      <div className="px-6 py-5 border-b border-[#2A2D36]">
-        <div>
-          <h2 className="text-xl font-semibold text-white mb-2 tracking-[-0.02em]">
-            Suggested Font Option {index + 1}
-          </h2>
-          <p className="text-2xl font-bold text-white tracking-[-0.02em]">{font.name}</p>
-          <p className="text-sm text-white/60 mt-2 max-w-xl tracking-[-0.02em]">
-            A {font.aestheticStyle.toLowerCase()} typeface that aligns with your brand's personality.
-          </p>
-        </div>
+  }) => {
+    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [showLabels, setShowLabels] = useState(false);
+    const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
+
+    const shuffleCopyPack = () => {
+      const currentIndex = copyPacks.findIndex(pack => pack.styleId === currentCopyPack.styleId);
+      let nextIndex = currentIndex;
+      
+      while (nextIndex === currentIndex) {
+        nextIndex = Math.floor(Math.random() * copyPacks.length);
+      }
+      
+      setCurrentCopyPack(copyPacks[nextIndex]);
+    };
+
+    const SpecLabel = ({ children }: { children: React.ReactNode }) => (
+      <div className={`font-sans text-xs mb-1 ${
+        isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+      }`}>
+        {children}
       </div>
+    );
 
-      <div className="p-4 md:p-8">
-        <div className={`rounded-lg shadow-lg p-4 md:p-8 transition-colors duration-300 ${
-          isDarkMode ? 'bg-neutral-900' : 'bg-white'
-        }`}>
-          <div className="flex flex-col">
-            <div className="flex flex-col md:flex-row gap-2 mb-8">
-              <button
-                onClick={shuffleCopyPack}
-                className={`flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm ${
-                  isDarkMode 
-                    ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
-                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
-                }`}
+    return (
+      <div className="mb-8 bg-[#1C1F26] rounded-xl overflow-hidden shadow-xl">
+        <div className="px-6 py-5 border-b border-[#2A2D36]">
+          <div>
+            <p className="text-2xl font-bold text-white tracking-[-0.02em]">{font.name}</p>
+            <p className="text-sm text-white/60 mt-2 max-w-xl tracking-[-0.02em]">
+              A {getDisplayName(font.aestheticStyle).toLowerCase()} typeface that aligns with your brand's personality.
+            </p>
+          </div>
+        </div>
+
+        <div className="p-4 md:p-8">
+          <div className={clsx(
+            'rounded-lg shadow-lg p-4 md:p-8 transition-colors duration-300',
+            isDarkMode ? 'bg-neutral-900' : 'bg-white'
+          )}>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2 mb-8">
+                <button
+                  onClick={shuffleCopyPack}
+                  className={clsx(
+                    'flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-sm',
+                    isDarkMode 
+                      ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                      : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
+                  )}
+                >
+                  <Shuffle className="w-4 h-4" />
+                  <span className="hidden md:inline">Shuffle copy</span>
+                </button>
+                <button
+                  onClick={() => setShowLabels(!showLabels)}
+                  className={clsx(
+                    'flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-sm',
+                    isDarkMode 
+                      ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                      : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
+                  )}
+                >
+                  {showLabels ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  <span className="hidden md:inline">{showLabels ? 'Hide specs' : 'Show specs'}</span>
+                </button>
+                <button
+                  onClick={() => setIsDarkMode(!isDarkMode)}
+                  className={clsx(
+                    'flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-sm',
+                    isDarkMode 
+                      ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                      : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
+                  )}
+                >
+                  {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                  <span className="hidden md:inline">{isDarkMode ? 'Light' : 'Dark'}</span>
+                </button>
+              </div>
+
+              <div 
+                style={{ 
+                  fontFamily: font.name === 'Baloo 2' ? "'Baloo\\ 2', cursive" : font.embedCode 
+                }}
+                className="space-y-4"
               >
-                <Shuffle className="w-4 h-4" />
-                Shuffle copy
-              </button>
-              <button
-                onClick={() => setShowLabels(!showLabels)}
-                className={`flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm ${
-                  isDarkMode 
-                    ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
-                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
-                }`}
-              >
-                {showLabels ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                {showLabels ? 'Hide specs' : 'Show specs'}
-              </button>
-              <button
-                onClick={() => setIsDarkMode(!isDarkMode)}
-                className={`flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm ${
-                  isDarkMode 
-                    ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
-                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
-                }`}
-              >
-                {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                {isDarkMode ? 'Light mode' : 'Dark mode'}
-              </button>
-            </div>
+                <div>
+                  {showLabels && <SpecLabel>Heading • 36px/48px • Bold</SpecLabel>}
+                  <h1 
+                    className={`text-3xl md:text-5xl font-bold transition-colors tracking-[-0.02em] ${
+                      isDarkMode ? 'text-white' : 'text-neutral-900'
+                    }`}
+                  >
+                    {currentCopyPack.heading}
+                  </h1>
+                </div>
 
-            <div className="space-y-4">
-              <div>
-                {showLabels && <div className={`text-xs mb-1 ${
-                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                }`}>Heading • 36px/48px • Bold</div>}
-                <h1 
-                  style={{ fontFamily: font.name }} 
-                  className={`text-3xl md:text-5xl font-bold transition-colors tracking-[-0.02em] ${
-                    isDarkMode ? 'text-white' : 'text-neutral-900'
-                  }`}
-                >
-                  {currentCopyPack.heading}
-                </h1>
-              </div>
+                <div>
+                  {showLabels && <SpecLabel>Subheading • 20px/24px • Medium</SpecLabel>}
+                  <h2 
+                    className={`text-xl md:text-2xl font-medium transition-colors tracking-[-0.02em] ${
+                      isDarkMode ? 'text-white' : 'text-neutral-900'
+                    }`}
+                  >
+                    {currentCopyPack.subheading}
+                  </h2>
+                </div>
 
-              <div>
-                {showLabels && <div className={`text-xs mb-1 ${
-                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                }`}>Subheading • 20px/24px • Medium</div>}
-                <h2 
-                  style={{ fontFamily: font.name }} 
-                  className={`text-xl md:text-2xl font-medium transition-colors tracking-[-0.02em] ${
-                    isDarkMode ? 'text-white' : 'text-neutral-900'
-                  }`}
-                >
-                  {currentCopyPack.subheading}
-                </h2>
-              </div>
+                <div>
+                  {showLabels && <SpecLabel>Lead Paragraph • 18px/20px • Regular</SpecLabel>}
+                  <p 
+                    className={`text-lg md:text-xl transition-colors tracking-[-0.02em] ${
+                      isDarkMode ? 'text-white' : 'text-neutral-900'
+                    }`}
+                  >
+                    {currentCopyPack.leadParagraph}
+                  </p>
+                </div>
 
-              <div>
-                {showLabels && <div className={`text-xs mb-1 ${
-                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                }`}>Lead Paragraph • 18px/20px • Regular</div>}
-                <p 
-                  style={{ fontFamily: font.name }} 
-                  className={`text-lg md:text-xl transition-colors tracking-[-0.02em] ${
-                    isDarkMode ? 'text-white' : 'text-neutral-900'
-                  }`}
-                >
-                  {currentCopyPack.leadParagraph}
-                </p>
-              </div>
+                <div className="space-y-2">
+                  {showLabels && <SpecLabel>Body Copy • 14px/16px • Regular</SpecLabel>}
+                  <p 
+                    className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
+                      isDarkMode ? 'text-white' : 'text-neutral-900'
+                    }`}
+                  >
+                    {currentCopyPack.body1}
+                  </p>
+                  <p 
+                    className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
+                      isDarkMode ? 'text-white' : 'text-neutral-900'
+                    }`}
+                  >
+                    {currentCopyPack.body2}
+                  </p>
+                </div>
 
-              <div className="space-y-2">
-                {showLabels && <div className={`text-xs mb-1 ${
-                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                }`}>Body Copy • 14px/16px • Regular</div>}
-                <p 
-                  style={{ fontFamily: font.name }} 
-                  className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
-                    isDarkMode ? 'text-white' : 'text-neutral-900'
-                  }`}
-                >
-                  {currentCopyPack.body1}
-                </p>
-                <p 
-                  style={{ fontFamily: font.name }} 
-                  className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
-                    isDarkMode ? 'text-white' : 'text-neutral-900'
-                  }`}
-                >
-                  {currentCopyPack.body2}
-                </p>
-              </div>
-
-              <div>
-                {showLabels && <div className={`text-xs mb-1 ${
-                  isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                }`}>Fine Print • 11px/12px • Light</div>}
-                <small 
-                  style={{ fontFamily: font.name }} 
-                  className={`text-[11px] md:text-xs font-light block transition-colors tracking-[-0.02em] ${
-                    isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                  }`}
-                >
-                  {currentCopyPack.finePrint}
-                </small>
+                <div>
+                  {showLabels && <SpecLabel>Fine Print • 11px/12px • Light</SpecLabel>}
+                  <small 
+                    className={`text-[11px] md:text-xs font-light block transition-colors tracking-[-0.02em] ${
+                      isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+                    }`}
+                  >
+                    {currentCopyPack.finePrint}
+                  </small>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="px-6 py-5 border-t border-[#2A2D36]">
-        <h3 className="text-lg font-semibold mb-2 text-white tracking-[-0.02em]">Start Using This Font Right Now</h3>
-        <p className="text-white/80 text-sm mb-4 tracking-[-0.02em]">
-          This Google Web Font is free to use for your brand. You can download it to your computer or embed it in your website in seconds using the tools on Google Fonts.
-        </p>
-        <a
-          href={font.googleFontsLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-colors font-semibold w-fit"
-        >
-          Use {font.name} <ArrowRight className="w-4 h-4" />
-        </a>
+        <div className="px-6 py-5 border-t border-[#2A2D36]">
+          <h3 className="text-lg font-semibold mb-2 text-white tracking-[-0.02em]">Get this free font</h3>
+          <p className="text-white/80 text-sm mb-4 tracking-[-0.02em]">
+            Install it to your computer or embed it on your website in seconds.
+          </p>
+          <a
+            href={font.googleFontsLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-colors font-semibold w-fit"
+          >
+            Use {font.name} <ArrowRight className="w-4 h-4" />
+          </a>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   if (!recommendations || !scores) {
     return (
@@ -313,6 +320,8 @@ export const QuizResults: React.FC = () => {
       </div>
     );
   }
+
+  const displayName = getDisplayName(recommendations.aestheticStyle);
 
   return (
     <div className="w-full max-w-3xl mx-auto">
@@ -338,43 +347,15 @@ export const QuizResults: React.FC = () => {
           <Share2 className="w-4 h-4" />
           Download Report
         </button>
-        
-        <button
-          onClick={() => setShowDebug(!showDebug)}
-          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full md:w-auto order-last md:order-none"
-        >
-          <Bug className="w-4 h-4" />
-          Debug
-        </button>
       </div>
-
-      {showDebug && (
-        <div className="mb-8 p-4 bg-white/5 rounded-lg overflow-x-auto">
-          <h3 className="text-lg font-semibold mb-4 text-white">Debug Information</h3>
-          <div className="space-y-4">
-            <div>
-              <h4 className="text-sm font-medium text-white/80 mb-2">User Scores:</h4>
-              <pre className="text-xs text-white/60 font-mono">
-                {JSON.stringify(scores, null, 2)}
-              </pre>
-            </div>
-            <div>
-              <h4 className="text-sm font-medium text-white/80 mb-2">Font Recommendations:</h4>
-              <pre className="text-xs text-white/60 font-mono">
-                {JSON.stringify(recommendations, null, 2)}
-              </pre>
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className="mb-12">
         <h1 className="text-4xl font-bold text-white mb-4 tracking-[-0.02em]">
-          {aestheticDescriptions[recommendations.aestheticStyle]?.emoji} {recommendations.aestheticStyle}
+          {aestheticDescriptions[displayName]?.emoji} {displayName}
         </h1>
         <p className="text-white/60 text-lg mb-8">
-          {aestheticDescriptions[recommendations.aestheticStyle]?.description || 
-           `Based on your answers, your brand's font personality aligns with the ${recommendations.aestheticStyle.toLowerCase()} style.`}
+          {aestheticDescriptions[displayName]?.description || 
+           `Based on your answers, your brand's font personality aligns with the ${displayName.toLowerCase()} style.`}
         </p>
         
         <div className="flex flex-wrap gap-2 mb-8">
