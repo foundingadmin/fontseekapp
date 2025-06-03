@@ -22,19 +22,19 @@ function App() {
   }, [skipToResults]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+    <div className="min-h-screen w-full bg-gradient-to-br from-gray-900 to-black text-white overflow-x-hidden">
       <InfoPopup />
-      <main className="pt-24 pb-16">
-        <div className="container mx-auto px-4">
-          {!hasStarted ? (
-            <IntroScreen />
-          ) : (
-            <>
+      <main className="min-h-screen">
+        {!hasStarted ? (
+          <IntroScreen />
+        ) : (
+          <div className="pt-24 pb-16">
+            <div className="container mx-auto px-4">
               {!isComplete && <QuizProgress />}
               {isComplete ? <QuizResults /> : <QuizQuestion />}
-            </>
-          )}
-        </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
