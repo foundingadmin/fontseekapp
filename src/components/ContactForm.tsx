@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { useQuizStore } from '../store/quizStore';
 import emailjs from '@emailjs/browser';
@@ -11,11 +11,31 @@ interface ContactFormProps {
 export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [isLogoVisible, setIsLogoVisible] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const logoRef = useRef<HTMLDivElement>(null);
   const initialEmail = useQuizStore(state => state.email);
   const [email, setEmail] = useState(initialEmail || '');
   const scores = useQuizStore(state => state.scores);
   const recommendations = useQuizStore(state => state.recommendations);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsLogoVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (logoRef.current) {
+      observer.observe(logoRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -50,17 +70,26 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
   return (
     <div className="mt-24 mb-16 bg-[#1C1F26] rounded-xl overflow-hidden">
       <div className="px-8 py-12 max-w-3xl mx-auto">
-        <a href="/" className="block mb-8">
-          <img 
-            src={brandmarkLogo}
-            alt="FontSeek - Strategy-Driven Font Recommendations" 
-            className="w-[140px] h-auto mx-auto"
-            onError={(e) => {
-              const img = e.target as HTMLImageElement;
-              console.error('Failed to load image:', img.src);
-            }}
-          />
-        </a>
+        <div 
+          ref={logoRef}
+          className={`transition-all duration-700 transform ${
+            isLogoVisible 
+              ? 'opacity-100 translate-y-0' 
+              : 'opacity-0 translate-y-4'
+          }`}
+        >
+          <a href="/" className="block mb-8">
+            <img 
+              src={brandmarkLogo}
+              alt="FontSeek - Strategy-Driven Font Recommendations" 
+              className="w-16 h-auto mx-auto"
+              onError={(e) => {
+                const img = e.target as HTMLImageElement;
+                console.error('Failed to load image:', img.src);
+              }}
+            />
+          </a>
+        </div>
         
         <h2 className="text-3xl font-bold text-white mb-4 text-center">
           Love your font match? Let's bring your brand to life online.
