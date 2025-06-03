@@ -1,73 +1,109 @@
 import type { UserScores, FontRecommendation, FontData } from '../types';
 import { fonts } from '../data/fonts';
 
-const CLASSIC_EDITORIAL_FONTS = [
-  'Merriweather',
-  'Playfair Display',
-  'Lora',
-  'EB Garamond',
-  'Libre Baskerville',
-  'Crimson Pro',
-  'Domine'
-];
+const AESTHETIC_WHITELISTS = {
+  'Classic Editorial': [
+    'Libre Baskerville',
+    'EB Garamond',
+    'Lora',
+    'Merriweather',
+    'Playfair Display'
+  ],
+  'Modern & Minimal': [
+    'Inter',
+    'Work Sans',
+    'IBM Plex Sans',
+    'Space Grotesk',
+    'Manrope'
+  ],
+  'Friendly & Playful': [
+    'Baloo 2',
+    'Fredoka',
+    'Quicksand',
+    'Nunito',
+    'Comic Neue'
+  ],
+  'Elegant & High-End': [
+    'Cormorant Garamond',
+    'DM Serif Display',
+    'Playfair Display',
+    'Lora',
+    'Gloock'
+  ],
+  'Professional & Versatile': [
+    'Source Sans Pro',
+    'Open Sans',
+    'Poppins',
+    'Raleway',
+    'Roboto'
+  ],
+  'Retro & Character-Rich': [
+    'Barlow Condensed',
+    'Rokkitt',
+    'Alfa Slab One',
+    'Press Start 2P',
+    'Chivo'
+  ]
+};
 
-function isClassicEditorial(scores: UserScores): boolean {
-  return (
-    scores.tone <= 2 &&
-    scores.energy <= 2 &&
-    scores.design <= 2 &&
-    scores.era <= 2 &&
-    scores.structure <= 2
-  );
+function determineAestheticStyle(scores: UserScores): string {
+  const { tone, energy, design, era, structure } = scores;
+
+  // Classic Editorial
+  if (tone <= 2 && energy <= 2 && design <= 3 && era <= 2) {
+    return 'Classic Editorial';
+  }
+
+  // Modern & Minimal
+  if (design <= 2 && era >= 4 && structure >= 4) {
+    return 'Modern & Minimal';
+  }
+
+  // Friendly & Playful
+  if (tone >= 4 && energy >= 3 && structure <= 3) {
+    return 'Friendly & Playful';
+  }
+
+  // Elegant & High-End
+  if (tone <= 2 && design >= 3 && era <= 3) {
+    return 'Elegant & High-End';
+  }
+
+  // Retro & Character-Rich
+  if (design >= 4 && era <= 3) {
+    return 'Retro & Character-Rich';
+  }
+
+  // Default to Professional & Versatile
+  return 'Professional & Versatile';
 }
 
-function getClassicEditorialFonts(): FontData[] {
+function getFontsForStyle(style: string): FontData[] {
+  const whitelist = AESTHETIC_WHITELISTS[style];
+  if (!whitelist) return [];
+
   return fonts
-    .filter(font => CLASSIC_EDITORIAL_FONTS.includes(font.name))
+    .filter(font => whitelist.includes(font.name))
     .sort((a, b) => {
-      const aIndex = CLASSIC_EDITORIAL_FONTS.indexOf(a.name);
-      const bIndex = CLASSIC_EDITORIAL_FONTS.indexOf(b.name);
+      const aIndex = whitelist.indexOf(a.name);
+      const bIndex = whitelist.indexOf(b.name);
       return aIndex - bIndex;
     });
 }
 
 function calculateFontRecommendations(scores: UserScores): FontRecommendation {
-  // Check for Classic Editorial style first
-  if (isClassicEditorial(scores)) {
-    const editorialFonts = getClassicEditorialFonts();
-    
-    if (editorialFonts.length >= 3) {
-      return {
-        aestheticStyle: 'Classic Editorial',
-        primary: editorialFonts[0],
-        secondary: editorialFonts[1],
-        tertiary: editorialFonts[2]
-      };
-    }
+  const aestheticStyle = determineAestheticStyle(scores);
+  const matchingFonts = getFontsForStyle(aestheticStyle);
+
+  if (matchingFonts.length === 0) {
+    throw new Error(`No fonts found for style: ${aestheticStyle}`);
   }
 
-  // Calculate trait match scores for each font
-  const fontScores = fonts.map(font => {
-    const score = Math.abs(font.tone - scores.tone) +
-                 Math.abs(font.energy - scores.energy) +
-                 Math.abs(font.design - scores.design) +
-                 Math.abs(font.era - scores.era) +
-                 Math.abs(font.structure - scores.structure);
-    
-    return { font, score };
-  });
-
-  // Sort by match score (lower is better)
-  fontScores.sort((a, b) => a.score - b.score);
-
-  // Get the best matching fonts
-  const bestMatches = fontScores.slice(0, 3).map(match => match.font);
-
   return {
-    aestheticStyle: bestMatches[0].aestheticStyle,
-    primary: bestMatches[0],
-    secondary: bestMatches[1],
-    tertiary: bestMatches[2]
+    aestheticStyle,
+    primary: matchingFonts[0],
+    secondary: matchingFonts[1] || matchingFonts[0],
+    tertiary: matchingFonts[2] || matchingFonts[1] || matchingFonts[0]
   };
 }
 
