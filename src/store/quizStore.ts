@@ -18,6 +18,7 @@ interface QuizStore {
   calculateResults: () => void;
   resetQuiz: () => void;
   startQuiz: (email: string) => void;
+  skipToResults: () => void;
 }
 
 export const useQuizStore = create<QuizStore>((set, get) => ({
@@ -131,5 +132,22 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       email,
       hasStarted: true
     });
+  },
+
+  skipToResults: () => {
+    // Fill in any unanswered questions with default 'A' answers
+    const answers = { ...get().answers };
+    for (let i = 1; i <= quizQuestions.length; i++) {
+      if (!answers[i]) {
+        answers[i] = 'A';
+      }
+    }
+    
+    set({ 
+      answers,
+      currentQuestion: quizQuestions.length
+    });
+    
+    get().calculateResults();
   }
 }));
