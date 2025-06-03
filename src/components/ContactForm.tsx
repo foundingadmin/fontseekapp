@@ -62,10 +62,10 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
         </a>
         
         <h2 className="text-3xl font-bold text-white mb-4 text-center">
-          Ready to bring your brand voice to life?
+          Love your font match? Let's bring your brand to life online.
         </h2>
         <p className="text-white/60 text-center mb-12 text-lg">
-          Let's discuss how we can help you implement your font recommendations across your brand, marketing, and web presence.
+          Let's explore how to bring your brand's unique personality to life through a strategic, conversion-focused website design. Our team specializes in crafting digital experiences that turn visitors into loyal customers.
         </p>
 
         <form 
@@ -116,7 +116,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
             disabled={isSubmitting}
             className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-500 text-black font-semibold rounded-lg hover:bg-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? 'Sending...' : 'Send Message'}
+            Ready to elevate your digital presence? Let's discuss your website project.
             <ArrowRight className="w-5 h-5" />
           </button>
 
@@ -130,21 +130,21 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
           <div className="text-center">
-            <h3 className="text-white font-semibold mb-2">Brand Strategy</h3>
+            <h3 className="text-white font-semibold mb-2">Strategic Web Design That Converts</h3>
             <p className="text-white/60 text-sm">
-              Develop a comprehensive brand strategy aligned with your font personality
+              Transform your brand's personality into an engaging online presence. Our data-driven approach ensures your website not only looks stunning but drives real business results.
             </p>
           </div>
           <div className="text-center">
-            <h3 className="text-white font-semibold mb-2">Marketing Implementation</h3>
+            <h3 className="text-white font-semibold mb-2">Built for Growth & Impact</h3>
             <p className="text-white/60 text-sm">
-              Create marketing materials that consistently reflect your brand voice
+              We craft responsive, user-focused websites that scale with your business. Every design choice, from typography to interaction, is purposefully selected to enhance your digital performance.
             </p>
           </div>
           <div className="text-center">
-            <h3 className="text-white font-semibold mb-2">Web Presence</h3>
+            <h3 className="text-white font-semibold mb-2">Expert Guidance, Proven Process</h3>
             <p className="text-white/60 text-sm">
-              Design a website that embodies your brand voice and engages your audience
+              Partner with our experienced team to develop a website that authentically represents your brand while delivering measurable ROI through strategic design and development.
             </p>
           </div>
         </div>
