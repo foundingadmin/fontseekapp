@@ -12,7 +12,8 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const formRef = useRef<HTMLFormElement>(null);
-  const email = useQuizStore(state => state.email);
+  const initialEmail = useQuizStore(state => state.email);
+  const [email, setEmail] = useState(initialEmail || '');
   const scores = useQuizStore(state => state.scores);
   const recommendations = useQuizStore(state => state.recommendations);
 
@@ -74,7 +75,6 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
           className="space-y-6"
         >
           <input type="hidden" name="subject" value="FontSeek Consultation Request" />
-          <input type="hidden" name="email" value={email || ''} />
           <input type="hidden" name="aesthetic" value={recommendations?.aestheticStyle || ''} />
           <input type="hidden" name="option1" value={recommendations?.primary.name || ''} />
           <input type="hidden" name="option2" value={recommendations?.secondary.name || ''} />
@@ -95,9 +95,10 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
               type="email"
               name="email"
               placeholder="Email Address"
-              value={email || ''}
-              readOnly
-              className="w-full px-4 py-3 bg-[#2A2D36] border border-white/10 rounded-lg text-white/60 focus:outline-none cursor-not-allowed"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full px-4 py-3 bg-[#2A2D36] border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
             />
           </div>
 
@@ -116,7 +117,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
             disabled={isSubmitting}
             className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-500 text-black font-semibold rounded-lg hover:bg-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Ready to elevate your digital presence? Let's discuss your website project.
+            {isSubmitting ? 'Sending...' : 'Ready to elevate your digital presence? Let\'s discuss your website project.'}
             <ArrowRight className="w-5 h-5" />
           </button>
 
