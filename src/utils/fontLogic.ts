@@ -1,7 +1,17 @@
 import type { UserScores, FontRecommendation, FontData } from '../types';
 import { fonts } from '../data/fonts';
 import { aestheticScoring } from '../data/aestheticScoring';
-import { getDisplayName } from '../utils/aestheticStyles';
+import { getDisplayName } from './aestheticStyles';
+
+const CLASSIC_EDITORIAL_FONTS = [
+  'Lora',
+  'EB Garamond',
+  'Crimson Pro',
+  'Domine',
+  'Libre Baskerville',
+  'Playfair Display',
+  'Merriweather'
+];
 
 function isClassicEditorial(scores: UserScores): boolean {
   return (
@@ -13,19 +23,26 @@ function isClassicEditorial(scores: UserScores): boolean {
   );
 }
 
-function getSerifFonts(): FontData[] {
-  return fonts.filter(font => {
-    const style = font.aestheticStyle.toLowerCase();
-    return (
-      style.includes('serif') &&
-      !style.includes('display') // Exclude display serifs
-    );
-  });
+function getClassicEditorialFonts(): FontData[] {
+  return fonts
+    .filter(font => {
+      // Only include serif fonts from our approved list
+      return (
+        CLASSIC_EDITORIAL_FONTS.includes(font.name) &&
+        !font.aestheticStyle.toLowerCase().includes('display') &&
+        !font.aestheticStyle.toLowerCase().includes('sans')
+      );
+    })
+    .sort((a, b) => {
+      // Sort by priority in CLASSIC_EDITORIAL_FONTS array
+      const aIndex = CLASSIC_EDITORIAL_FONTS.indexOf(a.name);
+      const bIndex = CLASSIC_EDITORIAL_FONTS.indexOf(b.name);
+      return aIndex - bIndex;
+    });
 }
 
 function calculateStyleMatch(scores: UserScores, range: typeof aestheticScoring[keyof typeof aestheticScoring]): number {
   let matchScore = 0;
-  
   const traits: (keyof UserScores)[] = ['tone', 'energy', 'design', 'era', 'structure'];
   
   for (const trait of traits) {
@@ -64,22 +81,22 @@ function determineAestheticStyle(scores: UserScores): string {
 function getFontsByAestheticStyle(style: string, scores: UserScores): FontData[] {
   // Special handling for Classic Editorial
   if (style === 'Classic Editorial') {
-    const serifFonts = getSerifFonts();
-    const priorityFonts = ['Lora', 'Libre Baskerville', 'Crimson Pro', 'EB Garamond', 'Domine', 'Merriweather'];
-    
-    return serifFonts.sort((a, b) => {
-      const aIndex = priorityFonts.indexOf(a.name);
-      const bIndex = priorityFonts.indexOf(b.name);
-      
-      if (aIndex === -1 && bIndex === -1) return 0;
-      if (aIndex === -1) return 1;
-      if (bIndex === -1) return -1;
-      return aIndex - bIndex;
-    });
+    return getClassicEditorialFonts();
   }
 
+  // Filter out modern sans and display fonts for traditional scores
+  const isTraditional = scores.tone <= 2 && scores.energy <= 2;
+  
   return fonts.filter(font => {
     const displayName = getDisplayName(font.aestheticStyle);
+    
+    if (isTraditional) {
+      const style = font.aestheticStyle.toLowerCase();
+      if (style.includes('modern') || style.includes('geometric') || style.includes('display')) {
+        return false;
+      }
+    }
+    
     return displayName === style;
   });
 }
@@ -87,41 +104,38 @@ function getFontsByAestheticStyle(style: string, scores: UserScores): FontData[]
 export function calculateFontRecommendations(scores: UserScores): FontRecommendation {
   const aestheticStyle = determineAestheticStyle(scores);
   let matchingFonts = getFontsByAestheticStyle(aestheticStyle, scores);
-  
-  // If we don't have enough fonts in the primary style, find similar styles
-  if (matchingFonts.length < 3) {
-    const similarStyles = Object.entries(aestheticScoring)
-      .filter(([style]) => style !== aestheticStyle)
-      .sort((a, b) => {
-        const scoreA = calculateStyleMatch(scores, a[1]);
-        const scoreB = calculateStyleMatch(scores, b[1]);
-        return scoreB - scoreA;
-      })
-      .map(([style]) => style);
-    
-    for (const style of similarStyles) {
-      const additionalFonts = getFontsByAestheticStyle(style, scores);
-      matchingFonts = [...matchingFonts, ...additionalFonts];
-      if (matchingFonts.length >= 3) break;
-    }
+
+  // For Classic Editorial, ensure we have enough serif options
+  if (aestheticStyle === 'Classic Editorial' && matchingFonts.length < 3) {
+    const additionalSerifs = fonts.filter(font => 
+      font.aestheticStyle.toLowerCase().includes('serif') &&
+      !matchingFonts.some(f => f.name === font.name) &&
+      !font.aestheticStyle.toLowerCase().includes('display')
+    );
+    matchingFonts = [...matchingFonts, ...additionalSerifs];
   }
 
-  // Sort fonts by how well they match the scores
+  // Sort fonts by trait match score
   matchingFonts.sort((a, b) => {
-    const distanceA = Math.abs(a.tone - scores.tone) +
-                     Math.abs(a.energy - scores.energy) +
-                     Math.abs(a.design - scores.design) +
-                     Math.abs(a.era - scores.era) +
-                     Math.abs(a.structure - scores.structure);
-                     
-    const distanceB = Math.abs(b.tone - scores.tone) +
-                     Math.abs(b.energy - scores.energy) +
-                     Math.abs(b.design - scores.design) +
-                     Math.abs(b.era - scores.era) +
-                     Math.abs(b.structure - scores.structure);
-                     
-    return distanceA - distanceB;
+    const scoreA = Math.abs(a.tone - scores.tone) +
+                  Math.abs(a.energy - scores.energy) +
+                  Math.abs(a.design - scores.design) +
+                  Math.abs(a.era - scores.era) +
+                  Math.abs(a.structure - scores.structure);
+                  
+    const scoreB = Math.abs(b.tone - scores.tone) +
+                  Math.abs(b.energy - scores.energy) +
+                  Math.abs(b.design - scores.design) +
+                  Math.abs(b.era - scores.era) +
+                  Math.abs(b.structure - scores.structure);
+                  
+    return scoreA - scoreB;
   });
+
+  // Ensure we have at least 3 fonts
+  while (matchingFonts.length < 3) {
+    matchingFonts.push(matchingFonts[0]); // Duplicate the best match if needed
+  }
 
   return {
     aestheticStyle,
