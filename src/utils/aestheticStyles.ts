@@ -6,7 +6,8 @@ const styleDisplayNames: Record<string, string> = {
   'Transitional Serif': 'Classic & Credible',
   'Slab Serif': 'Structured & Professional',
   'Old Style Serif': 'Elegant & Literary',
-  'Display / Bubbly': 'Bold & Expressive'
+  'Display / Bubbly': 'Bold & Expressive',
+  'Classic Editorial': 'Classic Editorial'
 };
 
 export function getDisplayName(internalName: string): string {

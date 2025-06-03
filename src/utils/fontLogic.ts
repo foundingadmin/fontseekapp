@@ -3,6 +3,26 @@ import { fonts } from '../data/fonts';
 import { aestheticScoring } from '../data/aestheticScoring';
 import { getDisplayName } from '../utils/aestheticStyles';
 
+function isClassicEditorial(scores: UserScores): boolean {
+  return (
+    scores.tone <= 2 &&
+    scores.energy <= 2 &&
+    scores.design <= 2 &&
+    scores.era >= 4 &&
+    scores.structure <= 2
+  );
+}
+
+function getSerifFonts(): FontData[] {
+  return fonts.filter(font => {
+    const style = font.aestheticStyle.toLowerCase();
+    return (
+      style.includes('serif') &&
+      !style.includes('display') // Exclude display serifs
+    );
+  });
+}
+
 function calculateStyleMatch(scores: UserScores, range: typeof aestheticScoring[keyof typeof aestheticScoring]): number {
   let matchScore = 0;
   
@@ -22,6 +42,11 @@ function calculateStyleMatch(scores: UserScores, range: typeof aestheticScoring[
 }
 
 function determineAestheticStyle(scores: UserScores): string {
+  // Force Classic Editorial for specific score combinations
+  if (isClassicEditorial(scores)) {
+    return 'Classic Editorial';
+  }
+
   let bestMatch = '';
   let highestScore = -1;
 
@@ -36,7 +61,23 @@ function determineAestheticStyle(scores: UserScores): string {
   return bestMatch;
 }
 
-function getFontsByAestheticStyle(style: string): FontData[] {
+function getFontsByAestheticStyle(style: string, scores: UserScores): FontData[] {
+  // Special handling for Classic Editorial
+  if (style === 'Classic Editorial') {
+    const serifFonts = getSerifFonts();
+    const priorityFonts = ['Lora', 'Libre Baskerville', 'Crimson Pro', 'EB Garamond', 'Domine', 'Merriweather'];
+    
+    return serifFonts.sort((a, b) => {
+      const aIndex = priorityFonts.indexOf(a.name);
+      const bIndex = priorityFonts.indexOf(b.name);
+      
+      if (aIndex === -1 && bIndex === -1) return 0;
+      if (aIndex === -1) return 1;
+      if (bIndex === -1) return -1;
+      return aIndex - bIndex;
+    });
+  }
+
   return fonts.filter(font => {
     const displayName = getDisplayName(font.aestheticStyle);
     return displayName === style;
@@ -45,7 +86,7 @@ function getFontsByAestheticStyle(style: string): FontData[] {
 
 export function calculateFontRecommendations(scores: UserScores): FontRecommendation {
   const aestheticStyle = determineAestheticStyle(scores);
-  let matchingFonts = getFontsByAestheticStyle(aestheticStyle);
+  let matchingFonts = getFontsByAestheticStyle(aestheticStyle, scores);
   
   // If we don't have enough fonts in the primary style, find similar styles
   if (matchingFonts.length < 3) {
@@ -59,7 +100,7 @@ export function calculateFontRecommendations(scores: UserScores): FontRecommenda
       .map(([style]) => style);
     
     for (const style of similarStyles) {
-      const additionalFonts = getFontsByAestheticStyle(style);
+      const additionalFonts = getFontsByAestheticStyle(style, scores);
       matchingFonts = [...matchingFonts, ...additionalFonts];
       if (matchingFonts.length >= 3) break;
     }
