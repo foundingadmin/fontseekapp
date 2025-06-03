@@ -23,7 +23,7 @@ function App() {
   }, [skipToResults]);
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-gray-900 to-black text-white overflow-x-hidden">
+    <div className="min-h-screen w-full bg-gradient-to-br from-gray-900 to-black text-white overflow-x-hidden relative">
       <InfoPopup />
       <main className="min-h-screen">
         {!hasStarted ? (
@@ -37,7 +37,7 @@ function App() {
           </div>
         )}
       </main>
-      <footer className="py-4">
+      <div className={`py-4 ${!hasStarted ? 'absolute bottom-0 left-0 right-0' : ''}`}>
         <div className="container mx-auto px-4 flex items-center justify-center text-sm text-white/60">
           Built with <Heart className="w-4 h-4 mx-2 text-emerald-500" /> by{' '}
           <a 
@@ -49,7 +49,7 @@ function App() {
             Founding Creative
           </a>
         </div>
-      </footer>
+      </div>
     </div>
   );
 }
