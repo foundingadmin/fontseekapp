@@ -2,56 +2,91 @@ import type { UserScores, FontRecommendation, FontData } from '../types';
 import { fonts } from '../data/fonts';
 import { aestheticScoring } from '../data/aestheticScoring';
 
-function calculateFontDistance(font: FontData, scores: UserScores): number {
-  return Math.abs(font.tone - scores.tone) +
-         Math.abs(font.energy - scores.energy) +
-         Math.abs(font.design - scores.design) +
-         Math.abs(font.era - scores.era) +
-         Math.abs(font.structure - scores.structure);
+function calculateStyleMatch(scores: UserScores, range: typeof aestheticScoring[keyof typeof aestheticScoring]): number {
+  let matchScore = 0;
+  
+  const traits: (keyof UserScores)[] = ['tone', 'energy', 'design', 'era', 'structure'];
+  
+  for (const trait of traits) {
+    const score = scores[trait];
+    const min = range[`${trait}Min`];
+    const max = range[`${trait}Max`];
+    
+    if (score >= min && score <= max) {
+      matchScore += 1;
+    }
+  }
+  
+  return matchScore;
 }
 
 function determineAestheticStyle(scores: UserScores): string {
   let bestMatch = '';
-  let smallestDistance = Infinity;
+  let highestScore = -1;
 
-  for (const font of fonts) {
-    const distance = calculateFontDistance(font, scores);
-    if (distance < smallestDistance) {
-      smallestDistance = distance;
-      bestMatch = font.aestheticStyle;
+  for (const [style, range] of Object.entries(aestheticScoring)) {
+    const score = calculateStyleMatch(scores, range);
+    if (score > highestScore) {
+      highestScore = score;
+      bestMatch = style;
     }
   }
 
   return bestMatch;
 }
 
+function getFontsByAestheticStyle(style: string): FontData[] {
+  return fonts.filter(font => {
+    const displayName = getDisplayName(font.aestheticStyle);
+    return displayName === style;
+  });
+}
+
 export function calculateFontRecommendations(scores: UserScores): FontRecommendation {
   const aestheticStyle = determineAestheticStyle(scores);
+  let matchingFonts = getFontsByAestheticStyle(aestheticStyle);
   
-  // Get all fonts sorted by how well they match the user's scores
-  const sortedFonts = [...fonts].sort((a, b) => 
-    calculateFontDistance(a, scores) - calculateFontDistance(b, scores)
-  );
-
-  // Try to get fonts of the same aesthetic style first
-  const matchingFonts = sortedFonts.filter(font => 
-    font.aestheticStyle === aestheticStyle
-  );
-
-  // If we don't have enough matching fonts, use the best matching fonts regardless of style
-  const recommendations = {
-    aestheticStyle,
-    primary: matchingFonts[0] || sortedFonts[0],
-    secondary: matchingFonts[1] || sortedFonts[1],
-    tertiary: matchingFonts[2] || sortedFonts[2]
-  };
-
-  // Ensure we have valid fonts for all positions
-  if (!recommendations.primary || !recommendations.secondary || !recommendations.tertiary) {
-    throw new Error('Not enough fonts available for recommendations');
+  // If we don't have enough fonts in the primary style, find similar styles
+  if (matchingFonts.length < 3) {
+    const similarStyles = Object.entries(aestheticScoring)
+      .filter(([style]) => style !== aestheticStyle)
+      .sort((a, b) => {
+        const scoreA = calculateStyleMatch(scores, a[1]);
+        const scoreB = calculateStyleMatch(scores, b[1]);
+        return scoreB - scoreA;
+      })
+      .map(([style]) => style);
+    
+    for (const style of similarStyles) {
+      const additionalFonts = getFontsByAestheticStyle(style);
+      matchingFonts = [...matchingFonts, ...additionalFonts];
+      if (matchingFonts.length >= 3) break;
+    }
   }
 
-  return recommendations;
+  // Sort fonts by how well they match the scores
+  matchingFonts.sort((a, b) => {
+    const distanceA = Math.abs(a.tone - scores.tone) +
+                     Math.abs(a.energy - scores.energy) +
+                     Math.abs(a.design - scores.design) +
+                     Math.abs(a.era - scores.era) +
+                     Math.abs(a.structure - scores.structure);
+                     
+    const distanceB = Math.abs(b.tone - scores.tone) +
+                     Math.abs(b.energy - scores.energy) +
+                     Math.abs(b.design - scores.design) +
+                     Math.abs(b.era - scores.era) +
+                     Math.abs(b.structure - scores.structure);
+                     
+    return distanceA - distanceB;
+  });
+
+  return {
+    aestheticStyle,
+    primary: matchingFonts[0],
+    secondary: matchingFonts[1],
+    tertiary: matchingFonts[2]
+  };
 }
 
 export function getTopTraits(scores: UserScores): string[] {
