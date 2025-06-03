@@ -160,21 +160,21 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
           <div className="text-center">
-            <h3 className="text-white font-semibold mb-2">Strategic Web Design That Converts</h3>
+            <h3 className="text-white font-semibold mb-2">Design that works</h3>
             <p className="text-white/60 text-sm">
-              Transform your brand's personality into an engaging online presence. Our data-driven approach ensures your website not only looks stunning but drives real business results.
+              Turn brand personality into high-performing experiences. Our sites look great and convert.
             </p>
           </div>
           <div className="text-center">
-            <h3 className="text-white font-semibold mb-2">Built for Growth & Impact</h3>
+            <h3 className="text-white font-semibold mb-2">Built to scale</h3>
             <p className="text-white/60 text-sm">
-              We craft responsive, user-focused websites that scale with your business. Every design choice, from typography to interaction, is purposefully selected to enhance your digital performance.
+              Responsive, user-first websites designed to grow with you for long-term impact.
             </p>
           </div>
           <div className="text-center">
-            <h3 className="text-white font-semibold mb-2">Expert Guidance, Proven Process</h3>
+            <h3 className="text-white font-semibold mb-2">Your strategic partner</h3>
             <p className="text-white/60 text-sm">
-              Partner with our experienced team to develop a website that authentically represents your brand while delivering measurable ROI through strategic design and development.
+              Work with our experts to create a site that reflects the real meaning behind your brand.
             </p>
           </div>
         </div>
