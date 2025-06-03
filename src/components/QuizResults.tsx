@@ -184,42 +184,42 @@ export const QuizResults: React.FC = () => {
             isDarkMode ? 'bg-neutral-900' : 'bg-white'
           )}>
             <div className="flex flex-col">
-              <div className="flex flex-col md:flex-row gap-2 mb-8">
+              <div className="flex items-center gap-2 mb-8">
                 <button
                   onClick={shuffleCopyPack}
                   className={clsx(
-                    'flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm',
+                    'flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-sm',
                     isDarkMode 
                       ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
                       : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
                   )}
                 >
                   <Shuffle className="w-4 h-4" />
-                  Shuffle copy
+                  <span className="hidden md:inline">Shuffle copy</span>
                 </button>
                 <button
                   onClick={() => setShowLabels(!showLabels)}
                   className={clsx(
-                    'flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm',
+                    'flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-sm',
                     isDarkMode 
                       ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
                       : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
                   )}
                 >
                   {showLabels ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  {showLabels ? 'Hide specs' : 'Show specs'}
+                  <span className="hidden md:inline">{showLabels ? 'Hide specs' : 'Show specs'}</span>
                 </button>
                 <button
                   onClick={() => setIsDarkMode(!isDarkMode)}
                   className={clsx(
-                    'flex items-center justify-center gap-2 px-3 py-2.5 md:py-1.5 rounded-lg transition-colors text-sm',
+                    'flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-sm',
                     isDarkMode 
                       ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
                       : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
                   )}
                 >
                   {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                  {isDarkMode ? 'Light mode' : 'Dark mode'}
+                  <span className="hidden md:inline">{isDarkMode ? 'Light' : 'Dark'}</span>
                 </button>
               </div>
 
