@@ -98,7 +98,7 @@ export const IntroScreen: React.FC = () => {
           </h1>
           
           <p className="text-xl text-white/80 mb-12">
-            FontSeek helps you discover the Google Web Font that best fits your brand's personality—not just its style. Get instant recommendations, usage previews, and dev-ready code in under 3 minutes.
+            FontSeek helps you find the perfect free and ready-to-use modern font to bring your brand's personality to life on your website and beyond. In under 3 minutes, get strategic recommendations, live web previews, and dev-ready code to elevate your site's design with intention.
           </p>
 
           <form onSubmit={handleSubmit} className="max-w-[400px] mx-auto">
