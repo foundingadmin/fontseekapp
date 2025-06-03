@@ -86,3 +86,5 @@ const QuizResults: React.FC = () => {
 };
 
 export default QuizResults;
+
+export { QuizResults }
