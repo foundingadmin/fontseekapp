@@ -1,6 +1,7 @@
 import type { UserScores, FontRecommendation, FontData } from '../types';
 import { fonts } from '../data/fonts';
 import { aestheticScoring } from '../data/aestheticScoring';
+import { getDisplayName } from '../utils/aestheticStyles';
 
 function calculateStyleMatch(scores: UserScores, range: typeof aestheticScoring[keyof typeof aestheticScoring]): number {
   let matchScore = 0;

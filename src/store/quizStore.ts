@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { QuizQuestion, UserScores, FontRecommendation } from '../types';
 import { quizQuestions } from '../data/quiz';
 import { calculateFontRecommendations, getTopTraits } from '../utils/fontLogic';
+import { fonts } from '../data/fonts';
 
 interface QuizStore {
   currentQuestion: number;
