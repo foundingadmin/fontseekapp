@@ -33,9 +33,13 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       answers: { ...state.answers, [questionNumber]: answer }
     }));
 
-    // Only auto-advance and calculate if we're on the last question
-    if (questionNumber === quizQuestions.length) {
-      get().calculateResults();
+    const current = get().currentQuestion;
+    
+    // Calculate results if this is the last question
+    if (current === quizQuestions.length) {
+      setTimeout(() => {
+        get().calculateResults();
+      }, 0);
     } else {
       get().nextQuestion();
     }
@@ -51,7 +55,12 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
   previousQuestion: () => {
     const current = get().currentQuestion;
     if (current > 1) {
-      set({ currentQuestion: current - 1 });
+      set({ 
+        currentQuestion: current - 1,
+        scores: null,
+        recommendations: null,
+        topTraits: []
+      });
     }
   },
 
@@ -80,10 +89,19 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       scores[trait as keyof UserScores] = Math.round((score1 + score2) / 2);
     });
 
-    const recommendations = calculateFontRecommendations(scores);
-    const topTraits = getTopTraits(scores);
-    
-    set({ scores, recommendations, topTraits });
+    try {
+      const recommendations = calculateFontRecommendations(scores);
+      const topTraits = getTopTraits(scores);
+      
+      set({ scores, recommendations, topTraits });
+    } catch (error) {
+      console.error('Error calculating recommendations:', error);
+      set({ 
+        scores: null,
+        recommendations: null,
+        topTraits: []
+      });
+    }
   },
 
   resetQuiz: () => {

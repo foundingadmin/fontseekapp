@@ -99,7 +99,6 @@ export const QuizResults: React.FC = () => {
       { trait: 'structure', score: scores.structure }
     ];
 
-    // Sort by score (descending) and break ties using priority order
     traitScores.sort((a, b) => {
       if (a.score !== b.score) return b.score - a.score;
       
@@ -108,13 +107,13 @@ export const QuizResults: React.FC = () => {
     });
 
     return traitScores
-      .filter(({ score }) => score !== 3) // Skip neutral scores
-      .slice(0, 3) // Take top 3
+      .filter(({ score }) => score !== 3)
+      .slice(0, 3)
       .map(({ trait, score }) => {
         const label = traitLabels[trait as keyof typeof traitLabels];
         return score >= 4 ? label.high : label.low;
       })
-      .filter(Boolean); // Remove any undefined values
+      .filter(Boolean);
   };
 
   const shuffleCopyPack = () => {
@@ -199,13 +198,17 @@ export const QuizResults: React.FC = () => {
               </button>
             </div>
 
-            <div className="space-y-4">
+            <div 
+              style={{ 
+                fontFamily: font.name === 'Baloo 2' ? "'Baloo\\ 2', cursive" : font.embedCode 
+              }}
+              className="space-y-4"
+            >
               <div>
                 {showLabels && <div className={`text-xs mb-1 ${
                   isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
                 }`}>Heading • 36px/48px • Bold</div>}
                 <h1 
-                  style={{ fontFamily: font.name }} 
                   className={`text-3xl md:text-5xl font-bold transition-colors tracking-[-0.02em] ${
                     isDarkMode ? 'text-white' : 'text-neutral-900'
                   }`}
@@ -219,7 +222,6 @@ export const QuizResults: React.FC = () => {
                   isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
                 }`}>Subheading • 20px/24px • Medium</div>}
                 <h2 
-                  style={{ fontFamily: font.name }} 
                   className={`text-xl md:text-2xl font-medium transition-colors tracking-[-0.02em] ${
                     isDarkMode ? 'text-white' : 'text-neutral-900'
                   }`}
@@ -233,7 +235,6 @@ export const QuizResults: React.FC = () => {
                   isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
                 }`}>Lead Paragraph • 18px/20px • Regular</div>}
                 <p 
-                  style={{ fontFamily: font.name }} 
                   className={`text-lg md:text-xl transition-colors tracking-[-0.02em] ${
                     isDarkMode ? 'text-white' : 'text-neutral-900'
                   }`}
@@ -247,7 +248,6 @@ export const QuizResults: React.FC = () => {
                   isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
                 }`}>Body Copy • 14px/16px • Regular</div>}
                 <p 
-                  style={{ fontFamily: font.name }} 
                   className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
                     isDarkMode ? 'text-white' : 'text-neutral-900'
                   }`}
@@ -255,7 +255,6 @@ export const QuizResults: React.FC = () => {
                   {currentCopyPack.body1}
                 </p>
                 <p 
-                  style={{ fontFamily: font.name }} 
                   className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
                     isDarkMode ? 'text-white' : 'text-neutral-900'
                   }`}
@@ -269,7 +268,6 @@ export const QuizResults: React.FC = () => {
                   isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
                 }`}>Fine Print • 11px/12px • Light</div>}
                 <small 
-                  style={{ fontFamily: font.name }} 
                   className={`text-[11px] md:text-xs font-light block transition-colors tracking-[-0.02em] ${
                     isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
                   }`}
