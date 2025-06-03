@@ -1,135 +1,204 @@
 import type { UserScores, FontRecommendation, FontData } from '../types';
 import { fonts } from '../data/fonts';
 
-function isDisplayBubblyEligible(scores: UserScores): boolean {
-  return scores.tone >= 3 && 
-         scores.structure >= 3 && 
-         scores.energy >= 4 &&
-         scores.design >= 4;
+function calculateTraitScore(answers: Record<number, 'A' | 'B'>, questionPair: [number, number]): number {
+  const score1 = answers[questionPair[0]] === 'A' ? 1 : 5;
+  const score2 = answers[questionPair[1]] === 'A' ? 1 : 5;
+  return Math.round((score1 + score2) / 2);
+}
+
+function matchesAestheticStyle(scores: UserScores, ranges: Record<string, [number, number]>): boolean {
+  return Object.entries(ranges).every(([trait, [min, max]]) => {
+    const score = scores[trait as keyof UserScores];
+    return score >= min && score <= max;
+  });
 }
 
 function determineAestheticStyle(scores: UserScores): string {
-  const { tone, energy, design, era, structure } = scores;
+  const styleRanges = [
+    {
+      name: 'Grotesque Sans',
+      ranges: {
+        tone: [2, 4],
+        energy: [2, 4],
+        design: [1, 3],
+        era: [3, 5],
+        structure: [3, 5]
+      }
+    },
+    {
+      name: 'Geometric Sans',
+      ranges: {
+        tone: [3, 5],
+        energy: [3, 5],
+        design: [2, 4],
+        era: [3, 5],
+        structure: [4, 5]
+      }
+    },
+    {
+      name: 'Humanist Sans',
+      ranges: {
+        tone: [3, 5],
+        energy: [2, 4],
+        design: [2, 3],
+        era: [2, 4],
+        structure: [1, 3]
+      }
+    },
+    {
+      name: 'Rounded Sans',
+      ranges: {
+        tone: [3, 5],
+        energy: [3, 5],
+        design: [3, 5],
+        era: [2, 4],
+        structure: [1, 2]
+      }
+    },
+    {
+      name: 'Monospace',
+      ranges: {
+        tone: [2, 3],
+        energy: [1, 2],
+        design: [1, 2],
+        era: [2, 3],
+        structure: [5, 5]
+      }
+    },
+    {
+      name: 'Display / Bubbly',
+      ranges: {
+        tone: [4, 5],
+        energy: [4, 5],
+        design: [4, 5],
+        era: [3, 5],
+        structure: [1, 3]
+      }
+    },
+    {
+      name: 'Transitional Serif',
+      ranges: {
+        tone: [1, 3],
+        energy: [1, 3],
+        design: [2, 4],
+        era: [3, 5],
+        structure: [2, 4]
+      }
+    },
+    {
+      name: 'Serif Old Style',
+      ranges: {
+        tone: [1, 2],
+        energy: [1, 3],
+        design: [2, 3],
+        era: [1, 3],
+        structure: [1, 3]
+      }
+    }
+  ];
 
-  // Display / Bubbly - Strict eligibility check
-  if (isDisplayBubblyEligible(scores)) {
-    return 'Display / Bubbly';
+  // Try to find an exact match first
+  for (const style of styleRanges) {
+    if (matchesAestheticStyle(scores, style.ranges)) {
+      return style.name;
+    }
   }
 
-  // Geometric Sans - Modern, structured, minimal
-  if (structure >= 4 && era >= 4 && design <= 3) {
-    return 'Geometric Sans';
+  // If no exact match, find closest match by calculating distance to range midpoints
+  let closestStyle = styleRanges[0];
+  let smallestDistance = Infinity;
+
+  for (const style of styleRanges) {
+    let distance = 0;
+    Object.entries(style.ranges).forEach(([trait, [min, max]]) => {
+      const midpoint = (min + max) / 2;
+      const score = scores[trait as keyof UserScores];
+      distance += Math.abs(score - midpoint);
+    });
+
+    if (distance < smallestDistance) {
+      smallestDistance = distance;
+      closestStyle = style;
+    }
   }
 
-  // Transitional Serif - Traditional, balanced
-  if (tone <= 3 && era <= 3 && structure <= 3) {
-    return 'Transitional Serif';
-  }
-
-  // Humanist Sans - Friendly, balanced
-  if (tone >= 3 && structure <= 3) {
-    return 'Humanist Sans';
-  }
-
-  // Default to Humanist Sans if no clear match
-  return 'Humanist Sans';
+  return closestStyle.name;
 }
 
-function calculateFontMatchScore(font: FontData, scores: UserScores): number {
-  const weights = {
-    tone: 2.0,      // Higher weight for tone
-    energy: 1.5,    // Medium-high weight for energy
-    design: 1.5,    // Medium-high weight for design
-    era: 1.0,       // Standard weight for era
-    structure: 1.0  // Standard weight for structure
+function calculateFontDistance(font: FontData, scores: UserScores): number {
+  return Math.abs(font.tone - scores.tone) +
+         Math.abs(font.energy - scores.energy) +
+         Math.abs(font.design - scores.design) +
+         Math.abs(font.era - scores.era) +
+         Math.abs(font.structure - scores.structure);
+}
+
+function getSystemDefaultFont(): FontData {
+  return {
+    name: 'System UI',
+    googleFontsLink: '',
+    tone: 3,
+    energy: 3,
+    design: 3,
+    era: 3,
+    structure: 3,
+    aestheticStyle: 'System Default',
+    embedCode: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+    personalityTags: ['Clean', 'Universal', 'Reliable'],
+    recommendedFor: ['Apps', 'Interfaces', 'System Tools']
   };
-
-  let score = 0;
-  let totalWeight = 0;
-
-  for (const [trait, weight] of Object.entries(weights)) {
-    const traitKey = trait as keyof typeof weights;
-    const difference = Math.abs(font[traitKey] - scores[traitKey]);
-    score += (5 - difference) * weight;
-    totalWeight += weight;
-  }
-
-  // Normalize score to 0-100 range
-  const normalizedScore = (score / (5 * totalWeight)) * 100;
-
-  // Apply penalties for Display/Bubbly fonts when inappropriate
-  if (font.aestheticStyle === 'Display / Bubbly' && !isDisplayBubblyEligible(scores)) {
-    return 0; // Completely exclude ineligible display fonts
-  }
-
-  return normalizedScore;
-}
-
-function getFallbackFonts(scores: UserScores, usedFonts: Set<string>): FontData[] {
-  // Get fonts from similar aesthetic styles based on scores
-  const fallbackStyles = new Set<string>();
-  
-  if (scores.tone <= 3 && scores.era <= 3) {
-    fallbackStyles.add('Transitional Serif');
-  }
-  if (scores.structure >= 4 && scores.era >= 4) {
-    fallbackStyles.add('Geometric Sans');
-  }
-  if (scores.tone >= 3 && scores.structure <= 3) {
-    fallbackStyles.add('Humanist Sans');
-  }
-
-  return fonts
-    .filter(font => 
-      fallbackStyles.has(font.aestheticStyle) && 
-      !usedFonts.has(font.name) &&
-      // Additional validation for Display/Bubbly fonts
-      !(font.aestheticStyle === 'Display / Bubbly' && !isDisplayBubblyEligible(scores))
-    )
-    .sort((a, b) => calculateFontMatchScore(b, scores) - calculateFontMatchScore(a, scores));
 }
 
 export function calculateFontRecommendations(scores: UserScores): FontRecommendation {
   const aestheticStyle = determineAestheticStyle(scores);
-  const usedFonts = new Set<string>();
+  
+  // Filter fonts by aesthetic style
+  let matchingFonts = fonts.filter(font => font.aestheticStyle === aestheticStyle);
 
-  // Get fonts matching the primary aesthetic style
-  let matchingFonts = fonts
-    .filter(font => {
-      if (font.aestheticStyle === 'Display / Bubbly' && !isDisplayBubblyEligible(scores)) {
-        return false;
-      }
-      return font.aestheticStyle === aestheticStyle;
-    })
-    .sort((a, b) => calculateFontMatchScore(b, scores) - calculateFontMatchScore(a, scores));
-
-  // Select primary font
-  const primary = matchingFonts[0];
-  if (primary) {
-    usedFonts.add(primary.name);
+  // If no matching fonts found, return system defaults
+  if (matchingFonts.length === 0) {
+    const systemFont = getSystemDefaultFont();
+    return {
+      aestheticStyle: 'System Default',
+      primary: systemFont,
+      secondary: systemFont,
+      tertiary: systemFont
+    };
   }
 
-  // Select secondary font
-  let secondary = matchingFonts.find(font => !usedFonts.has(font.name));
-  if (!secondary) {
-    const fallbackFonts = getFallbackFonts(scores, usedFonts);
-    secondary = fallbackFonts[0];
-  }
-  if (secondary) {
-    usedFonts.add(secondary.name);
-  }
+  // Sort fonts by distance score (ascending)
+  matchingFonts.sort((a, b) => calculateFontDistance(a, scores) - calculateFontDistance(b, scores));
 
-  // Select tertiary font
-  let tertiary = matchingFonts.find(font => !usedFonts.has(font.name));
-  if (!tertiary) {
-    const fallbackFonts = getFallbackFonts(scores, usedFonts);
-    tertiary = fallbackFonts[0];
+  // Ensure we have enough fonts, pad with system defaults if needed
+  while (matchingFonts.length < 3) {
+    matchingFonts.push(getSystemDefaultFont());
   }
 
   return {
-    primary: primary || fonts[0],
-    secondary: secondary || fonts[1],
-    tertiary: tertiary || fonts[2],
-    aestheticStyle
+    aestheticStyle,
+    primary: matchingFonts[0],
+    secondary: matchingFonts[1],
+    tertiary: matchingFonts[2]
   };
+}
+
+export function getTopTraits(scores: UserScores): string[] {
+  const traits = [
+    { name: 'Formal', score: 6 - scores.tone },
+    { name: 'Casual', score: scores.tone },
+    { name: 'Calm', score: 6 - scores.energy },
+    { name: 'Energetic', score: scores.energy },
+    { name: 'Minimal', score: 6 - scores.design },
+    { name: 'Expressive', score: scores.design },
+    { name: 'Classic', score: 6 - scores.era },
+    { name: 'Modern', score: scores.era },
+    { name: 'Organic', score: 6 - scores.structure },
+    { name: 'Geometric', score: scores.structure }
+  ];
+
+  return traits
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
+    .map(trait => trait.name);
 }
