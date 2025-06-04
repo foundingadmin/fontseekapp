@@ -8,9 +8,9 @@ export const QuizProgress: React.FC = () => {
   const progress = (currentQuestion / quizQuestions.length) * 100;
 
   return (
-    <div className="flex flex-col items-end">
+    <div className="flex items-center gap-4">
       <Progress.Root 
-        className="relative overflow-hidden bg-white/20 rounded-full w-32 h-1.5 mb-1"
+        className="relative overflow-hidden bg-white/20 rounded-full w-32 h-1.5"
         value={progress}
       >
         <Progress.Indicator
