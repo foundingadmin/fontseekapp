@@ -35,22 +35,49 @@
   }
 }
 
-@keyframes gradient-move {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 200% 50%;
-  }
+@keyframes gradient-1 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  100% { transform: translate(50%, 50%) rotate(360deg); }
+}
+
+@keyframes gradient-2 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  100% { transform: translate(-50%, -30%) rotate(-360deg); }
+}
+
+@keyframes gradient-3 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  100% { transform: translate(30%, -50%) rotate(180deg); }
 }
 
 .animate-gradient {
-  background: 
-    radial-gradient(circle at 50% 50%, rgba(0,0,0,0.95) 0%, rgba(6,78,59,0.3) 25%, rgba(0,0,0,0.95) 50%, rgba(6,78,59,0.3) 75%, rgba(0,0,0,0.95) 100%),
-    radial-gradient(circle at 25% 25%, rgba(0,0,0,0.95) 0%, rgba(6,78,59,0.5) 35%, rgba(0,0,0,0.95) 60%, rgba(6,78,59,0.5) 85%, rgba(0,0,0,0.95) 100%);
+  position: relative;
+  background: black;
+  overflow: hidden;
+}
+
+.animate-gradient::before,
+.animate-gradient::after,
+.animate-gradient span {
+  content: "";
+  position: absolute;
+  inset: -100%;
+  background: radial-gradient(circle, transparent 30%, black 70%),
+              radial-gradient(circle at 50% 50%, rgba(67, 218, 122, 0.3), transparent 50%),
+              radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.2), transparent 50%);
   background-size: 200% 200%;
-  animation: gradient-move 16s linear infinite;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.animate-gradient::before {
+  animation: gradient-1 20s linear infinite;
+}
+
+.animate-gradient::after {
+  animation: gradient-2 23s linear infinite;
+}
+
+.animate-gradient span {
+  animation: gradient-3 25s linear infinite;
 }

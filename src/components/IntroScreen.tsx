@@ -70,16 +70,8 @@ export const IntroScreen: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
-      <div 
-        className="absolute inset-0 animate-gradient"
-      />
-      
-      <div className="absolute inset-0 opacity-20">
-        <img 
-          src="/Wave-Black.svg" 
-          alt="" 
-          className="w-full h-full object-cover"
-        />
+      <div className="absolute inset-0 animate-gradient">
+        <span></span>
       </div>
       
       <div className="relative z-10 min-h-screen flex items-center justify-center">
