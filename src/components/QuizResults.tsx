@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuizStore } from '../store/quizStore';
 import { quizQuestions } from '../data/quiz';
-import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon } from 'lucide-react';
+import { RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon } from 'lucide-react';
 import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
@@ -24,7 +24,6 @@ export const QuizResults: React.FC = () => {
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showFallbackMessage, setShowFallbackMessage] = useState(false);
-  const [showDebug, setShowDebug] = useState(false);
 
   useEffect(() => {
     if (!scores && !recommendations) {
@@ -135,8 +134,8 @@ export const QuizResults: React.FC = () => {
     );
 
     return (
-      <div className="mb-8 bg-[#1C1F26] rounded-xl overflow-hidden shadow-xl">
-        <div className="px-6 py-5 border-b border-[#2A2D36]">
+      <div className="mb-8 glass-card rounded-xl overflow-hidden shadow-xl">
+        <div className="px-6 py-5 border-b border-white/10">
           <div>
             <p className="text-2xl font-bold text-white tracking-[-0.02em]">{font.name}</p>
             <p className="text-sm text-white/60 mt-2 max-w-xl tracking-[-0.02em]">
@@ -262,7 +261,7 @@ export const QuizResults: React.FC = () => {
           </div>
         </div>
 
-        <div className="px-6 py-5 border-t border-[#2A2D36]">
+        <div className="px-6 py-5 border-t border-white/10">
           <h3 className="text-lg font-semibold mb-2 text-white tracking-[-0.02em]">Get this free font</h3>
           <p className="text-white/80 text-sm mb-4 tracking-[-0.02em]">
             Install it to your computer or embed it on your website in seconds.

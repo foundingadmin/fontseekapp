@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQuizStore } from '../store/quizStore';
 import wordmarkLogo from '../assets/Founding-v1-Wordmark-white.svg';
-import { Heart } from 'lucide-react';
 
 export const IntroScreen: React.FC = () => {
   const { startQuiz } = useQuizStore();
@@ -136,20 +135,6 @@ export const IntroScreen: React.FC = () => {
             </form>
           </div>
         </div>
-
-        <footer className="relative z-30 py-6 px-4">
-          <div className="container mx-auto flex items-center justify-center text-sm text-white/60">
-            Designed & Built with <Heart className="w-4 h-4 mx-2 text-emerald-500" /> by{' '}
-            <a 
-              href="https://foundingcreative.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="ml-2 text-white hover:text-emerald-400 transition-colors"
-            >
-              Founding Creative
-            </a>
-          </div>
-        </footer>
       </div>
     </div>
   );
