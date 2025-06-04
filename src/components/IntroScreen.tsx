@@ -74,7 +74,7 @@ export const IntroScreen: React.FC = () => {
       <img 
         src="/Wave-Black.svg" 
         alt="" 
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover opacity-80"
         style={{ mixBlendMode: 'normal' }}
       />
       
