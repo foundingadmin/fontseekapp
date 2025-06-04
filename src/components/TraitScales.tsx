@@ -46,7 +46,7 @@ export const TraitScales: React.FC<TraitScalesProps> = () => {
   if (!visualScores) return null;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div>
         <h2 className="text-xl font-semibold mb-2">Your Brand Personality</h2>
         <p className="text-white/60">
@@ -54,14 +54,14 @@ export const TraitScales: React.FC<TraitScalesProps> = () => {
         </p>
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-4">
         {(Object.keys(traits) as Array<keyof UserScores>).map((traitKey, index) => {
           const trait = traits[traitKey];
           const score = visualScores[traitKey];
           const percentage = ((score - 1) / 4) * 100;
 
           return (
-            <div key={traitKey} className="space-y-3">
+            <div key={traitKey} className="space-y-2">
               <div className="flex items-center gap-2">
                 <h3 className="text-sm font-semibold">{trait.label}</h3>
                 <div className="group relative">
@@ -72,14 +72,14 @@ export const TraitScales: React.FC<TraitScalesProps> = () => {
                 </div>
               </div>
 
-              <div className="relative pt-6 pb-8">
-                <div className="flex justify-between text-xs text-white/60 absolute top-0 left-0 right-0">
+              <div className="relative h-8">
+                <div className="flex justify-between text-xs text-white/60 mb-2">
                   <span>{trait.leftLabel}</span>
                   <span>{trait.rightLabel}</span>
                 </div>
 
                 {/* Track background with tick marks */}
-                <div className="h-0.5 bg-neutral-700 rounded-full relative">
+                <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-0.5 bg-neutral-700 rounded-full">
                   {[0, 25, 50, 75, 100].map((tick) => (
                     <div
                       key={tick}
@@ -97,10 +97,10 @@ export const TraitScales: React.FC<TraitScalesProps> = () => {
                 
                 {/* Marker */}
                 <div 
-                  className="absolute top-0 -mt-3 w-6 h-6 bg-emerald-400 rounded-full transition-all duration-700 ease-out z-10"
+                  className="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-emerald-400 rounded-full transition-all duration-700 ease-out z-10"
                   style={{ 
                     left: `${percentage}%`,
-                    transform: 'translateX(-50%)',
+                    transform: 'translate(-50%, -50%)',
                     animation: `
                       marker-glow-${index + 1} 2s ease-in-out infinite,
                       fade-in 0.5s ease-out forwards
