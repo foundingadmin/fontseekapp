@@ -23,9 +23,27 @@ function App() {
   }, [skipToResults]);
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-gray-900 to-black text-white overflow-x-hidden relative">
+    <div className="min-h-screen w-full bg-black text-white overflow-x-hidden relative">
+      {hasStarted && (
+        <>
+          <div className="absolute inset-0 animate-gradient" />
+          <img 
+            src="/Wave-Black.svg" 
+            alt="" 
+            className="absolute inset-0 w-full h-full object-cover opacity-80"
+            style={{ mixBlendMode: 'normal' }}
+          />
+          
+          {/* Top gradient */}
+          <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black to-transparent z-10" />
+          
+          {/* Bottom gradient */}
+          <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-black to-transparent z-10" />
+        </>
+      )}
+      
       <InfoPopup />
-      <main className="min-h-screen">
+      <main className="min-h-screen relative z-20">
         {!hasStarted ? (
           <IntroScreen />
         ) : (
@@ -37,7 +55,7 @@ function App() {
           </div>
         )}
       </main>
-      <div className={`py-4 ${!hasStarted ? 'absolute bottom-0 left-0 right-0' : ''}`}>
+      <div className={`py-4 relative z-30 ${!hasStarted ? 'absolute bottom-0 left-0 right-0' : ''}`}>
         <div className="container mx-auto px-4 flex items-center justify-center text-sm text-white/60">
           Designed & Built with <Heart className="w-4 h-4 mx-2 text-emerald-500" /> by{' '}
           <a 
