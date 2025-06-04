@@ -74,10 +74,10 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
       <div className="px-12 py-16 max-w-3xl mx-auto">
         <div 
           ref={logoRef}
-          className={`transition-all duration-700 transform ${
+          className={`transition-all duration-1000 transform ${
             isLogoVisible 
-              ? 'opacity-100 translate-y-0' 
-              : 'opacity-0 translate-y-4'
+              ? 'opacity-100 translate-y-0 rotate-0' 
+              : 'opacity-0 translate-y-8 rotate-12'
           }`}
         >
           <a href="/" className="block mb-8">
