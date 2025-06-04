@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { IntroScreen } from './IntroScreen';
+import { QuizQuestion } from './QuizQuestion';
 import { useQuizStore } from '../store/quizStore';
 import { quizQuestions } from '../data/quiz';
 import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon } from 'lucide-react';
@@ -8,57 +10,6 @@ import { generateFontReport } from '../utils/pdfGenerator';
 import { ContactForm } from './ContactForm';
 import { getDisplayName } from '../utils/aestheticStyles';
 import clsx from 'clsx';
-
-const aestheticDescriptions: Record<string, { emoji: string; description: string }> = {
-  'Bold & Expressive': {
-    emoji: '🧃',
-    description: "Your brand match reflects a personality that's bold, expressive, and packed with energy. This aesthetic thrives on making statements—ideal for brands that want to stand out, charm audiences, or inject a sense of fun into their communications."
-  },
-  'Warm & Approachable': {
-    emoji: '🧠',
-    description: 'This match reflects a balanced tone—friendly, professional, and adaptable. These fonts work beautifully for approachable brands that still need to be taken seriously. Think clarity with a touch of warmth.'
-  },
-  'Modern & Minimal': {
-    emoji: '🛰',
-    description: 'Your brand values precision, clarity, and modernity. These fonts are minimalist, clean, and calculated—ideal for tech-forward, future-facing, or design-savvy organizations.'
-  },
-  'Friendly & Playful': {
-    emoji: '🫧',
-    description: 'Friendly, casual, and fresh. These fonts are approachable and informal without being childish. This is the right pick for brands that want to feel helpful, human, and easygoing.'
-  },
-  'Universal & Neutral': {
-    emoji: '🧰',
-    description: 'Your brand values simplicity, speed, or versatility across platforms. This approach means no-frills performance and familiarity—ideal for internal apps, OS-native tools, or lightweight branding.'
-  },
-  'Classic & Credible': {
-    emoji: '📚',
-    description: 'A modern classic. This match tells us your brand appreciates structure and elegance but isn\'t stuck in the past. These fonts blend sharpness with sophistication—great for editorial, education, or premium service brands.'
-  },
-  'Elegant & Literary': {
-    emoji: '📖',
-    description: 'You lean into tradition, trust, and storytelling. This style fits brands with heritage, depth, and a classic sense of professionalism. Ideal for long-form content and legacy vibes.'
-  },
-  'Structured & Professional': {
-    emoji: '🗂',
-    description: 'You favor practicality and structure with just enough personality to keep things interesting. This timeless style is perfect for brands that want to feel grounded, neutral, and built to last.'
-  }
-};
-
-const traitLabels = {
-  tone: { low: "Formal", high: "Casual" },
-  energy: { low: "Calm", high: "Energetic" },
-  design: { low: "Minimal", high: "Expressive" },
-  era: { low: "Classic", high: "Modern" },
-  structure: { low: "Organic", high: "Geometric" }
-};
-
-function loadGoogleFont(fontName: string) {
-  const formatted = fontName.replace(/ /g, '+');
-  const link = document.createElement('link');
-  link.href = `https://fonts.googleapis.com/css2?family=${formatted}:wght@400;500;700&display=swap`;
-  link.rel = 'stylesheet';
-  document.head.appendChild(link);
-}
 
 export const QuizResults: React.FC = () => {
   const { scores, visualScores, recommendations, calculateResults, resetQuiz } = useQuizStore();
@@ -323,17 +274,17 @@ export const QuizResults: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4 mb-8">
         <button
           onClick={resetQuiz}
-          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 text-black font-medium hover:bg-emerald-400 transition-colors w-full md:w-auto"
+          className="glass-card flex items-center justify-center gap-2 px-6 py-3 rounded-full text-white hover:bg-white/10 transition-all duration-300 backdrop-blur-lg border border-white/10 group"
         >
-          <RefreshCw className="w-4 h-4" />
+          <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
           Retake Quiz
         </button>
         
         <button
           onClick={handleDownloadReport}
-          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full md:w-auto"
+          className="glass-card flex items-center justify-center gap-2 px-6 py-3 rounded-full text-white hover:bg-white/10 transition-all duration-300 backdrop-blur-lg border border-white/10 group"
         >
-          <Share2 className="w-4 h-4" />
+          <Share2 className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
           Download Report
         </button>
       </div>
