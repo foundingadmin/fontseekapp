@@ -294,7 +294,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ onShowInfo }) => {
   const displayName = getDisplayName(recommendations.aestheticStyle);
 
   return (
-    <div className="w-full max-w-3xl mx-auto">
+    <div className="w-full max-w-3xl mx-auto pt-6">
       {showFallbackMessage && (
         <div className="mb-8 px-4 py-3 bg-white/5 rounded-lg text-white/60 text-sm text-center">
           We had a little trouble finding a perfect match for your font style, so we've shown the closest match instead.
