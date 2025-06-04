@@ -136,6 +136,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ onShowInfo }) => {
           </div>
         )}
 
+        <div className="text-sm font-medium text-emerald-400 mb-2 tracking-[-0.02em]">Your Style</div>
         <h1 className="text-4xl font-bold text-white mb-4 tracking-[-0.02em]">
           {aestheticDescriptions[displayName]?.emoji} {displayName}
         </h1>
