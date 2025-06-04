@@ -26,7 +26,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ onShowInfo }) => {
   const { scores, visualScores, recommendations, calculateResults, resetQuiz } = useQuizStore();
   const [showLabels, setShowLabels] = useState(false);
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
-  const [isDarkMode, setIsDarkMode] = useState(true); // Default to dark mode
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [showFallbackMessage, setShowFallbackMessage] = useState(false);
 
   useEffect(() => {
@@ -86,17 +86,6 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ onShowInfo }) => {
       .filter(Boolean);
   };
 
-  const shuffleCopyPack = () => {
-    const currentIndex = copyPacks.findIndex(pack => pack.styleId === currentCopyPack.styleId);
-    let nextIndex = currentIndex;
-    
-    while (nextIndex === currentIndex) {
-      nextIndex = Math.floor(Math.random() * copyPacks.length);
-    }
-    
-    setCurrentCopyPack(copyPacks[nextIndex]);
-  };
-
   const handleDownloadReport = () => {
     if (!recommendations || !scores) return;
 
@@ -108,179 +97,6 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ onShowInfo }) => {
     });
 
     doc.save('FontSeek-Report.pdf');
-  };
-
-  const FontPreviewCard = ({ font, index }: { 
-    font: typeof recommendations.primary;
-    index: number;
-  }) => {
-    const [isDarkMode, setIsDarkMode] = useState(true); // Default to dark mode
-    const [showLabels, setShowLabels] = useState(false);
-    const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
-
-    const shuffleCopyPack = () => {
-      const currentIndex = copyPacks.findIndex(pack => pack.styleId === currentCopyPack.styleId);
-      let nextIndex = currentIndex;
-      
-      while (nextIndex === currentIndex) {
-        nextIndex = Math.floor(Math.random() * copyPacks.length);
-      }
-      
-      setCurrentCopyPack(copyPacks[nextIndex]);
-    };
-
-    const SpecLabel = ({ children }: { children: React.ReactNode }) => (
-      <div className={`font-sans text-xs mb-1 ${
-        isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-      }`}>
-        {children}
-      </div>
-    );
-
-    return (
-      <div className="mb-8 glass-card rounded-xl overflow-hidden shadow-xl">
-        <div className="px-6 py-5 border-b border-white/10">
-          <div>
-            <p className="text-2xl font-bold text-white tracking-[-0.02em]">{font.name}</p>
-            <p className="text-sm text-white/60 mt-2 max-w-xl tracking-[-0.02em]">
-              A {getDisplayName(font.aestheticStyle).toLowerCase()} typeface that aligns with your brand's personality.
-            </p>
-          </div>
-        </div>
-
-        <div className="p-4 md:p-8">
-          <div className={clsx(
-            'rounded-lg shadow-lg p-4 md:p-8 transition-colors duration-300',
-            isDarkMode ? 'bg-black' : 'bg-white'
-          )}>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2 mb-8">
-                <button
-                  onClick={shuffleCopyPack}
-                  className={clsx(
-                    'flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-sm',
-                    isDarkMode 
-                      ? 'bg-white/5 text-white hover:bg-white/10' 
-                      : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
-                  )}
-                >
-                  <Shuffle className="w-4 h-4" />
-                  <span className="hidden md:inline">Shuffle copy</span>
-                </button>
-                <button
-                  onClick={() => setShowLabels(!showLabels)}
-                  className={clsx(
-                    'flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-sm',
-                    isDarkMode 
-                      ? 'bg-white/5 text-white hover:bg-white/10' 
-                      : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
-                  )}
-                >
-                  {showLabels ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  <span className="hidden md:inline">{showLabels ? 'Hide specs' : 'Show specs'}</span>
-                </button>
-                <button
-                  onClick={() => setIsDarkMode(!isDarkMode)}
-                  className={clsx(
-                    'flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-sm',
-                    isDarkMode 
-                      ? 'bg-white/5 text-white hover:bg-white/10' 
-                      : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
-                  )}
-                >
-                  {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                  <span className="hidden md:inline">{isDarkMode ? 'Light' : 'Dark'}</span>
-                </button>
-              </div>
-
-              <div 
-                style={{ 
-                  fontFamily: font.name === 'Baloo 2' ? "'Baloo\\ 2', cursive" : font.embedCode 
-                }}
-                className="space-y-4"
-              >
-                <div>
-                  {showLabels && <SpecLabel>Heading • 36px/48px • Bold</SpecLabel>}
-                  <h1 
-                    className={`text-3xl md:text-5xl font-bold transition-colors tracking-[-0.02em] ${
-                      isDarkMode ? 'text-white' : 'text-neutral-900'
-                    }`}
-                  >
-                    {currentCopyPack.heading}
-                  </h1>
-                </div>
-
-                <div>
-                  {showLabels && <SpecLabel>Subheading • 20px/24px • Medium</SpecLabel>}
-                  <h2 
-                    className={`text-xl md:text-2xl font-medium transition-colors tracking-[-0.02em] ${
-                      isDarkMode ? 'text-white' : 'text-neutral-900'
-                    }`}
-                  >
-                    {currentCopyPack.subheading}
-                  </h2>
-                </div>
-
-                <div>
-                  {showLabels && <SpecLabel>Lead Paragraph • 18px/20px • Regular</SpecLabel>}
-                  <p 
-                    className={`text-lg md:text-xl transition-colors tracking-[-0.02em] ${
-                      isDarkMode ? 'text-white' : 'text-neutral-900'
-                    }`}
-                  >
-                    {currentCopyPack.leadParagraph}
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  {showLabels && <SpecLabel>Body Copy • 14px/16px • Regular</SpecLabel>}
-                  <p 
-                    className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
-                      isDarkMode ? 'text-white' : 'text-neutral-900'
-                    }`}
-                  >
-                    {currentCopyPack.body1}
-                  </p>
-                  <p 
-                    className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
-                      isDarkMode ? 'text-white' : 'text-neutral-900'
-                    }`}
-                  >
-                    {currentCopyPack.body2}
-                  </p>
-                </div>
-
-                <div>
-                  {showLabels && <SpecLabel>Fine Print • 11px/12px • Light</SpecLabel>}
-                  <small 
-                    className={`text-[11px] md:text-xs font-light block transition-colors tracking-[-0.02em] ${
-                      isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
-                    }`}
-                  >
-                    {currentCopyPack.finePrint}
-                  </small>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="px-6 py-5 border-t border-white/10">
-          <h3 className="text-lg font-semibold mb-2 text-white tracking-[-0.02em]">Get this free font</h3>
-          <p className="text-white/80 text-sm mb-4 tracking-[-0.02em]">
-            Install it to your computer or embed it on your website in seconds.
-          </p>
-          <a
-            href={font.googleFontsLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-colors font-semibold w-fit"
-          >
-            Use {font.name} <ArrowRight className="w-4 h-4" />
-          </a>
-        </div>
-      </div>
-    );
   };
 
   if (!recommendations || !scores) {
@@ -295,12 +111,6 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ onShowInfo }) => {
 
   return (
     <div className="w-full max-w-3xl mx-auto pt-6">
-      {showFallbackMessage && (
-        <div className="mb-8 px-4 py-3 bg-white/5 rounded-lg text-white/60 text-sm text-center">
-          We had a little trouble finding a perfect match for your font style, so we've shown the closest match instead.
-        </div>
-      )}
-      
       <div className="flex flex-row items-center justify-between gap-4 mb-8">
         <button
           onClick={resetQuiz}
@@ -319,7 +129,13 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ onShowInfo }) => {
         </button>
       </div>
 
-      <div className="mb-12">
+      <div className="glass-card rounded-xl p-8 mb-12">
+        {showFallbackMessage && (
+          <div className="mb-8 px-4 py-3 bg-white/5 rounded-lg text-white/60 text-sm text-center">
+            We had a little trouble finding a perfect match for your font style, so we've shown the closest match instead.
+          </div>
+        )}
+
         <h1 className="text-4xl font-bold text-white mb-4 tracking-[-0.02em]">
           {aestheticDescriptions[displayName]?.emoji} {displayName}
         </h1>
@@ -344,6 +160,179 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ onShowInfo }) => {
       <FontPreviewCard font={recommendations.tertiary} index={2} />
 
       <ContactForm onDownloadReport={handleDownloadReport} onShowInfo={onShowInfo} />
+    </div>
+  );
+};
+
+const FontPreviewCard = ({ font, index }: { 
+  font: typeof recommendations.primary;
+  index: number;
+}) => {
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [showLabels, setShowLabels] = useState(false);
+  const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
+
+  const shuffleCopyPack = () => {
+    const currentIndex = copyPacks.findIndex(pack => pack.styleId === currentCopyPack.styleId);
+    let nextIndex = currentIndex;
+    
+    while (nextIndex === currentIndex) {
+      nextIndex = Math.floor(Math.random() * copyPacks.length);
+    }
+    
+    setCurrentCopyPack(copyPacks[nextIndex]);
+  };
+
+  const SpecLabel = ({ children }: { children: React.ReactNode }) => (
+    <div className={`font-sans text-xs mb-1 ${
+      isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+    }`}>
+      {children}
+    </div>
+  );
+
+  return (
+    <div className="mb-8 glass-card rounded-xl overflow-hidden shadow-xl">
+      <div className="px-6 py-5 border-b border-white/10">
+        <div>
+          <p className="text-2xl font-bold text-white tracking-[-0.02em]">{font.name}</p>
+          <p className="text-sm text-white/60 mt-2 max-w-xl tracking-[-0.02em]">
+            A {getDisplayName(font.aestheticStyle).toLowerCase()} typeface that aligns with your brand's personality.
+          </p>
+        </div>
+      </div>
+
+      <div className="p-4 md:p-8">
+        <div className={clsx(
+          'rounded-lg shadow-lg p-4 md:p-8 transition-colors duration-300',
+          isDarkMode ? 'bg-black' : 'bg-white'
+        )}>
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2 mb-8">
+              <button
+                onClick={shuffleCopyPack}
+                className={clsx(
+                  'flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-sm',
+                  isDarkMode 
+                    ? 'bg-white/5 text-white hover:bg-white/10' 
+                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
+                )}
+              >
+                <Shuffle className="w-4 h-4" />
+                <span className="hidden md:inline">Shuffle copy</span>
+              </button>
+              <button
+                onClick={() => setShowLabels(!showLabels)}
+                className={clsx(
+                  'flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-sm',
+                  isDarkMode 
+                    ? 'bg-white/5 text-white hover:bg-white/10' 
+                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
+                )}
+              >
+                {showLabels ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                <span className="hidden md:inline">{showLabels ? 'Hide specs' : 'Show specs'}</span>
+              </button>
+              <button
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                className={clsx(
+                  'flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-sm',
+                  isDarkMode 
+                    ? 'bg-white/5 text-white hover:bg-white/10' 
+                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
+                )}
+              >
+                {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                <span className="hidden md:inline">{isDarkMode ? 'Light' : 'Dark'}</span>
+              </button>
+            </div>
+
+            <div 
+              style={{ 
+                fontFamily: font.name === 'Baloo 2' ? "'Baloo\\ 2', cursive" : font.embedCode 
+              }}
+              className="space-y-4"
+            >
+              <div>
+                {showLabels && <SpecLabel>Heading • 36px/48px • Bold</SpecLabel>}
+                <h1 
+                  className={`text-3xl md:text-5xl font-bold transition-colors tracking-[-0.02em] ${
+                    isDarkMode ? 'text-white' : 'text-neutral-900'
+                  }`}
+                >
+                  {currentCopyPack.heading}
+                </h1>
+              </div>
+
+              <div>
+                {showLabels && <SpecLabel>Subheading • 20px/24px • Medium</SpecLabel>}
+                <h2 
+                  className={`text-xl md:text-2xl font-medium transition-colors tracking-[-0.02em] ${
+                    isDarkMode ? 'text-white' : 'text-neutral-900'
+                  }`}
+                >
+                  {currentCopyPack.subheading}
+                </h2>
+              </div>
+
+              <div>
+                {showLabels && <SpecLabel>Lead Paragraph • 18px/20px • Regular</SpecLabel>}
+                <p 
+                  className={`text-lg md:text-xl transition-colors tracking-[-0.02em] ${
+                    isDarkMode ? 'text-white' : 'text-neutral-900'
+                  }`}
+                >
+                  {currentCopyPack.leadParagraph}
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                {showLabels && <SpecLabel>Body Copy • 14px/16px • Regular</SpecLabel>}
+                <p 
+                  className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
+                    isDarkMode ? 'text-white' : 'text-neutral-900'
+                  }`}
+                >
+                  {currentCopyPack.body1}
+                </p>
+                <p 
+                  className={`text-sm md:text-base transition-colors tracking-[-0.02em] ${
+                    isDarkMode ? 'text-white' : 'text-neutral-900'
+                  }`}
+                >
+                  {currentCopyPack.body2}
+                </p>
+              </div>
+
+              <div>
+                {showLabels && <SpecLabel>Fine Print • 11px/12px • Light</SpecLabel>}
+                <small 
+                  className={`text-[11px] md:text-xs font-light block transition-colors tracking-[-0.02em] ${
+                    isDarkMode ? 'text-neutral-400' : 'text-neutral-500'
+                  }`}
+                >
+                  {currentCopyPack.finePrint}
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-6 py-5 border-t border-white/10">
+        <h3 className="text-lg font-semibold mb-2 text-white tracking-[-0.02em]">Get this free font</h3>
+        <p className="text-white/80 text-sm mb-4 tracking-[-0.02em]">
+          Install it to your computer or embed it on your website in seconds.
+        </p>
+        <a
+          href={font.googleFontsLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-colors font-semibold w-fit"
+        >
+          Use {font.name} <ArrowRight className="w-4 h-4" />
+        </a>
+      </div>
     </div>
   );
 };
