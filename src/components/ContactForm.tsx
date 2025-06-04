@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { useQuizStore } from '../store/quizStore';
 import emailjs from '@emailjs/browser';
 import brandmarkLogo from '/Founding-v1-Brandmark-white.svg';
@@ -184,9 +184,11 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
         <div className="mt-12 text-center">
           <button
             onClick={() => setShowInfoPopup(true)}
-            className="text-white/60 hover:text-emerald-400 transition-colors text-sm"
+            className="flex items-center justify-center gap-2 mx-auto text-emerald-400 hover:text-emerald-300 transition-colors text-sm group"
           >
-            Learn more about FontSeek
+            <Info className="w-4 h-4" />
+            <span>About FontSeek</span>
+            <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </button>
         </div>
       </div>
