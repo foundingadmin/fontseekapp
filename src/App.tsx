@@ -39,7 +39,7 @@ function App() {
       </main>
       <div className={`py-4 ${!hasStarted ? 'absolute bottom-0 left-0 right-0' : ''}`}>
         <div className="container mx-auto px-4 flex items-center justify-center text-sm text-white/60">
-          Built with <Heart className="w-4 h-4 mx-2 text-emerald-500" /> by{' '}
+          Designed & Built by{' '}
           <a 
             href="https://foundingcreative.com" 
             target="_blank" 
