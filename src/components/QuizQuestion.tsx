@@ -44,20 +44,17 @@ export const QuizQuestion: React.FC = () => {
       <div className="sticky top-0 z-[40]">
         <div className="container mx-auto px-4">
           <div className="h-16 flex items-center justify-between">
-            <div className="flex items-center gap-8">
-              {currentQuestion > 1 && (
-                <button
-                  onClick={previousQuestion}
-                  className="flex items-center gap-1 text-white/60 hover:text-white transition-colors group"
-                >
-                  <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-                  Back
-                </button>
-              )}
-              <div className="flex items-center">
-                <QuizProgress />
-              </div>
-            </div>
+            {currentQuestion > 1 ? (
+              <button
+                onClick={previousQuestion}
+                className="flex items-center gap-1 text-white/60 hover:text-white transition-colors group"
+              >
+                <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+                Back
+              </button>
+            ) : (
+              <div></div>
+            )}
           </div>
         </div>
       </div>
