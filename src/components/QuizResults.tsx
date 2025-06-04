@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useQuizStore } from '../store/quizStore';
 import { quizQuestions } from '../data/quiz';
-import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon, Bug } from 'lucide-react';
+import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon } from 'lucide-react';
 import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
@@ -350,16 +350,6 @@ export const QuizResults: React.FC = () => {
 
   return (
     <div className="w-full max-w-3xl mx-auto">
-      <div className="relative">
-        <button
-          onClick={() => setShowDebug(!showDebug)}
-          className="absolute -left-12 top-0 p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-          aria-label="Toggle debug info"
-        >
-          <Bug className="w-5 h-5 text-white/60" />
-        </button>
-      </div>
-
       {showDebug && <DebugInfo />}
 
       {showFallbackMessage && (
