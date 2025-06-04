@@ -46,22 +46,35 @@ const AESTHETIC_WHITELISTS = {
   ]
 };
 
-function determineAestheticStyle(scores: UserScores): string {
-  const { tone, energy, design, era, structure } = scores;
+function calculateDistance(userScores: UserScores, font: FontData): number {
+  return Math.abs(userScores.tone - font.tone) +
+         Math.abs(userScores.energy - font.energy) +
+         Math.abs(userScores.design - font.design) +
+         Math.abs(userScores.era - font.era) +
+         Math.abs(userScores.structure - font.structure);
+}
 
-  // Classic Editorial
-  if (tone <= 2 && energy <= 2 && design <= 3 && era <= 2) {
+function determineAestheticStyle(scores: UserScores): string {
+  // All A's = Most formal/traditional
+  if (Object.values(scores).every(score => score <= 2)) {
     return 'Classic Editorial';
   }
+  
+  // All B's = Most casual/expressive
+  if (Object.values(scores).every(score => score >= 4)) {
+    return 'Friendly & Playful';
+  }
+
+  const { tone, energy, design, era, structure } = scores;
 
   // Modern & Minimal
   if (design <= 2 && era >= 4 && structure >= 4) {
     return 'Modern & Minimal';
   }
 
-  // Friendly & Playful
-  if (tone >= 4 && energy >= 3 && structure <= 3) {
-    return 'Friendly & Playful';
+  // Professional & Versatile
+  if (tone <= 3 && energy <= 3 && design <= 3) {
+    return 'Professional & Versatile';
   }
 
   // Elegant & High-End
@@ -74,26 +87,23 @@ function determineAestheticStyle(scores: UserScores): string {
     return 'Retro & Character-Rich';
   }
 
-  // Default to Professional & Versatile
+  // Default to Professional & Versatile as a safe fallback
   return 'Professional & Versatile';
 }
 
-function getFontsForStyle(style: string): FontData[] {
+function getFontsForStyle(style: string, userScores: UserScores): FontData[] {
   const whitelist = AESTHETIC_WHITELISTS[style];
   if (!whitelist) return [];
 
   return fonts
     .filter(font => whitelist.includes(font.name))
-    .sort((a, b) => {
-      const aIndex = whitelist.indexOf(a.name);
-      const bIndex = whitelist.indexOf(b.name);
-      return aIndex - bIndex;
-    });
+    .sort((a, b) => calculateDistance(userScores, a) - calculateDistance(userScores, b))
+    .slice(0, 3);
 }
 
 function calculateFontRecommendations(scores: UserScores): FontRecommendation {
   const aestheticStyle = determineAestheticStyle(scores);
-  const matchingFonts = getFontsForStyle(aestheticStyle);
+  const matchingFonts = getFontsForStyle(aestheticStyle, scores);
 
   if (matchingFonts.length === 0) {
     throw new Error(`No fonts found for style: ${aestheticStyle}`);

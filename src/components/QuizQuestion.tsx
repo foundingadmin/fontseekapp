@@ -42,12 +42,12 @@ export const QuizQuestion: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <div className="min-h-[120px] flex items-center justify-center mb-8">
-        <h2 className="text-2xl md:text-3xl font-semibold text-white text-center">
+        <h2 className="text-2xl md:text-3xl font-semibold text-white text-center max-w-[600px]">
           {question.question}
         </h2>
       </div>
       
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 items-center">
         {[
           { value: 'A', label: question.optionA },
           { value: 'B', label: question.optionB }
@@ -59,7 +59,7 @@ export const QuizQuestion: React.FC = () => {
               onClick={() => !selectedAnswer && !isTransitioning && handleSelect(option.value as 'A' | 'B')}
               disabled={selectedAnswer !== null || isTransitioning}
               className={clsx(
-                'min-h-[88px] w-full p-6 rounded-xl border-2 transition-all duration-400 ease-in-out',
+                'min-h-[88px] w-full max-w-[600px] p-6 rounded-xl border-2 transition-all duration-400 ease-in-out',
                 'text-left text-lg font-medium group flex items-center',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75',
                 isSelected
