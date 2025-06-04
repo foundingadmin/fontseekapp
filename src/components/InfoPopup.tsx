@@ -17,7 +17,7 @@ export const InfoPopup: React.FC<InfoPopupProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[999] flex items-center justify-center p-8">
+    <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
         className={`absolute inset-0 bg-black/60 backdrop-blur-md transition-all duration-300 ${
@@ -33,7 +33,7 @@ export const InfoPopup: React.FC<InfoPopupProps> = ({ onClose }) => {
         }`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="absolute top-8 right-8">
+        <div className="absolute top-6 right-6">
           <button
             onClick={handleClose}
             className="p-2 rounded-full hover:bg-white/10 transition-colors group"
@@ -44,12 +44,12 @@ export const InfoPopup: React.FC<InfoPopupProps> = ({ onClose }) => {
         </div>
 
         <div className="h-[80vh] overflow-y-auto custom-scrollbar">
-          <div className="p-12">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-8 tracking-[-0.02em] leading-[1.1]">
+          <div className="p-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-[-0.02em] leading-[1.1]">
               Why we built FontSeek
             </h2>
 
-            <div className="space-y-6 text-base text-white/80 tracking-[-0.01em] leading-relaxed">
+            <div className="space-y-4 text-base text-white/80 tracking-[-0.01em] leading-relaxed">
               <p className="text-lg md:text-xl text-white font-medium tracking-[-0.02em]">
                 Most font tools start with how a font looks. We start instead with what your brand feels like.
               </p>
@@ -70,8 +70,8 @@ export const InfoPopup: React.FC<InfoPopupProps> = ({ onClose }) => {
                 FontSeek doesn't just suggest fonts. It helps bring your website and your brand to life with purpose.
               </p>
 
-              <div className="pt-8 mt-8 border-t border-white/10">
-                <p className="text-white/60 mb-6 text-sm">
+              <div className="pt-6 mt-6 border-t border-white/10">
+                <p className="text-white/60 mb-4 text-sm">
                   Need help bringing your website and brand to life with purpose?
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
