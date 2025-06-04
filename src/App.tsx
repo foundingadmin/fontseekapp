@@ -3,6 +3,7 @@ import { IntroScreen } from './components/IntroScreen';
 import { QuizQuestion } from './components/QuizQuestion';
 import { QuizResults } from './components/QuizResults';
 import { QuizProgress } from './components/QuizProgress';
+import { InfoPopup } from './components/InfoPopup';
 import { useQuizStore } from './store/quizStore';
 import { Heart } from 'lucide-react';
 
