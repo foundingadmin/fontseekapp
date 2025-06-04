@@ -17,19 +17,19 @@ export const InfoPopup: React.FC<InfoPopupProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[999] flex items-center justify-center">
+    <div className="fixed inset-0 z-[999] flex items-center justify-center p-8">
       {/* Backdrop */}
       <div 
-        className={`absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-300 ${
-          isClosing ? 'opacity-0' : 'opacity-100'
+        className={`absolute inset-0 bg-black/60 backdrop-blur-md transition-all duration-300 ${
+          isClosing ? 'opacity-0 backdrop-blur-none' : 'opacity-100'
         }`}
         onClick={handleClose}
       />
 
       {/* Modal */}
       <div 
-        className={`relative w-full h-screen max-w-3xl glass-card shadow-2xl transition-all duration-300 ${
-          isClosing ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+        className={`relative w-full max-w-3xl glass-card rounded-[32px] shadow-2xl transition-all duration-300 ${
+          isClosing ? 'opacity-0 scale-95 translate-y-4' : 'opacity-100 scale-100 translate-y-0'
         }`}
         onClick={(e) => e.stopPropagation()}
       >
@@ -43,8 +43,8 @@ export const InfoPopup: React.FC<InfoPopupProps> = ({ onClose }) => {
           </button>
         </div>
 
-        <div className="h-full overflow-y-auto custom-scrollbar">
-          <div className="p-8">
+        <div className="h-[80vh] overflow-y-auto custom-scrollbar">
+          <div className="p-12">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 tracking-[-0.02em]">
               Why we built FontSeek
             </h2>
