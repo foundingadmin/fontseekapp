@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Info } from 'lucide-react';
 import { useQuizStore } from '../store/quizStore';
 import emailjs from '@emailjs/browser';
 import brandmarkLogo from '/Founding-v1-Brandmark-white.svg';
@@ -185,8 +185,9 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport, onSh
         <div className="mt-12 pt-8 border-t border-white/10 text-center">
           <button
             onClick={onShowInfo}
-            className="text-white/60 hover:text-white transition-colors text-sm"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-colors text-sm font-medium"
           >
+            <Info className="w-4 h-4" />
             About FontSeek
           </button>
         </div>

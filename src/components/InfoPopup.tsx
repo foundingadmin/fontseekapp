@@ -39,18 +39,18 @@ export const InfoPopup: React.FC<InfoPopupProps> = ({ onClose }) => {
             className="p-2 rounded-full hover:bg-white/10 transition-colors group"
             aria-label="Close popup"
           >
-            <X className="w-6 h-6 text-white/60 transition-transform duration-300 group-hover:rotate-90" />
+            <X className="w-5 h-5 text-white/60 transition-transform duration-300 group-hover:rotate-90" />
           </button>
         </div>
 
         <div className="h-[80vh] overflow-y-auto custom-scrollbar">
           <div className="p-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 tracking-[-0.02em] leading-[1.1]">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-8 tracking-[-0.02em] leading-[1.1]">
               Why we built FontSeek
             </h2>
 
-            <div className="space-y-8 text-lg text-white/80 tracking-[-0.01em] leading-relaxed">
-              <p className="text-2xl md:text-3xl text-white font-medium tracking-[-0.02em]">
+            <div className="space-y-6 text-base text-white/80 tracking-[-0.01em] leading-relaxed">
+              <p className="text-lg md:text-xl text-white font-medium tracking-[-0.02em]">
                 Most font tools start with how a font looks. We start instead with what your brand feels like.
               </p>
 
@@ -66,12 +66,12 @@ export const InfoPopup: React.FC<InfoPopupProps> = ({ onClose }) => {
                 We designed this quick, strategy-led tool that maps your brand's personality traits to fonts that align with your tone, energy, and structure. The result is ready-to-use-immediately free fonts that look right because they feel right.
               </p>
 
-              <p className="text-2xl md:text-3xl text-white font-medium tracking-[-0.02em]">
+              <p className="text-lg md:text-xl text-white font-medium tracking-[-0.02em]">
                 FontSeek doesn't just suggest fonts. It helps bring your website and your brand to life with purpose.
               </p>
 
-              <div className="pt-12 mt-12 border-t border-white/10">
-                <p className="text-white/60 mb-8 text-base">
+              <div className="pt-8 mt-8 border-t border-white/10">
+                <p className="text-white/60 mb-6 text-sm">
                   Need help bringing your website and brand to life with purpose?
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -79,17 +79,17 @@ export const InfoPopup: React.FC<InfoPopupProps> = ({ onClose }) => {
                     href="https://foundingcreative.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-2 px-8 py-4 bg-emerald-500 text-black rounded-full hover:bg-emerald-400 transition-all duration-300 hover:scale-[1.02] font-medium group text-base"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-all duration-300 hover:scale-[1.02] font-medium group text-sm"
                   >
                     Visit Website
-                    <ArrowUpRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </a>
                   <a
                     href="mailto:admin@foundingcreative.com"
-                    className="flex-1 flex items-center justify-center gap-2 px-8 py-4 glass-card text-emerald-400 border border-emerald-500/20 rounded-full hover:bg-emerald-500/10 transition-all duration-300 hover:scale-[1.02] group text-base"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 glass-card text-emerald-400 border border-emerald-500/20 rounded-lg hover:bg-emerald-500/10 transition-all duration-300 hover:scale-[1.02] group text-sm"
                   >
                     Send Email
-                    <ArrowUpRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </a>
                 </div>
               </div>
