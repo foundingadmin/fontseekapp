@@ -7,42 +7,8 @@ import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
 import { ContactForm } from './ContactForm';
 import { getDisplayName } from '../utils/aestheticStyles';
+import { aestheticDescriptions } from '../utils/aestheticStyles';
 import clsx from 'clsx';
-
-const aestheticDescriptions: Record<string, { emoji: string; description: string }> = {
-  'Bold & Expressive': {
-    emoji: '🧃',
-    description: "Your brand match reflects a personality that's bold, expressive, and packed with energy. This aesthetic thrives on making statements—ideal for brands that want to stand out, charm audiences, or inject a sense of fun into their communications."
-  },
-  'Warm & Approachable': {
-    emoji: '🧠',
-    description: 'This match reflects a balanced tone—friendly, professional, and adaptable. These fonts work beautifully for approachable brands that still need to be taken seriously. Think clarity with a touch of warmth.'
-  },
-  'Modern & Minimal': {
-    emoji: '🛰',
-    description: 'Your brand values precision, clarity, and modernity. These fonts are minimalist, clean, and calculated—ideal for tech-forward, future-facing, or design-savvy organizations.'
-  },
-  'Friendly & Playful': {
-    emoji: '🫧',
-    description: 'Friendly, casual, and fresh. These fonts are approachable and informal without being childish. This is the right pick for brands that want to feel helpful, human, and easygoing.'
-  },
-  'Universal & Neutral': {
-    emoji: '🧰',
-    description: 'Your brand values simplicity, speed, or versatility across platforms. This approach means no-frills performance and familiarity—ideal for internal apps, OS-native tools, or lightweight branding.'
-  },
-  'Classic & Credible': {
-    emoji: '📚',
-    description: 'A modern classic. This match tells us your brand appreciates structure and elegance but isn\'t stuck in the past. These fonts blend sharpness with sophistication—great for editorial, education, or premium service brands.'
-  },
-  'Elegant & Literary': {
-    emoji: '📖',
-    description: 'You lean into tradition, trust, and storytelling. This style fits brands with heritage, depth, and a classic sense of professionalism. Ideal for long-form content and legacy vibes.'
-  },
-  'Structured & Professional': {
-    emoji: '🗂',
-    description: 'You favor practicality and structure with just enough personality to keep things interesting. This timeless style is perfect for brands that want to feel grounded, neutral, and built to last.'
-  }
-};
 
 const traitLabels = {
   tone: { low: "Formal", high: "Casual" },
@@ -358,21 +324,21 @@ export const QuizResults: React.FC = () => {
         </div>
       )}
       
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4 mb-8">
+      <div className="flex flex-row items-center justify-between gap-4 mb-8">
         <button
           onClick={resetQuiz}
-          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 text-black font-medium hover:bg-emerald-400 transition-colors w-full md:w-auto"
+          className="flex items-center justify-center gap-2 px-6 py-3 rounded-full glass-card text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/10 transition-all duration-300 group"
         >
-          <RefreshCw className="w-4 h-4" />
-          Retake Quiz
+          <RefreshCw className="w-4 h-4 text-emerald-400 transition-transform group-hover:rotate-180 duration-500" />
+          <span className="hidden md:inline">Retake Quiz</span>
         </button>
         
         <button
           onClick={handleDownloadReport}
-          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full md:w-auto"
+          className="flex items-center justify-center gap-2 px-6 py-3 rounded-full glass-card text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/10 transition-all duration-300 group"
         >
-          <Share2 className="w-4 h-4" />
-          Download Report
+          <Share2 className="w-4 h-4 text-emerald-400 transition-transform group-hover:translate-x-1 duration-300" />
+          <span className="hidden md:inline">Download Report</span>
         </button>
       </div>
 
