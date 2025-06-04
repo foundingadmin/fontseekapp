@@ -26,7 +26,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ onShowInfo }) => {
   const { scores, visualScores, recommendations, calculateResults, resetQuiz } = useQuizStore();
   const [showLabels, setShowLabels] = useState(false);
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true); // Default to dark mode
   const [showFallbackMessage, setShowFallbackMessage] = useState(false);
 
   useEffect(() => {
@@ -114,7 +114,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ onShowInfo }) => {
     font: typeof recommendations.primary;
     index: number;
   }) => {
-    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [isDarkMode, setIsDarkMode] = useState(true); // Default to dark mode
     const [showLabels, setShowLabels] = useState(false);
     const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
 
@@ -151,7 +151,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ onShowInfo }) => {
         <div className="p-4 md:p-8">
           <div className={clsx(
             'rounded-lg shadow-lg p-4 md:p-8 transition-colors duration-300',
-            isDarkMode ? 'bg-neutral-900' : 'bg-white'
+            isDarkMode ? 'bg-black' : 'bg-white'
           )}>
             <div className="flex flex-col">
               <div className="flex items-center gap-2 mb-8">
@@ -160,7 +160,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ onShowInfo }) => {
                   className={clsx(
                     'flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-sm',
                     isDarkMode 
-                      ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                      ? 'bg-white/5 text-white hover:bg-white/10' 
                       : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
                   )}
                 >
@@ -172,7 +172,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ onShowInfo }) => {
                   className={clsx(
                     'flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-sm',
                     isDarkMode 
-                      ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                      ? 'bg-white/5 text-white hover:bg-white/10' 
                       : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
                   )}
                 >
@@ -184,7 +184,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ onShowInfo }) => {
                   className={clsx(
                     'flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-sm',
                     isDarkMode 
-                      ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                      ? 'bg-white/5 text-white hover:bg-white/10' 
                       : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
                   )}
                 >
