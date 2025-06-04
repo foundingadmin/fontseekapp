@@ -71,10 +71,7 @@ export const IntroScreen: React.FC = () => {
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
       <div 
-        className="absolute inset-0 bg-gradient-to-br from-black via-emerald-950 to-black animate-gradient"
-        style={{
-          backgroundSize: '200% 200%',
-        }}
+        className="absolute inset-0 animate-gradient"
       />
       
       <div className="absolute inset-0 opacity-20">
