@@ -28,7 +28,7 @@ export const InfoPopup: React.FC = () => {
           className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-200 ${
             isClosing 
               ? 'bg-black/0 backdrop-blur-none' 
-              : 'bg-black/80 backdrop-blur-sm'
+              : 'bg-black/90 backdrop-blur-md'
           }`}
         >
           <div 
