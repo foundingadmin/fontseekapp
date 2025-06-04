@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuizStore } from '../store/quizStore';
 import { quizQuestions } from '../data/quiz';
 import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon } from 'lucide-react';
@@ -280,30 +280,6 @@ export const QuizResults: React.FC = () => {
     );
   };
 
-  const DebugInfo = () => {
-    if (!scores || !visualScores) return null;
-    
-    return (
-      <div className="mb-8 p-4 bg-white/5 rounded-lg text-sm font-mono">
-        <h3 className="text-emerald-400 mb-2">Debug Information</h3>
-        <div className="space-y-4">
-          <div>
-            <h4 className="text-white/60 mb-1">Aesthetic Matching Scores:</h4>
-            <pre className="text-white/80 overflow-x-auto">
-              {JSON.stringify(scores, null, 2)}
-            </pre>
-          </div>
-          <div>
-            <h4 className="text-white/60 mb-1">Visual Graph Scores:</h4>
-            <pre className="text-white/80 overflow-x-auto">
-              {JSON.stringify(visualScores, null, 2)}
-            </pre>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   if (!recommendations || !scores) {
     return (
       <div className="flex items-center justify-center">
@@ -330,7 +306,7 @@ export const QuizResults: React.FC = () => {
           className="flex items-center justify-center gap-2 px-6 py-3 rounded-full glass-card text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/10 transition-all duration-300 group"
         >
           <RefreshCw className="w-4 h-4 text-emerald-400 transition-transform group-hover:rotate-180 duration-500" />
-          <span className="hidden md:inline">Retake Quiz</span>
+          <span>Retake Quiz</span>
         </button>
         
         <button
@@ -338,7 +314,7 @@ export const QuizResults: React.FC = () => {
           className="flex items-center justify-center gap-2 px-6 py-3 rounded-full glass-card text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/10 transition-all duration-300 group"
         >
           <Share2 className="w-4 h-4 text-emerald-400 transition-transform group-hover:translate-x-1 duration-300" />
-          <span className="hidden md:inline">Download Report</span>
+          <span>Download Report</span>
         </button>
       </div>
 
