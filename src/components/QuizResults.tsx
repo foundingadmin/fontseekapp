@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { IntroScreen } from './IntroScreen';
-import { QuizQuestion } from './QuizQuestion';
 import { useQuizStore } from '../store/quizStore';
 import { quizQuestions } from '../data/quiz';
 import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon } from 'lucide-react';
@@ -8,30 +6,50 @@ import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
 import { ContactForm } from './ContactForm';
-import { getDisplayName, aestheticDescriptions } from '../utils/aestheticStyles';
+import { getDisplayName } from '../utils/aestheticStyles';
 import clsx from 'clsx';
 
-const traitLabels = {
-  tone: {
-    high: 'Professional & Formal',
-    low: 'Casual & Relaxed'
+const aestheticDescriptions: Record<string, { emoji: string; description: string }> = {
+  'Bold & Expressive': {
+    emoji: '🧃',
+    description: "Your brand match reflects a personality that's bold, expressive, and packed with energy. This aesthetic thrives on making statements—ideal for brands that want to stand out, charm audiences, or inject a sense of fun into their communications."
   },
-  energy: {
-    high: 'Dynamic & Bold',
-    low: 'Calm & Subtle'
+  'Warm & Approachable': {
+    emoji: '🧠',
+    description: 'This match reflects a balanced tone—friendly, professional, and adaptable. These fonts work beautifully for approachable brands that still need to be taken seriously. Think clarity with a touch of warmth.'
   },
-  design: {
-    high: 'Modern & Progressive',
-    low: 'Classic & Traditional'
+  'Modern & Minimal': {
+    emoji: '🛰',
+    description: 'Your brand values precision, clarity, and modernity. These fonts are minimalist, clean, and calculated—ideal for tech-forward, future-facing, or design-savvy organizations.'
   },
-  era: {
-    high: 'Contemporary',
-    low: 'Timeless'
+  'Friendly & Playful': {
+    emoji: '🫧',
+    description: 'Friendly, casual, and fresh. These fonts are approachable and informal without being childish. This is the right pick for brands that want to feel helpful, human, and easygoing.'
   },
-  structure: {
-    high: 'Structured & Organized',
-    low: 'Organic & Fluid'
+  'Universal & Neutral': {
+    emoji: '🧰',
+    description: 'Your brand values simplicity, speed, or versatility across platforms. This approach means no-frills performance and familiarity—ideal for internal apps, OS-native tools, or lightweight branding.'
+  },
+  'Classic & Credible': {
+    emoji: '📚',
+    description: 'A modern classic. This match tells us your brand appreciates structure and elegance but isn\'t stuck in the past. These fonts blend sharpness with sophistication—great for editorial, education, or premium service brands.'
+  },
+  'Elegant & Literary': {
+    emoji: '📖',
+    description: 'You lean into tradition, trust, and storytelling. This style fits brands with heritage, depth, and a classic sense of professionalism. Ideal for long-form content and legacy vibes.'
+  },
+  'Structured & Professional': {
+    emoji: '🗂',
+    description: 'You favor practicality and structure with just enough personality to keep things interesting. This timeless style is perfect for brands that want to feel grounded, neutral, and built to last.'
   }
+};
+
+const traitLabels = {
+  tone: { low: "Formal", high: "Casual" },
+  energy: { low: "Calm", high: "Energetic" },
+  design: { low: "Minimal", high: "Expressive" },
+  era: { low: "Classic", high: "Modern" },
+  structure: { low: "Organic", high: "Geometric" }
 };
 
 export const QuizResults: React.FC = () => {
@@ -40,6 +58,7 @@ export const QuizResults: React.FC = () => {
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showFallbackMessage, setShowFallbackMessage] = useState(false);
+  const [showDebug, setShowDebug] = useState(false);
 
   useEffect(() => {
     if (!scores && !recommendations) {
@@ -49,6 +68,14 @@ export const QuizResults: React.FC = () => {
 
   useEffect(() => {
     if (recommendations) {
+      const loadGoogleFont = (fontName: string) => {
+        const formatted = fontName.replace(/ /g, '+');
+        const link = document.createElement('link');
+        link.href = `https://fonts.googleapis.com/css2?family=${formatted}:wght@400;500;700&display=swap`;
+        link.rel = 'stylesheet';
+        document.head.appendChild(link);
+      };
+
       loadGoogleFont(recommendations.primary.name);
       loadGoogleFont(recommendations.secondary.name);
       loadGoogleFont(recommendations.tertiary.name);
@@ -88,6 +115,17 @@ export const QuizResults: React.FC = () => {
         return score >= 4 ? label.high : label.low;
       })
       .filter(Boolean);
+  };
+
+  const shuffleCopyPack = () => {
+    const currentIndex = copyPacks.findIndex(pack => pack.styleId === currentCopyPack.styleId);
+    let nextIndex = currentIndex;
+    
+    while (nextIndex === currentIndex) {
+      nextIndex = Math.floor(Math.random() * copyPacks.length);
+    }
+    
+    setCurrentCopyPack(copyPacks[nextIndex]);
   };
 
   const handleDownloadReport = () => {
@@ -131,7 +169,7 @@ export const QuizResults: React.FC = () => {
     );
 
     return (
-      <div className="mb-8 glass-card rounded-xl overflow-hidden">
+      <div className="mb-8 bg-[#1C1F26] rounded-xl overflow-hidden shadow-xl">
         <div className="px-6 py-5 border-b border-[#2A2D36]">
           <div>
             <p className="text-2xl font-bold text-white tracking-[-0.02em]">{font.name}</p>
@@ -276,6 +314,30 @@ export const QuizResults: React.FC = () => {
     );
   };
 
+  const DebugInfo = () => {
+    if (!scores || !visualScores) return null;
+    
+    return (
+      <div className="mb-8 p-4 bg-white/5 rounded-lg text-sm font-mono">
+        <h3 className="text-emerald-400 mb-2">Debug Information</h3>
+        <div className="space-y-4">
+          <div>
+            <h4 className="text-white/60 mb-1">Aesthetic Matching Scores:</h4>
+            <pre className="text-white/80 overflow-x-auto">
+              {JSON.stringify(scores, null, 2)}
+            </pre>
+          </div>
+          <div>
+            <h4 className="text-white/60 mb-1">Visual Graph Scores:</h4>
+            <pre className="text-white/80 overflow-x-auto">
+              {JSON.stringify(visualScores, null, 2)}
+            </pre>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   if (!recommendations || !scores) {
     return (
       <div className="flex items-center justify-center">
@@ -288,8 +350,10 @@ export const QuizResults: React.FC = () => {
 
   return (
     <div className="w-full max-w-3xl mx-auto">
+      {showDebug && <DebugInfo />}
+
       {showFallbackMessage && (
-        <div className="mb-8 glass-card px-4 py-3 rounded-lg text-white/60 text-sm text-center">
+        <div className="mb-8 px-4 py-3 bg-white/5 rounded-lg text-white/60 text-sm text-center">
           We had a little trouble finding a perfect match for your font style, so we've shown the closest match instead.
         </div>
       )}
@@ -297,17 +361,17 @@ export const QuizResults: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4 mb-8">
         <button
           onClick={resetQuiz}
-          className="glass-card flex items-center justify-center gap-2 px-6 py-3 rounded-full text-white hover:bg-white/10 transition-all duration-300 backdrop-blur-lg border border-white/10 group"
+          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 text-black font-medium hover:bg-emerald-400 transition-colors w-full md:w-auto"
         >
-          <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
+          <RefreshCw className="w-4 h-4" />
           Retake Quiz
         </button>
         
         <button
           onClick={handleDownloadReport}
-          className="glass-card flex items-center justify-center gap-2 px-6 py-3 rounded-full text-white hover:bg-white/10 transition-all duration-300 backdrop-blur-lg border border-white/10 group"
+          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full md:w-auto"
         >
-          <Share2 className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+          <Share2 className="w-4 h-4" />
           Download Report
         </button>
       </div>
@@ -329,9 +393,7 @@ export const QuizResults: React.FC = () => {
           ))}
         </div>
         
-        <div className="glass-card rounded-xl p-8 mb-12">
-          {scores && <TraitScales scores={scores} />}
-        </div>
+        {scores && <TraitScales scores={scores} />}
       </div>
 
       <FontPreviewCard font={recommendations.primary} index={0} />
