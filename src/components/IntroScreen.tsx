@@ -82,57 +82,75 @@ export const IntroScreen: React.FC = () => {
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black to-transparent z-10" />
       
       {/* Bottom gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent z-10" />
+      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-black to-transparent z-10" />
       
-      <div className="relative z-20 min-h-screen flex items-center justify-center">
-        <div className="max-w-3xl mx-auto px-4 py-16 text-center">
-          <a href="/" className="inline-block mb-12">
-            <img 
-              src={wordmarkLogo}
-              alt="FontSeek - Strategy-Driven Font Recommendations" 
-              className="w-[140px] h-auto"
-              onError={(e) => {
-                const img = e.target as HTMLImageElement;
-                console.error('Failed to load image:', img.src);
-              }}
-            />
-          </a>
-          
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Choose fonts on what they say. Not how they look.
-          </h1>
-          
-          <p className="text-xl text-white/80 mb-12">
-            FontSeek helps you find the perfect free and ready-to-use modern font to bring your brand's personality to life on your website and beyond. In under 3 minutes, get strategic recommendations, live web previews, and dev-ready code to elevate your site's design with intention.
-          </p>
+      <div className="relative z-20 min-h-screen flex flex-col">
+        <div className="flex-1 flex items-center justify-center">
+          <div className="max-w-3xl mx-auto px-4 py-16 text-center">
+            <a href="/" className="inline-block mb-12">
+              <img 
+                src={wordmarkLogo}
+                alt="FontSeek - Strategy-Driven Font Recommendations" 
+                className="w-[140px] h-auto"
+                onError={(e) => {
+                  const img = e.target as HTMLImageElement;
+                  console.error('Failed to load image:', img.src);
+                }}
+              />
+            </a>
+            
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Choose fonts on what they say. Not how they look.
+            </h1>
+            
+            <p className="text-xl text-white/80 mb-12">
+              FontSeek helps you find the perfect free and ready-to-use modern font to bring your brand's personality to life on your website and beyond. In under 3 minutes, get strategic recommendations, live web previews, and dev-ready code to elevate your site's design with intention.
+            </p>
 
-          <form onSubmit={handleSubmit} className="max-w-[400px] mx-auto">
-            <input
-              type="email"
-              required
-              placeholder="Enter your email to begin"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-6 py-3 mb-4 bg-white/5 border border-white/20 rounded-full text-white placeholder-white/40 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  handleSubmit(e);
-                }
-              }}
-            />
-            {error && (
-              <p className="text-red-500 text-sm mb-4">{error}</p>
-            )}
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full px-6 py-3 bg-emerald-500 text-black font-semibold rounded-full hover:bg-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSubmitting ? 'Starting...' : 'Start Quiz'}
-            </button>
-          </form>
+            <form onSubmit={handleSubmit} className="max-w-[400px] mx-auto">
+              <input
+                type="email"
+                required
+                placeholder="Enter your email to begin"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-6 py-3 mb-4 bg-white/5 border border-white/20 rounded-full text-white placeholder-white/40 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSubmit(e);
+                  }
+                }}
+              />
+              {error && (
+                <p className="text-red-500 text-sm mb-4">{error}</p>
+              )}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full px-6 py-3 bg-emerald-500 text-black font-semibold rounded-full hover:bg-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? 'Starting...' : 'Start Quiz'}
+              </button>
+            </form>
+          </div>
         </div>
+
+        <footer className="relative z-30 py-6 px-4">
+          <div className="container mx-auto text-center">
+            <p className="text-sm text-white/60">
+              Built with passion by the team at{' '}
+              <a 
+                href="https://foundingcreative.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-white hover:text-emerald-400 transition-colors"
+              >
+                Founding Creative
+              </a>
+            </p>
+          </div>
+        </footer>
       </div>
     </div>
   );
