@@ -54,60 +54,60 @@ export const TraitScales: React.FC<TraitScalesProps> = () => {
         </p>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-8">
         {(Object.keys(traits) as Array<keyof UserScores>).map((traitKey, index) => {
           const trait = traits[traitKey];
           const score = visualScores[traitKey];
           const percentage = ((score - 1) / 4) * 100;
 
           return (
-            <div key={traitKey} className="space-y-2">
+            <div key={traitKey} className="space-y-3">
               <div className="flex items-center gap-2">
                 <h3 className="text-sm font-semibold">{trait.label}</h3>
                 <div className="group relative">
                   <Info className="w-4 h-4 text-white/40 hover:text-white/60 cursor-help" />
-                  <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 px-3 py-2 bg-black/90 text-xs text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                  <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 px-3 py-2 bg-black/90 text-xs text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
                     {trait.description}
                   </div>
                 </div>
               </div>
 
-              <div className="relative">
-                <div className="flex justify-between text-xs text-white/60 mb-1.5">
+              <div className="relative pt-6 pb-8">
+                <div className="flex justify-between text-xs text-white/60 absolute top-0 left-0 right-0">
                   <span>{trait.leftLabel}</span>
                   <span>{trait.rightLabel}</span>
                 </div>
 
-                <div className="h-2 bg-neutral-700 rounded-full relative overflow-hidden">
-                  {/* Background tick marks */}
+                {/* Track background with tick marks */}
+                <div className="h-0.5 bg-neutral-700 rounded-full relative">
                   {[0, 25, 50, 75, 100].map((tick) => (
                     <div
                       key={tick}
-                      className="absolute top-0 bottom-0 w-0.5 bg-white/10"
+                      className="absolute top-1/2 -translate-y-1/2 w-0.5 h-3 bg-white/10"
                       style={{ left: `${tick}%` }}
                     />
                   ))}
                   
-                  {/* Animated progress bar */}
+                  {/* Progress bar */}
                   <div 
                     className="absolute top-0 left-0 h-full bg-emerald-400/10 rounded-full transition-all duration-700 ease-out"
                     style={{ width: `${percentage}%` }}
                   />
-                  
-                  {/* Animated marker with glow effect */}
-                  <div 
-                    className="absolute top-1/2 w-5 h-5 bg-emerald-400 rounded-full transition-all duration-700 ease-out"
-                    style={{ 
-                      left: `${percentage}%`,
-                      transform: 'translate(-50%, -50%)',
-                      animation: `
-                        marker-glow-${index + 1} 2s ease-in-out infinite,
-                        fade-in 0.5s ease-out forwards
-                      `,
-                      animationDelay: `${index * 0.1}s`
-                    }}
-                  />
                 </div>
+                
+                {/* Marker */}
+                <div 
+                  className="absolute top-0 -mt-3 w-6 h-6 bg-emerald-400 rounded-full transition-all duration-700 ease-out z-10"
+                  style={{ 
+                    left: `${percentage}%`,
+                    transform: 'translateX(-50%)',
+                    animation: `
+                      marker-glow-${index + 1} 2s ease-in-out infinite,
+                      fade-in 0.5s ease-out forwards
+                    `,
+                    animationDelay: `${index * 0.1}s`
+                  }}
+                />
               </div>
             </div>
           );
