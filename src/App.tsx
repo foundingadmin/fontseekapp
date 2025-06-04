@@ -30,8 +30,12 @@ function App() {
         <img 
           src="/Wave-Black.svg" 
           alt="" 
-          className="absolute inset-0 w-full h-full object-cover opacity-80"
-          style={{ mixBlendMode: 'normal' }}
+          className="absolute inset-0 w-full h-full object-cover opacity-80 scale-[2.5]"
+          style={{ 
+            mixBlendMode: 'normal',
+            transform: 'scale(2.5) translateY(-10%)',
+            transformOrigin: 'center'
+          }}
         />
         
         {/* Gradient overlays */}
