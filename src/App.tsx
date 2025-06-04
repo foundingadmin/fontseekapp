@@ -61,17 +61,19 @@ function App() {
         </main>
 
         {/* Fixed footer */}
-        <footer className="fixed bottom-0 left-0 right-0 z-30 py-6 px-4 bg-gradient-to-t from-black via-black/95 to-transparent">
-          <div className="container mx-auto flex items-center justify-center text-sm text-white/60">
-            Designed & Built with <Heart className="w-4 h-4 mx-2 text-emerald-500" /> by{' '}
-            <a 
-              href="https://foundingcreative.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="ml-2 text-white hover:text-emerald-400 transition-colors"
-            >
-              Founding Creative
-            </a>
+        <footer className="fixed bottom-0 left-0 right-0 z-30 py-6 px-4">
+          <div className="glass-card py-6">
+            <div className="container mx-auto flex items-center justify-center text-sm text-white/60">
+              Designed & Built with <Heart className="w-4 h-4 mx-2 text-emerald-500" /> by{' '}
+              <a 
+                href="https://foundingcreative.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="ml-2 text-white hover:text-emerald-400 transition-colors"
+              >
+                Founding Creative
+              </a>
+            </div>
           </div>
         </footer>
       </div>

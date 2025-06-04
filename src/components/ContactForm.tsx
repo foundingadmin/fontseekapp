@@ -18,6 +18,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
   const [email, setEmail] = useState(initialEmail || '');
   const scores = useQuizStore(state => state.scores);
   const recommendations = useQuizStore(state => state.recommendations);
+  const [showInfoPopup, setShowInfoPopup] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -178,7 +179,17 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
             </p>
           </div>
         </div>
+
+        <div className="mt-12 text-center">
+          <button
+            onClick={() => setShowInfoPopup(true)}
+            className="text-white/60 hover:text-emerald-400 transition-colors text-sm"
+          >
+            Learn more about FontSeek
+          </button>
+        </div>
       </div>
+      {showInfoPopup && <InfoPopup onClose={() => setShowInfoPopup(false)} />}
     </div>
   );
 };
