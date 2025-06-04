@@ -3,17 +3,16 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { useQuizStore } from '../store/quizStore';
 import emailjs from '@emailjs/browser';
 import brandmarkLogo from '/Founding-v1-Brandmark-white.svg';
-import { InfoPopup } from './InfoPopup';
 
 interface ContactFormProps {
   onDownloadReport: () => void;
+  onShowInfo: () => void;
 }
 
-export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) => {
+export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport, onShowInfo }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [isLogoVisible, setIsLogoVisible] = useState(false);
-  const [showInfoPopup, setShowInfoPopup] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const initialEmail = useQuizStore(state => state.email);
@@ -183,7 +182,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
 
         <div className="mt-12 text-center">
           <button
-            onClick={() => setShowInfoPopup(true)}
+            onClick={onShowInfo}
             className="flex items-center justify-center gap-2 mx-auto text-emerald-400 hover:text-emerald-300 transition-colors text-sm group"
           >
             About FontSeek
@@ -191,7 +190,6 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
           </button>
         </div>
       </div>
-      {showInfoPopup && <InfoPopup onClose={() => setShowInfoPopup(false)} />}
     </div>
   );
 };

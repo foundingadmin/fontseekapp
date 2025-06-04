@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuizStore } from '../store/quizStore';
 import { quizQuestions } from '../data/quiz';
-import { RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon, ArrowRight, Info } from 'lucide-react';
+import { RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon, ArrowRight } from 'lucide-react';
 import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
@@ -18,7 +18,11 @@ const traitLabels = {
   structure: { low: "Organic", high: "Geometric" }
 };
 
-export const QuizResults: React.FC = () => {
+interface QuizResultsProps {
+  onShowInfo: () => void;
+}
+
+export const QuizResults: React.FC<QuizResultsProps> = ({ onShowInfo }) => {
   const { scores, visualScores, recommendations, calculateResults, resetQuiz } = useQuizStore();
   const [showLabels, setShowLabels] = useState(false);
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
@@ -339,7 +343,7 @@ export const QuizResults: React.FC = () => {
       <FontPreviewCard font={recommendations.secondary} index={1} />
       <FontPreviewCard font={recommendations.tertiary} index={2} />
 
-      <ContactForm onDownloadReport={handleDownloadReport} />
+      <ContactForm onDownloadReport={handleDownloadReport} onShowInfo={onShowInfo} />
     </div>
   );
 };

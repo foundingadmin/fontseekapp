@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IntroScreen } from './components/IntroScreen';
 import { QuizQuestion } from './components/QuizQuestion';
 import { QuizResults } from './components/QuizResults';
@@ -9,6 +9,7 @@ import { Heart } from 'lucide-react';
 
 function App() {
   const { currentQuestion, answers, skipToResults, hasStarted } = useQuizStore();
+  const [showInfoPopup, setShowInfoPopup] = useState(false);
   const isComplete = Object.keys(answers).length === 10;
 
   useEffect(() => {
@@ -52,7 +53,11 @@ function App() {
             <div className="pt-24">
               <div className="container mx-auto px-4">
                 {!isComplete && <QuizProgress />}
-                {isComplete ? <QuizResults /> : <QuizQuestion />}
+                {isComplete ? (
+                  <QuizResults onShowInfo={() => setShowInfoPopup(true)} />
+                ) : (
+                  <QuizQuestion />
+                )}
               </div>
             </div>
           )}
@@ -75,6 +80,9 @@ function App() {
           </div>
         </footer>
       </div>
+
+      {/* Info Popup */}
+      {showInfoPopup && <InfoPopup onClose={() => setShowInfoPopup(false)} />}
     </div>
   );
 }
