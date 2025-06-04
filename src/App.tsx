@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { IntroScreen } from './components/IntroScreen';
 import { QuizQuestion } from './components/QuizQuestion';
 import { QuizResults } from './components/QuizResults';
 import { QuizProgress } from './components/QuizProgress';
 import { InfoPopup } from './components/InfoPopup';
 import { useQuizStore } from './store/quizStore';
-import { Heart } from 'lucide-react';
+import { Info, Heart } from 'lucide-react';
 
 function App() {
   const { currentQuestion, answers, skipToResults, hasStarted } = useQuizStore();
-  const [showInfoPopup, setShowInfoPopup] = useState(false);
+  const [showInfoPopup, setShowInfoPopup] = React.useState(false);
   const isComplete = Object.keys(answers).length === 10;
 
   useEffect(() => {
@@ -31,12 +31,8 @@ function App() {
         <img 
           src="/Wave-Black.svg" 
           alt="" 
-          className="absolute inset-0 w-full h-full object-cover opacity-80 scale-[2.5]"
-          style={{ 
-            mixBlendMode: 'normal',
-            transform: 'scale(2.5) translateY(-10%)',
-            transformOrigin: 'center'
-          }}
+          className="absolute inset-0 w-full h-full object-cover opacity-80"
+          style={{ mixBlendMode: 'normal' }}
         />
         
         {/* Gradient overlays */}
@@ -46,6 +42,15 @@ function App() {
 
       {/* Scrollable content layer */}
       <div className="relative z-10">
+        {/* Info Button */}
+        <button
+          onClick={() => setShowInfoPopup(true)}
+          className="fixed top-8 right-8 z-[60] p-2 rounded-full glass-card hover:bg-white/10 transition-all duration-300 hover:scale-110 group"
+          aria-label="About FontSeek"
+        >
+          <Info className="w-5 h-5 text-white/60 group-hover:text-white transition-colors duration-300" />
+        </button>
+
         <main className="min-h-screen pb-24">
           {!hasStarted ? (
             <IntroScreen />
