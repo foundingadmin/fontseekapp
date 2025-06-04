@@ -27,7 +27,7 @@ export const InfoPopup: React.FC = () => {
         <>
           {/* Backdrop */}
           <div 
-            className={`fixed inset-0 z-[65] bg-black/80 backdrop-blur-sm transition-all duration-300 ${
+            className={`fixed inset-0 z-[65] bg-black/60 backdrop-blur-sm transition-all duration-300 ${
               isClosing ? 'opacity-0 backdrop-blur-none' : 'opacity-100'
             }`}
             onClick={handleClose}
@@ -40,7 +40,7 @@ export const InfoPopup: React.FC = () => {
             }`}
           >
             <div 
-              className="relative w-full max-w-2xl max-h-[90vh] bg-[#1C1F26]/95 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden"
+              className="relative w-full max-w-2xl max-h-[90vh] bg-[#1C1F26]/80 backdrop-blur-md rounded-xl shadow-xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="absolute top-4 right-4">
