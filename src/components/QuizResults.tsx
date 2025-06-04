@@ -8,8 +8,7 @@ import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
 import { ContactForm } from './ContactForm';
-import { getDisplayName, aestheticDescriptions } from '../utils/aestheticStyles';
-import { getTopTraits } from '../utils/fontLogic';
+import { getDisplayName } from '../utils/aestheticStyles';
 import clsx from 'clsx';
 
 export const QuizResults: React.FC = () => {
@@ -40,10 +39,38 @@ export const QuizResults: React.FC = () => {
     }
   }, [recommendations]);
 
+  const getTopTraits = () => {
+    if (!scores) return [];
+
+    const traitScores = [
+      { trait: 'tone', score: scores.tone },
+      { trait: 'energy', score: scores.energy },
+      { trait: 'design', score: scores.design },
+      { trait: 'era', score: scores.era },
+      { trait: 'structure', score: scores.structure }
+    ];
+
+    traitScores.sort((a, b) => {
+      if (a.score !== b.score) return b.score - a.score;
+      
+      const priority = ['energy', 'design', 'tone', 'era', 'structure'];
+      return priority.indexOf(a.trait) - priority.indexOf(b.trait);
+    });
+
+    return traitScores
+      .filter(({ score }) => score !== 3)
+      .slice(0, 3)
+      .map(({ trait, score }) => {
+        const label = traitLabels[trait as keyof typeof traitLabels];
+        return score >= 4 ? label.high : label.low;
+      })
+      .filter(Boolean);
+  };
+
   const handleDownloadReport = () => {
     if (!recommendations || !scores) return;
 
-    const traits = getTopTraits(scores);
+    const traits = getTopTraits();
     const doc = generateFontReport({
       font: recommendations.primary,
       scores,
@@ -235,7 +262,6 @@ export const QuizResults: React.FC = () => {
   }
 
   const displayName = getDisplayName(recommendations.aestheticStyle);
-  const topTraits = getTopTraits(scores);
 
   return (
     <div className="w-full max-w-3xl mx-auto">
@@ -273,7 +299,7 @@ export const QuizResults: React.FC = () => {
         </p>
         
         <div className="flex flex-wrap gap-2 mb-8">
-          {topTraits.map((trait) => (
+          {getTopTraits().map((trait) => (
             <span key={trait} className="bg-emerald-500/10 text-emerald-400 text-xs font-medium px-3 py-1 rounded-full tracking-[-0.02em]">
               {trait}
             </span>
