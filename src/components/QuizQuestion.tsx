@@ -5,7 +5,7 @@ import { ArrowDown, ArrowUp, Check } from 'lucide-react';
 import clsx from 'clsx';
 
 export const QuizQuestion: React.FC = () => {
-  const { currentQuestion, answers } = useQuizStore();
+  const { currentQuestion, answers, setAnswer } = useQuizStore();
   const question = quizQuestions[currentQuestion - 1];
   const currentAnswer = answers[currentQuestion];
   const [selectedAnswer, setSelectedAnswer] = useState<'A' | 'B' | null>(null);
