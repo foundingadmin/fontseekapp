@@ -80,7 +80,7 @@ export const QuizQuestion: React.FC = () => {
                   disabled={selectedAnswer !== null || isTransitioning}
                   className={clsx(
                     'min-h-[88px] w-full p-6 rounded-xl border-2 transition-all duration-400 ease-in-out',
-                    'text-left text-lg font-medium group',
+                    'text-left text-lg font-medium group flex items-center',
                     'focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75',
                     isSelected
                       ? 'bg-emerald-500/10 text-white border-emerald-500 scale-[1.02]'
@@ -88,7 +88,7 @@ export const QuizQuestion: React.FC = () => {
                     selectedAnswer && !isSelected && 'opacity-50'
                   )}
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-4 w-full">
                     <div
                       className={clsx(
                         'flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-400 ease-in-out',
