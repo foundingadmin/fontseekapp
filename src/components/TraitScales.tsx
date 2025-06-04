@@ -7,13 +7,6 @@ interface TraitScalesProps {
   scores: UserScores;
 }
 
-interface TraitDefinition {
-  label: string;
-  leftLabel: string;
-  rightLabel: string;
-  description: string;
-}
-
 const traits: Record<keyof UserScores, TraitDefinition> = {
   tone: {
     label: 'Tone',
@@ -62,7 +55,7 @@ export const TraitScales: React.FC<TraitScalesProps> = () => {
       </div>
 
       <div className="space-y-6">
-        {(Object.keys(traits) as Array<keyof UserScores>).map((traitKey) => {
+        {(Object.keys(traits) as Array<keyof UserScores>).map((traitKey, index) => {
           const trait = traits[traitKey];
           const score = visualScores[traitKey];
           const percentage = ((score - 1) / 4) * 100;
@@ -101,13 +94,17 @@ export const TraitScales: React.FC<TraitScalesProps> = () => {
                     style={{ width: `${percentage}%` }}
                   />
                   
-                  {/* Animated indicator dot with glow effect */}
+                  {/* Animated marker with glow effect */}
                   <div 
-                    className="absolute top-1/2 w-6 h-6 bg-emerald-400 rounded-full shadow-[0_0_15px_rgba(67,218,122,0.5)] transition-all duration-700 ease-out opacity-0 animate-fade-in"
+                    className="absolute top-1/2 w-5 h-5 bg-emerald-400 rounded-full transition-all duration-700 ease-out"
                     style={{ 
                       left: `${percentage}%`,
-                      transform: `translate(-50%, -50%) scale(${score === 3 ? '0.9' : '1'})`,
-                      animation: 'fade-in 0.5s ease-out forwards, slide-in 0.7s ease-out forwards'
+                      transform: 'translate(-50%, -50%)',
+                      animation: `
+                        marker-glow-${index + 1} 2s ease-in-out infinite,
+                        fade-in 0.5s ease-out forwards
+                      `,
+                      animationDelay: `${index * 0.1}s`
                     }}
                   />
                 </div>
