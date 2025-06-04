@@ -40,7 +40,7 @@ export const InfoPopup: React.FC = () => {
             }`}
           >
             <div 
-              className="relative w-full max-w-2xl max-h-[90vh] bg-[#1C1F26] rounded-xl shadow-xl overflow-hidden"
+              className="relative w-full max-w-2xl max-h-[90vh] bg-[#1C1F26]/95 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="absolute top-4 right-4">
