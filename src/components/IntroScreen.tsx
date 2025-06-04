@@ -71,14 +71,14 @@ export const IntroScreen: React.FC = () => {
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
       <div 
-        className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900 animate-gradient"
+        className="absolute inset-0 bg-gradient-to-br from-cyan-600 via-emerald-500 to-blue-600 animate-gradient"
         style={{
           backgroundSize: '400% 400%',
           animation: 'gradient 15s ease infinite',
         }}
       />
       
-      <div className="absolute inset-0 opacity-20">
+      <div className="absolute inset-0 opacity-30">
         <img 
           src="/Wave-Black.svg" 
           alt="" 

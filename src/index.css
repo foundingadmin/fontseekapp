@@ -55,3 +55,11 @@
     transform: translateY(-20%);
   }
 }
+
+.animate-gradient {
+  animation: gradient 15s ease infinite;
+}
+
+.animate-wave {
+  animation: wave 20s linear infinite;
+}
