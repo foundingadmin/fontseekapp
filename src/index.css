@@ -35,48 +35,19 @@
   }
 }
 
-@keyframes gradient-1 {
+@keyframes gradient-move {
   0% {
-    background-position: 0% 0%;
-  }
-  25% {
-    background-position: 100% 25%;
-  }
-  50% {
-    background-position: 50% 100%;
-  }
-  75% {
-    background-position: 0% 75%;
-  }
-  100% {
-    background-position: 0% 0%;
-  }
-}
-
-@keyframes gradient-2 {
-  0% {
-    background-position: 100% 0%;
-  }
-  25% {
     background-position: 0% 50%;
   }
-  50% {
-    background-position: 100% 100%;
-  }
-  75% {
-    background-position: 50% 0%;
-  }
   100% {
-    background-position: 100% 0%;
+    background-position: 100% 50%;
   }
 }
 
 .animate-gradient {
-  background-size: 400% 400%;
-  background-image: 
-    linear-gradient(45deg, rgba(0,0,0,0.95) 0%, rgba(6,78,59,0.5) 50%, rgba(0,0,0,0.95) 100%),
-    linear-gradient(-45deg, rgba(0,0,0,0.95) 0%, rgba(6,78,59,0.3) 50%, rgba(0,0,0,0.95) 100%);
-  animation: 
-    gradient-1 15s linear infinite,
-    gradient-2 17s linear infinite;
+  background: 
+    radial-gradient(circle at 50% 50%, rgba(0,0,0,0.95) 0%, rgba(6,78,59,0.3) 25%, rgba(0,0,0,0.95) 50%),
+    radial-gradient(circle at 25% 25%, rgba(0,0,0,0.95) 0%, rgba(6,78,59,0.5) 35%, rgba(0,0,0,0.95) 60%);
+  background-size: 200% 200%;
+  animation: gradient-move 8s linear infinite;
 }
