@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuizStore } from '../store/quizStore';
 import { quizQuestions } from '../data/quiz';
-import { RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon } from 'lucide-react';
+import { RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon, ArrowRight } from 'lucide-react';
 import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
