@@ -5,7 +5,7 @@ import { QuizResults } from './components/QuizResults';
 import { QuizProgress } from './components/QuizProgress';
 import { InfoPopup } from './components/InfoPopup';
 import { useQuizStore } from './store/quizStore';
-import { Heart } from 'lucide-react';
+import { Heart, Bug } from 'lucide-react';
 
 function App() {
   const { currentQuestion, answers, skipToResults, hasStarted } = useQuizStore();
@@ -38,6 +38,15 @@ function App() {
       <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-black to-transparent z-10" />
 
       <InfoPopup />
+
+      {/* Debug button */}
+      <button
+        onClick={skipToResults}
+        className="fixed top-4 left-4 z-50 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 hover:scale-110"
+        aria-label="Debug: Skip to Results"
+      >
+        <Bug className="w-5 h-5 text-white" />
+      </button>
 
       {/* Main content */}
       <main className="relative z-20 min-h-screen pb-20">
