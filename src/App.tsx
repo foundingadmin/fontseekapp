@@ -50,7 +50,7 @@ function App() {
           {!hasStarted ? (
             <IntroScreen />
           ) : (
-            <div className="pt-24">
+            <div className={isComplete ? '' : 'pt-24'}>
               <div className="container mx-auto px-4">
                 {!isComplete && <QuizProgress />}
                 {isComplete ? (
