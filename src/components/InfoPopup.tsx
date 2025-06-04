@@ -53,7 +53,7 @@ export const InfoPopup: React.FC = () => {
                 </button>
               </div>
 
-              <div className="p-12 md:p-16">
+              <div className="p-8">
                 <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 tracking-[-0.02em]">
                   Why we built FontSeek
                 </h2>
@@ -88,17 +88,17 @@ export const InfoPopup: React.FC = () => {
                         href="https://foundingcreative.com"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-2 px-6 py-3 bg-emerald-500 text-black rounded-full hover:bg-emerald-400 transition-all duration-300 hover:scale-105 font-medium group text-base"
+                        className="flex-1 flex items-center justify-center gap-2 px-8 py-4 bg-emerald-500 text-black rounded-full hover:bg-emerald-400 transition-all duration-300 hover:scale-[1.02] font-medium group text-base"
                       >
-                        Visit foundingcreative.com
-                        <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                        Visit Website
+                        <ArrowUpRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                       </a>
                       <a
                         href="mailto:admin@foundingcreative.com"
-                        className="flex items-center justify-center gap-2 px-6 py-3 glass-card text-emerald-400 border border-emerald-500/20 rounded-full hover:bg-emerald-500/10 transition-all duration-300 hover:scale-105 group text-base"
+                        className="flex-1 flex items-center justify-center gap-2 px-8 py-4 glass-card text-emerald-400 border border-emerald-500/20 rounded-full hover:bg-emerald-500/10 transition-all duration-300 hover:scale-[1.02] group text-base"
                       >
-                        Email us directly
-                        <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                        Send Email
+                        <ArrowUpRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                       </a>
                     </div>
                   </div>
