@@ -56,36 +56,36 @@
 
 @keyframes marker-glow {
   0%, 100% {
-    box-shadow: 0 0 8px rgba(67, 218, 122, 0.4);
+    box-shadow: 0 0 12px rgba(67, 218, 122, 0.6);
   }
   50% {
-    box-shadow: 0 0 12px rgba(67, 218, 122, 0.6);
+    box-shadow: 0 0 20px rgba(67, 218, 122, 0.8);
   }
 }
 
 @keyframes marker-glow-1 {
-  0%, 100% { box-shadow: 0 0 8px rgba(67, 218, 122, 0.4); }
-  50% { box-shadow: 0 0 12px rgba(67, 218, 122, 0.6); }
+  0%, 100% { box-shadow: 0 0 12px rgba(67, 218, 122, 0.6); }
+  50% { box-shadow: 0 0 20px rgba(67, 218, 122, 0.8); }
 }
 
 @keyframes marker-glow-2 {
-  0%, 100% { box-shadow: 0 0 8px rgba(67, 218, 122, 0.4); }
-  50% { box-shadow: 0 0 12px rgba(67, 218, 122, 0.6); }
+  0%, 100% { box-shadow: 0 0 12px rgba(67, 218, 122, 0.6); }
+  50% { box-shadow: 0 0 20px rgba(67, 218, 122, 0.8); }
 }
 
 @keyframes marker-glow-3 {
-  0%, 100% { box-shadow: 0 0 8px rgba(67, 218, 122, 0.4); }
-  50% { box-shadow: 0 0 12px rgba(67, 218, 122, 0.6); }
+  0%, 100% { box-shadow: 0 0 12px rgba(67, 218, 122, 0.6); }
+  50% { box-shadow: 0 0 20px rgba(67, 218, 122, 0.8); }
 }
 
 @keyframes marker-glow-4 {
-  0%, 100% { box-shadow: 0 0 8px rgba(67, 218, 122, 0.4); }
-  50% { box-shadow: 0 0 12px rgba(67, 218, 122, 0.6); }
+  0%, 100% { box-shadow: 0 0 12px rgba(67, 218, 122, 0.6); }
+  50% { box-shadow: 0 0 20px rgba(67, 218, 122, 0.8); }
 }
 
 @keyframes marker-glow-5 {
-  0%, 100% { box-shadow: 0 0 8px rgba(67, 218, 122, 0.4); }
-  50% { box-shadow: 0 0 12px rgba(67, 218, 122, 0.6); }
+  0%, 100% { box-shadow: 0 0 12px rgba(67, 218, 122, 0.6); }
+  50% { box-shadow: 0 0 20px rgba(67, 218, 122, 0.8); }
 }
 
 @keyframes fade-in {

@@ -100,7 +100,7 @@ export const TraitScales: React.FC<TraitScalesProps> = () => {
                   
                   {/* Marker */}
                   <div 
-                    className="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-emerald-400 rounded-full transition-all duration-700 ease-out z-10"
+                    className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-emerald-400 rounded-full transition-all duration-700 ease-out z-10"
                     style={{ 
                       left: `${percentage}%`,
                       transform: 'translate(-50%, -50%)',
