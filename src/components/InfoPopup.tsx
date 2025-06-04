@@ -33,24 +33,24 @@ export const InfoPopup: React.FC<InfoPopupProps> = ({ onClose }) => {
         }`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="absolute top-6 right-6 z-10">
+        <div className="absolute top-8 right-8">
           <button
             onClick={handleClose}
-            className="p-2.5 rounded-full glass-card text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/10 transition-all duration-300 group"
+            className="p-2 rounded-full hover:bg-white/10 transition-colors group"
             aria-label="Close popup"
           >
-            <X className="w-5 h-5 transition-transform duration-300 group-hover:rotate-90" />
+            <X className="w-6 h-6 text-white/60 transition-transform duration-300 group-hover:rotate-90" />
           </button>
         </div>
 
         <div className="h-[80vh] overflow-y-auto custom-scrollbar">
-          <div className="p-8">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 tracking-[-0.02em]">
+          <div className="p-12">
+            <h2 className="text-5xl md:text-6xl font-bold text-white mb-12 tracking-[-0.02em] leading-[1.1]">
               Why we built FontSeek
             </h2>
 
-            <div className="space-y-6 text-lg md:text-xl text-white/80 tracking-[-0.01em]">
-              <p className="text-2xl text-emerald-400 font-medium tracking-[-0.02em]">
+            <div className="space-y-8 text-xl md:text-2xl text-white/80 tracking-[-0.01em] leading-relaxed">
+              <p className="text-3xl md:text-4xl text-white font-medium tracking-[-0.02em]">
                 Most font tools start with how a font looks. We start instead with what your brand feels like.
               </p>
 
@@ -66,12 +66,12 @@ export const InfoPopup: React.FC<InfoPopupProps> = ({ onClose }) => {
                 We designed this quick, strategy-led tool that maps your brand's personality traits to fonts that align with your tone, energy, and structure. The result is ready-to-use-immediately free fonts that look right because they feel right.
               </p>
 
-              <p className="text-2xl text-emerald-400 font-medium tracking-[-0.02em]">
+              <p className="text-3xl md:text-4xl text-white font-medium tracking-[-0.02em]">
                 FontSeek doesn't just suggest fonts. It helps bring your website and your brand to life with purpose.
               </p>
 
-              <div className="pt-8 mt-8 border-t border-white/10">
-                <p className="text-white/60 mb-6 text-lg">
+              <div className="pt-12 mt-12 border-t border-white/10">
+                <p className="text-white/60 mb-8 text-xl">
                   Need help bringing your website and brand to life with purpose?
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
