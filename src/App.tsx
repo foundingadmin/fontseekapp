@@ -55,8 +55,8 @@ function App() {
           </div>
         )}
       </main>
-      <div className={`py-4 relative z-30 ${!hasStarted ? 'absolute bottom-0 left-0 right-0' : ''}`}>
-        <div className="container mx-auto px-4 flex items-center justify-center text-sm text-white/60">
+      <footer className="relative z-30 py-6 px-4">
+        <div className="container mx-auto flex items-center justify-center text-sm text-white/60">
           Designed & Built with <Heart className="w-4 h-4 mx-2 text-emerald-500" /> by{' '}
           <a 
             href="https://foundingcreative.com" 
@@ -67,7 +67,7 @@ function App() {
             Founding Creative
           </a>
         </div>
-      </div>
+      </footer>
     </div>
   );
 }
