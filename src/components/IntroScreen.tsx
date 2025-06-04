@@ -71,7 +71,7 @@ export const IntroScreen: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
-      <div className="absolute inset-0 animate-gradient" />
+      <div className="absolute inset-0 animate-gradient opacity-20" />
       <img 
         src="/Wave-Black.svg" 
         alt="" 
