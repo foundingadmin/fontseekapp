@@ -72,42 +72,46 @@ export const TraitScales: React.FC<TraitScalesProps> = () => {
                 </div>
               </div>
 
-              <div className="relative h-8">
-                <div className="flex justify-between text-xs text-white/60 mb-2">
+              <div className="relative h-12">
+                {/* Labels */}
+                <div className="absolute top-0 left-0 right-0 flex justify-between text-xs text-white/60">
                   <span>{trait.leftLabel}</span>
                   <span>{trait.rightLabel}</span>
                 </div>
 
-                {/* Track background with tick marks */}
-                <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-0.5 bg-neutral-700 rounded-full">
-                  {[0, 25, 50, 75, 100].map((tick) => (
-                    <div
-                      key={tick}
-                      className="absolute top-1/2 -translate-y-1/2 w-0.5 h-3 bg-white/10"
-                      style={{ left: `${tick}%` }}
+                {/* Track and marker container */}
+                <div className="absolute left-0 right-0 top-1/2 mt-2">
+                  {/* Track background with tick marks */}
+                  <div className="absolute left-0 right-0 h-0.5 bg-neutral-700 rounded-full">
+                    {[0, 25, 50, 75, 100].map((tick) => (
+                      <div
+                        key={tick}
+                        className="absolute top-1/2 -translate-y-1/2 w-0.5 h-3 bg-white/10"
+                        style={{ left: `${tick}%` }}
+                      />
+                    ))}
+                    
+                    {/* Progress bar */}
+                    <div 
+                      className="absolute top-0 left-0 h-full bg-emerald-400/10 rounded-full transition-all duration-700 ease-out"
+                      style={{ width: `${percentage}%` }}
                     />
-                  ))}
+                  </div>
                   
-                  {/* Progress bar */}
+                  {/* Marker */}
                   <div 
-                    className="absolute top-0 left-0 h-full bg-emerald-400/10 rounded-full transition-all duration-700 ease-out"
-                    style={{ width: `${percentage}%` }}
+                    className="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-emerald-400 rounded-full transition-all duration-700 ease-out z-10"
+                    style={{ 
+                      left: `${percentage}%`,
+                      transform: 'translate(-50%, -50%)',
+                      animation: `
+                        marker-glow-${index + 1} 2s ease-in-out infinite,
+                        fade-in 0.5s ease-out forwards
+                      `,
+                      animationDelay: `${index * 0.1}s`
+                    }}
                   />
                 </div>
-                
-                {/* Marker */}
-                <div 
-                  className="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-emerald-400 rounded-full transition-all duration-700 ease-out z-10"
-                  style={{ 
-                    left: `${percentage}%`,
-                    transform: 'translate(-50%, -50%)',
-                    animation: `
-                      marker-glow-${index + 1} 2s ease-in-out infinite,
-                      fade-in 0.5s ease-out forwards
-                    `,
-                    animationDelay: `${index * 0.1}s`
-                  }}
-                />
               </div>
             </div>
           );
