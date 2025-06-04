@@ -92,6 +92,12 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
                     />
                   ))}
                   
+                  {/* Add a subtle glow effect for the active region */}
+                  <div 
+                    className="absolute top-0 left-0 h-full bg-emerald-400/10 rounded-full transition-all duration-500 ease-out"
+                    style={{ width: `${percentage}%` }}
+                  />
+                  
                   {/* Indicator dot with smooth transition */}
                   <div 
                     className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/20 ring-4 ring-emerald-400/20 transition-all duration-500 ease-out"
@@ -99,12 +105,6 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
                       left: `${percentage}%`,
                       transform: `translate(-50%, -50%) scale(${score === 3 ? '0.8' : '1'})`
                     }}
-                  />
-
-                  {/* Add a subtle glow effect for the active region */}
-                  <div 
-                    className="absolute top-0 left-0 h-full bg-emerald-400/10 rounded-full transition-all duration-500 ease-out"
-                    style={{ width: `${percentage}%` }}
                   />
                 </div>
 
