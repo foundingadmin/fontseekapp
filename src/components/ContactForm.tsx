@@ -70,7 +70,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport, onSh
 
   return (
     <div className="mt-24 mb-16 glass-card rounded-[32px] overflow-hidden">
-      <div className="px-12 py-16 max-w-3xl mx-auto">
+      <div className="px-24 py-32 max-w-3xl mx-auto">
         <div 
           ref={logoRef}
           className={`transition-all duration-1000 transform ${
@@ -102,7 +102,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport, onSh
         <form 
           ref={formRef}
           onSubmit={handleSubmit} 
-          className="space-y-6"
+          className="space-y-6 max-w-[600px] mx-auto"
         >
           <input type="hidden" name="subject" value="FontSeek Consultation Request" />
           <input type="hidden" name="aesthetic" value={recommendations?.aestheticStyle || ''} />
