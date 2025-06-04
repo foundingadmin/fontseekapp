@@ -28,12 +28,12 @@ export const InfoPopup: React.FC<InfoPopupProps> = ({ onClose }) => {
 
       {/* Modal */}
       <div 
-        className={`fixed inset-0 z-[999] flex items-center justify-center transition-all duration-300 ${
+        className={`fixed inset-0 z-[999] flex items-center justify-center p-4 transition-all duration-300 ${
           isClosing ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
         }`}
       >
         <div 
-          className="relative w-full h-screen max-w-4xl glass-card shadow-2xl flex flex-col"
+          className="relative w-full h-screen max-w-3xl glass-card shadow-2xl flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="absolute top-6 right-6 z-10">
