@@ -70,7 +70,7 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
                 <h3 className="text-sm font-semibold">{trait.label}</h3>
                 <div className="group relative">
                   <Info className="w-4 h-4 text-white/40 hover:text-white/60 cursor-help" />
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-black/90 text-xs text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                  <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 px-3 py-2 bg-black/90 text-xs text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
                     {trait.description}
                   </div>
                 </div>
@@ -82,8 +82,8 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
                   <span>{trait.rightLabel}</span>
                 </div>
 
-                <div className="h-1.5 bg-neutral-700 rounded-full relative">
-                  {/* Add tick marks for visual reference */}
+                <div className="h-1.5 bg-neutral-700 rounded-full relative overflow-hidden">
+                  {/* Background tick marks */}
                   {[0, 25, 50, 75, 100].map((tick) => (
                     <div
                       key={tick}
@@ -92,18 +92,19 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
                     />
                   ))}
                   
-                  {/* Add a subtle glow effect for the active region */}
+                  {/* Animated progress bar */}
                   <div 
-                    className="absolute top-0 left-0 h-full bg-emerald-400/10 rounded-full transition-all duration-500 ease-out"
+                    className="absolute top-0 left-0 h-full bg-emerald-400/10 rounded-full transition-all duration-700 ease-out"
                     style={{ width: `${percentage}%` }}
                   />
                   
-                  {/* Indicator dot with smooth transition */}
+                  {/* Animated indicator dot */}
                   <div 
-                    className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/20 ring-4 ring-emerald-400/20 transition-all duration-500 ease-out"
+                    className="absolute top-1/2 w-3 h-3 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/20 ring-4 ring-emerald-400/20 transition-all duration-700 ease-out opacity-0 animate-fade-in"
                     style={{ 
                       left: `${percentage}%`,
-                      transform: `translate(-50%, -50%) scale(${score === 3 ? '0.8' : '1'})`
+                      transform: `translate(-50%, -50%) scale(${score === 3 ? '0.8' : '1'})`,
+                      animation: 'fade-in 0.5s ease-out forwards, slide-in 0.7s ease-out forwards'
                     }}
                   />
                 </div>
