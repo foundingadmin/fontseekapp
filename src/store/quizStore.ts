@@ -8,6 +8,7 @@ interface QuizStore {
   currentQuestion: number;
   answers: Record<number, 'A' | 'B'>;
   scores: UserScores | null;
+  visualScores: UserScores | null;
   recommendations: FontRecommendation | null;
   topTraits: string[];
   email: string | null;
@@ -25,6 +26,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
   currentQuestion: 1,
   answers: {},
   scores: null,
+  visualScores: null,
   recommendations: null,
   topTraits: [],
   email: null,
@@ -35,7 +37,6 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       answers: { ...state.answers, [questionNumber]: answer }
     }));
 
-    // Only calculate results if this is the last question
     if (questionNumber === quizQuestions.length) {
       get().calculateResults();
     } else {
@@ -56,6 +57,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       set({ 
         currentQuestion: current - 1,
         scores: null,
+        visualScores: null,
         recommendations: null,
         topTraits: []
       });
@@ -71,41 +73,56 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       era: 0,
       structure: 0
     };
+    
+    const visualScores: UserScores = {
+      tone: 0,
+      energy: 0,
+      design: 0,
+      era: 0,
+      structure: 0
+    };
 
-    // Calculate scores from answers
+    // Calculate trait counts for each axis
+    const traitCounts: Record<string, { A: number, B: number }> = {
+      tone: { A: 0, B: 0 },
+      energy: { A: 0, B: 0 },
+      design: { A: 0, B: 0 },
+      era: { A: 0, B: 0 },
+      structure: { A: 0, B: 0 }
+    };
+
+    // Count answers for each trait
     Object.entries(answers).forEach(([questionNum, answer]) => {
       const question = quizQuestions[parseInt(questionNum) - 1];
-      const score = answer === 'A' ? question.optionAScore : question.optionBScore;
+      const trait = question.traitAxis.toLowerCase();
+      traitCounts[trait][answer]++;
+    });
+
+    // Calculate scores for aesthetic matching (binary)
+    Object.entries(traitCounts).forEach(([trait, count]) => {
+      const total = count.A + count.B;
+      scores[trait as keyof UserScores] = count.B > count.A ? 5 : 1;
       
-      switch (question.traitAxis.toLowerCase()) {
-        case 'tone':
-          scores.tone = score;
-          break;
-        case 'energy':
-          scores.energy = score;
-          break;
-        case 'design':
-          scores.design = score;
-          break;
-        case 'era':
-          scores.era = score;
-          break;
-        case 'structure':
-          scores.structure = score;
-          break;
-      }
+      // Calculate granular scores for visualization (1-5 scale)
+      const bPercentage = (count.B / total) * 100;
+      let visualScore = 1;
+      if (bPercentage >= 87.5) visualScore = 5;
+      else if (bPercentage >= 62.5) visualScore = 4;
+      else if (bPercentage >= 37.5) visualScore = 3;
+      else if (bPercentage >= 12.5) visualScore = 2;
+      visualScores[trait as keyof UserScores] = visualScore;
     });
 
     try {
       const recommendations = calculateFontRecommendations(scores);
       const topTraits = getTopTraits(scores);
       
-      set({ scores, recommendations, topTraits });
+      set({ scores, visualScores, recommendations, topTraits });
     } catch (error) {
       console.error('Error calculating recommendations:', error);
-      // Set default recommendations if calculation fails
       set({ 
         scores,
+        visualScores,
         recommendations: {
           aestheticStyle: 'Modern & Minimal',
           primary: fonts[0],
@@ -122,6 +139,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       currentQuestion: 1,
       answers: {},
       scores: null,
+      visualScores: null,
       recommendations: null,
       topTraits: []
     });
@@ -135,7 +153,6 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
   },
 
   skipToResults: () => {
-    // Fill in any unanswered questions with default 'A' answers
     const answers = { ...get().answers };
     for (let i = 1; i <= quizQuestions.length; i++) {
       if (!answers[i]) {

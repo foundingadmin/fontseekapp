@@ -1,6 +1,7 @@
 import React from 'react';
 import { Info } from 'lucide-react';
 import { UserScores } from '../types';
+import { useQuizStore } from '../store/quizStore';
 
 interface TraitScalesProps {
   scores: UserScores;
@@ -46,7 +47,11 @@ const traits: Record<keyof UserScores, TraitDefinition> = {
   }
 };
 
-export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
+export const TraitScales: React.FC<TraitScalesProps> = () => {
+  const visualScores = useQuizStore(state => state.visualScores);
+
+  if (!visualScores) return null;
+
   return (
     <div className="space-y-8">
       <div>
@@ -59,7 +64,7 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
       <div className="space-y-6">
         {(Object.keys(traits) as Array<keyof UserScores>).map((traitKey) => {
           const trait = traits[traitKey];
-          const score = scores[traitKey];
+          const score = visualScores[traitKey];
           
           // Calculate percentage with more granularity (1-5 scale to 0-100%)
           const percentage = ((score - 1) / 4) * 100;
