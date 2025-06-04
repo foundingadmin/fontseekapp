@@ -8,7 +8,7 @@ import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
 import { ContactForm } from './ContactForm';
-import { getDisplayName } from '../utils/aestheticStyles';
+import { getDisplayName, aestheticDescriptions } from '../utils/aestheticStyles';
 import clsx from 'clsx';
 
 export const QuizResults: React.FC = () => {
