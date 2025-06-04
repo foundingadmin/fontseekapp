@@ -84,7 +84,7 @@ export const IntroScreen: React.FC = () => {
       {/* Bottom gradient */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent z-10" />
       
-      <div className="relative z-10 min-h-screen flex items-center justify-center">
+      <div className="relative z-20 min-h-screen flex items-center justify-center">
         <div className="max-w-3xl mx-auto px-4 py-16 text-center">
           <a href="/" className="inline-block mb-12">
             <img 
