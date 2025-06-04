@@ -26,7 +26,7 @@ function App() {
     <div className="relative min-h-screen w-full text-white">
       {/* Fixed background layer */}
       <div className="fixed inset-0 bg-black">
-        <div className="absolute inset-0 animate-gradient opacity-20" />
+        <div className="absolute inset-0 animate-gradient opacity-10" />
         <img 
           src="/Wave-Black.svg" 
           alt="" 
