@@ -181,6 +181,15 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport, onSh
             </p>
           </div>
         </div>
+
+        <div className="mt-12 pt-8 border-t border-white/10 text-center">
+          <button
+            onClick={onShowInfo}
+            className="text-white/60 hover:text-white transition-colors text-sm"
+          >
+            About FontSeek
+          </button>
+        </div>
       </div>
     </div>
   );

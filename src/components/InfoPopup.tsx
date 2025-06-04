@@ -45,12 +45,12 @@ export const InfoPopup: React.FC<InfoPopupProps> = ({ onClose }) => {
 
         <div className="h-[80vh] overflow-y-auto custom-scrollbar">
           <div className="p-12">
-            <h2 className="text-5xl md:text-6xl font-bold text-white mb-12 tracking-[-0.02em] leading-[1.1]">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 tracking-[-0.02em] leading-[1.1]">
               Why we built FontSeek
             </h2>
 
-            <div className="space-y-8 text-xl md:text-2xl text-white/80 tracking-[-0.01em] leading-relaxed">
-              <p className="text-3xl md:text-4xl text-white font-medium tracking-[-0.02em]">
+            <div className="space-y-8 text-lg text-white/80 tracking-[-0.01em] leading-relaxed">
+              <p className="text-2xl md:text-3xl text-white font-medium tracking-[-0.02em]">
                 Most font tools start with how a font looks. We start instead with what your brand feels like.
               </p>
 
@@ -66,12 +66,12 @@ export const InfoPopup: React.FC<InfoPopupProps> = ({ onClose }) => {
                 We designed this quick, strategy-led tool that maps your brand's personality traits to fonts that align with your tone, energy, and structure. The result is ready-to-use-immediately free fonts that look right because they feel right.
               </p>
 
-              <p className="text-3xl md:text-4xl text-white font-medium tracking-[-0.02em]">
+              <p className="text-2xl md:text-3xl text-white font-medium tracking-[-0.02em]">
                 FontSeek doesn't just suggest fonts. It helps bring your website and your brand to life with purpose.
               </p>
 
               <div className="pt-12 mt-12 border-t border-white/10">
-                <p className="text-white/60 mb-8 text-xl">
+                <p className="text-white/60 mb-8 text-base">
                   Need help bringing your website and brand to life with purpose?
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">

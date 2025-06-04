@@ -5,7 +5,7 @@ import { QuizResults } from './components/QuizResults';
 import { QuizProgress } from './components/QuizProgress';
 import { InfoPopup } from './components/InfoPopup';
 import { useQuizStore } from './store/quizStore';
-import { Info, Heart } from 'lucide-react';
+import { Heart } from 'lucide-react';
 
 function App() {
   const { currentQuestion, answers, skipToResults, hasStarted } = useQuizStore();
@@ -42,15 +42,6 @@ function App() {
 
       {/* Scrollable content layer */}
       <div className="relative z-10">
-        {/* Info Button */}
-        <button
-          onClick={() => setShowInfoPopup(true)}
-          className="fixed top-8 right-8 z-[60] p-2 rounded-full glass-card hover:bg-white/10 transition-all duration-300 hover:scale-110 group"
-          aria-label="About FontSeek"
-        >
-          <Info className="w-5 h-5 text-white/60 group-hover:text-white transition-colors duration-300" />
-        </button>
-
         <main className="min-h-screen pb-24">
           {!hasStarted ? (
             <IntroScreen />
