@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Info } from 'lucide-react';
 import { useQuizStore } from '../store/quizStore';
 import emailjs from '@emailjs/browser';
 import brandmarkLogo from '/Founding-v1-Brandmark-white.svg';
@@ -70,7 +70,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
   };
 
   return (
-    <div className="mt-24 mb-16 glass-card rounded-xl overflow-hidden">
+    <div className="mt-24 mb-16 glass-card rounded-[32px] overflow-hidden">
       <div className="px-12 py-16 max-w-3xl mx-auto">
         <div 
           ref={logoRef}
@@ -117,7 +117,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
               name="name"
               placeholder="Your Name"
               required
-              className="w-full px-4 py-3 bg-[#2A2D36] border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+              className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-full text-white placeholder-white/40 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
             />
           </div>
 
@@ -129,7 +129,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-3 bg-[#2A2D36] border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+              className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-full text-white placeholder-white/40 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
             />
           </div>
 
@@ -139,14 +139,14 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
               placeholder="Tell us about your brand and what you'd like help with..."
               required
               rows={4}
-              className="w-full px-4 py-3 bg-[#2A2D36] border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 resize-none"
+              className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-[24px] text-white placeholder-white/40 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 resize-none"
             />
           </div>
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-500 text-black font-semibold rounded-lg hover:bg-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-emerald-500 text-black font-semibold rounded-full hover:bg-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? 'Sending...' : 'Send Message'}
             <ArrowRight className="w-5 h-5" />
