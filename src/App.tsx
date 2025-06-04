@@ -23,32 +23,53 @@ function App() {
   }, [skipToResults]);
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-gray-900 to-black text-white overflow-x-hidden relative">
-      <InfoPopup />
-      <main className="min-h-screen">
-        {!hasStarted ? (
-          <IntroScreen />
-        ) : (
-          <div className="pt-24 pb-16">
-            <div className="container mx-auto px-4">
-              {!isComplete && <QuizProgress />}
-              {isComplete ? <QuizResults /> : <QuizQuestion />}
+    <div className="relative min-h-screen w-full text-white">
+      {/* Fixed background layer */}
+      <div className="fixed inset-0 bg-black">
+        <div className="absolute inset-0 animate-gradient opacity-10" />
+        <img 
+          src="/Wave-Black.svg" 
+          alt="" 
+          className="absolute inset-0 w-full h-full object-cover opacity-80"
+          style={{ mixBlendMode: 'normal' }}
+        />
+        
+        {/* Gradient overlays */}
+        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-black to-transparent" />
+      </div>
+
+      {/* Scrollable content layer */}
+      <div className="relative z-10">
+        <InfoPopup />
+        
+        <main className="min-h-screen pb-24">
+          {!hasStarted ? (
+            <IntroScreen />
+          ) : (
+            <div className="pt-24">
+              <div className="container mx-auto px-4">
+                {!isComplete && <QuizProgress />}
+                {isComplete ? <QuizResults /> : <QuizQuestion />}
+              </div>
             </div>
+          )}
+        </main>
+
+        {/* Fixed footer */}
+        <footer className="fixed bottom-0 left-0 right-0 z-30 py-6 px-4 bg-gradient-to-t from-black via-black/95 to-transparent">
+          <div className="container mx-auto flex items-center justify-center text-sm text-white/60">
+            Designed & Built with <Heart className="w-4 h-4 mx-2 text-emerald-500" /> by{' '}
+            <a 
+              href="https://foundingcreative.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="ml-2 text-white hover:text-emerald-400 transition-colors"
+            >
+              Founding Creative
+            </a>
           </div>
-        )}
-      </main>
-      <div className={`py-4 ${!hasStarted ? 'absolute bottom-0 left-0 right-0' : ''}`}>
-        <div className="container mx-auto px-4 flex items-center justify-center text-sm text-white/60">
-          Built with <Heart className="w-4 h-4 mx-2 text-emerald-500" /> by{' '}
-          <a 
-            href="https://foundingcreative.com" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="ml-2 text-white hover:text-emerald-400 transition-colors"
-          >
-            Founding Creative
-          </a>
-        </div>
+        </footer>
       </div>
     </div>
   );
