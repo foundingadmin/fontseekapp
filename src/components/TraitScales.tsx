@@ -60,6 +60,8 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
         {(Object.keys(traits) as Array<keyof UserScores>).map((traitKey) => {
           const trait = traits[traitKey];
           const score = scores[traitKey];
+          
+          // Calculate percentage with more granularity (1-5 scale to 0-100%)
           const percentage = ((score - 1) / 4) * 100;
 
           return (
@@ -81,6 +83,7 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
                 </div>
 
                 <div className="h-1.5 bg-neutral-700 rounded-full relative">
+                  {/* Add tick marks for visual reference */}
                   {[0, 25, 50, 75, 100].map((tick) => (
                     <div
                       key={tick}
@@ -89,9 +92,19 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
                     />
                   ))}
                   
+                  {/* Add a subtle glow effect for the active region */}
                   <div 
-                    className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/20 ring-4 ring-emerald-400/20 transition-all duration-500"
-                    style={{ left: `${percentage}%` }}
+                    className="absolute top-0 left-0 h-full bg-emerald-400/10 rounded-full transition-all duration-500 ease-out"
+                    style={{ width: `${percentage}%` }}
+                  />
+                  
+                  {/* Indicator dot with smooth transition */}
+                  <div 
+                    className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/20 ring-4 ring-emerald-400/20 transition-all duration-500 ease-out"
+                    style={{ 
+                      left: `${percentage}%`,
+                      transform: `translate(-50%, -50%) scale(${score === 3 ? '0.8' : '1'})`
+                    }}
                   />
                 </div>
               </div>

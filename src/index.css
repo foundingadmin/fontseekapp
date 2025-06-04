@@ -34,3 +34,22 @@
     background-color: rgba(255, 255, 255, 0.3);
   }
 }
+
+.animate-gradient {
+  background: linear-gradient(-45deg, #43DA7A, #38BDF8, #1C1F26, #43DA7A);
+  background-size: 400% 400%;
+  animation: gradient 10s ease infinite;
+  opacity: 0.15;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
