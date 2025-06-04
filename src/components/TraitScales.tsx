@@ -65,8 +65,6 @@ export const TraitScales: React.FC<TraitScalesProps> = () => {
         {(Object.keys(traits) as Array<keyof UserScores>).map((traitKey) => {
           const trait = traits[traitKey];
           const score = visualScores[traitKey];
-          
-          // Calculate percentage with more granularity (1-5 scale to 0-100%)
           const percentage = ((score - 1) / 4) * 100;
 
           return (
@@ -87,12 +85,12 @@ export const TraitScales: React.FC<TraitScalesProps> = () => {
                   <span>{trait.rightLabel}</span>
                 </div>
 
-                <div className="h-1.5 bg-neutral-700 rounded-full relative overflow-hidden">
+                <div className="h-2 bg-neutral-700 rounded-full relative overflow-hidden">
                   {/* Background tick marks */}
                   {[0, 25, 50, 75, 100].map((tick) => (
                     <div
                       key={tick}
-                      className="absolute top-1/2 -translate-y-1/2 w-0.5 h-2.5 bg-white/10"
+                      className="absolute top-0 bottom-0 w-0.5 bg-white/10"
                       style={{ left: `${tick}%` }}
                     />
                   ))}
@@ -105,13 +103,29 @@ export const TraitScales: React.FC<TraitScalesProps> = () => {
                   
                   {/* Animated indicator dot */}
                   <div 
-                    className="absolute top-1/2 w-3 h-3 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/20 ring-4 ring-emerald-400/20 transition-all duration-700 ease-out opacity-0 animate-fade-in"
+                    className="absolute top-1/2 w-4 h-4 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/20 ring-4 ring-emerald-400/20 transition-all duration-700 ease-out opacity-0 animate-fade-in"
                     style={{ 
                       left: `${percentage}%`,
-                      transform: `translate(-50%, -50%) scale(${score === 3 ? '0.8' : '1'})`,
+                      transform: `translate(-50%, -50%) scale(${score === 3 ? '0.9' : '1'})`,
                       animation: 'fade-in 0.5s ease-out forwards, slide-in 0.7s ease-out forwards'
                     }}
                   />
+                </div>
+
+                {/* Score indicators */}
+                <div className="flex justify-between mt-1 px-0.5">
+                  {[1, 2, 3, 4, 5].map((value) => (
+                    <div
+                      key={value}
+                      className={`text-[10px] font-medium ${
+                        value === score 
+                          ? 'text-emerald-400' 
+                          : 'text-white/40'
+                      }`}
+                    >
+                      {value}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
