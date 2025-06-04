@@ -3,7 +3,6 @@ import { IntroScreen } from './components/IntroScreen';
 import { QuizQuestion } from './components/QuizQuestion';
 import { QuizResults } from './components/QuizResults';
 import { QuizProgress } from './components/QuizProgress';
-import { InfoPopup } from './components/InfoPopup';
 import { useQuizStore } from './store/quizStore';
 import { Heart } from 'lucide-react';
 
@@ -45,8 +44,6 @@ function App() {
 
       {/* Scrollable content layer */}
       <div className="relative z-10">
-        <InfoPopup />
-        
         <main className="min-h-screen pb-24">
           {!hasStarted ? (
             <IntroScreen />
@@ -61,9 +58,9 @@ function App() {
         </main>
 
         {/* Fixed footer */}
-        <footer className="fixed bottom-0 left-0 right-0 z-30 py-6 px-4">
-          <div className="glass-card py-6">
-            <div className="container mx-auto flex items-center justify-center text-sm text-white/60">
+        <footer className="fixed bottom-0 left-0 right-0 z-30">
+          <div className="bg-black/95 backdrop-blur-sm border-t border-white/10">
+            <div className="container mx-auto flex items-center justify-center py-6 px-4 text-sm text-white/60">
               Designed & Built with <Heart className="w-4 h-4 mx-2 text-emerald-500" /> by{' '}
               <a 
                 href="https://foundingcreative.com" 

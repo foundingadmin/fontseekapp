@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { useQuizStore } from '../store/quizStore';
 import emailjs from '@emailjs/browser';
 import brandmarkLogo from '/Founding-v1-Brandmark-white.svg';
+import { InfoPopup } from './InfoPopup';
 
 interface ContactFormProps {
   onDownloadReport: () => void;
@@ -12,13 +13,13 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [isLogoVisible, setIsLogoVisible] = useState(false);
+  const [showInfoPopup, setShowInfoPopup] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const initialEmail = useQuizStore(state => state.email);
   const [email, setEmail] = useState(initialEmail || '');
   const scores = useQuizStore(state => state.scores);
   const recommendations = useQuizStore(state => state.recommendations);
-  const [showInfoPopup, setShowInfoPopup] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(

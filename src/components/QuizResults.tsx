@@ -292,8 +292,6 @@ export const QuizResults: React.FC = () => {
 
   return (
     <div className="w-full max-w-3xl mx-auto">
-      {showDebug && <DebugInfo />}
-
       {showFallbackMessage && (
         <div className="mb-8 px-4 py-3 bg-white/5 rounded-lg text-white/60 text-sm text-center">
           We had a little trouble finding a perfect match for your font style, so we've shown the closest match instead.
@@ -303,18 +301,18 @@ export const QuizResults: React.FC = () => {
       <div className="flex flex-row items-center justify-between gap-4 mb-8">
         <button
           onClick={resetQuiz}
-          className="flex items-center justify-center gap-2 px-6 py-3 rounded-full glass-card text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/10 transition-all duration-300 group"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full glass-card text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/10 transition-all duration-300 group whitespace-nowrap"
         >
           <RefreshCw className="w-4 h-4 text-emerald-400 transition-transform group-hover:rotate-180 duration-500" />
-          <span>Retake Quiz</span>
+          <span className="text-sm">Retake</span>
         </button>
         
         <button
           onClick={handleDownloadReport}
-          className="flex items-center justify-center gap-2 px-6 py-3 rounded-full glass-card text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/10 transition-all duration-300 group"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full glass-card text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/10 transition-all duration-300 group whitespace-nowrap"
         >
           <Share2 className="w-4 h-4 text-emerald-400 transition-transform group-hover:translate-x-1 duration-300" />
-          <span>Download Report</span>
+          <span className="text-sm">Download</span>
         </button>
       </div>
 
