@@ -101,31 +101,15 @@ export const TraitScales: React.FC<TraitScalesProps> = () => {
                     style={{ width: `${percentage}%` }}
                   />
                   
-                  {/* Animated indicator dot */}
+                  {/* Animated indicator dot with glow effect */}
                   <div 
-                    className="absolute top-1/2 w-4 h-4 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/20 ring-4 ring-emerald-400/20 transition-all duration-700 ease-out opacity-0 animate-fade-in"
+                    className="absolute top-1/2 w-6 h-6 bg-emerald-400 rounded-full shadow-[0_0_15px_rgba(67,218,122,0.5)] transition-all duration-700 ease-out opacity-0 animate-fade-in"
                     style={{ 
                       left: `${percentage}%`,
                       transform: `translate(-50%, -50%) scale(${score === 3 ? '0.9' : '1'})`,
                       animation: 'fade-in 0.5s ease-out forwards, slide-in 0.7s ease-out forwards'
                     }}
                   />
-                </div>
-
-                {/* Score indicators */}
-                <div className="flex justify-between mt-1 px-0.5">
-                  {[1, 2, 3, 4, 5].map((value) => (
-                    <div
-                      key={value}
-                      className={`text-[10px] font-medium ${
-                        value === score 
-                          ? 'text-emerald-400' 
-                          : 'text-white/40'
-                      }`}
-                    >
-                      {value}
-                    </div>
-                  ))}
                 </div>
               </div>
             </div>

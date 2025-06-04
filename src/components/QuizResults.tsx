@@ -61,7 +61,7 @@ function loadGoogleFont(fontName: string) {
 }
 
 export const QuizResults: React.FC = () => {
-  const { scores, recommendations, calculateResults, resetQuiz } = useQuizStore();
+  const { scores, visualScores, recommendations, calculateResults, resetQuiz } = useQuizStore();
   const [showLabels, setShowLabels] = useState(false);
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -315,14 +315,25 @@ export const QuizResults: React.FC = () => {
   };
 
   const DebugInfo = () => {
-    if (!scores) return null;
+    if (!scores || !visualScores) return null;
     
     return (
       <div className="mb-8 p-4 bg-white/5 rounded-lg text-sm font-mono">
         <h3 className="text-emerald-400 mb-2">Debug Information</h3>
-        <pre className="text-white/80 overflow-x-auto">
-          {JSON.stringify(scores, null, 2)}
-        </pre>
+        <div className="space-y-4">
+          <div>
+            <h4 className="text-white/60 mb-1">Aesthetic Matching Scores:</h4>
+            <pre className="text-white/80 overflow-x-auto">
+              {JSON.stringify(scores, null, 2)}
+            </pre>
+          </div>
+          <div>
+            <h4 className="text-white/60 mb-1">Visual Graph Scores:</h4>
+            <pre className="text-white/80 overflow-x-auto">
+              {JSON.stringify(visualScores, null, 2)}
+            </pre>
+          </div>
+        </div>
       </div>
     );
   };
