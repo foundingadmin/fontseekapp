@@ -17,7 +17,7 @@ export const InfoPopup: React.FC = () => {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed top-4 right-4 z-50 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 hover:scale-110"
+        className="fixed top-4 right-4 z-[60] p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 hover:scale-110"
         aria-label="About FontSeek"
       >
         <Info className="w-5 h-5 text-white" />
@@ -25,10 +25,10 @@ export const InfoPopup: React.FC = () => {
 
       {isOpen && (
         <div 
-          className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ${
+          className={`fixed inset-0 z-[70] flex items-center justify-center p-4 transition-all duration-300 ${
             isClosing 
               ? 'bg-black/0 backdrop-blur-none' 
-              : 'bg-black/60 backdrop-blur-xl'
+              : 'bg-black/80 backdrop-blur-sm'
           }`}
         >
           <div 
@@ -106,7 +106,7 @@ export const InfoPopup: React.FC = () => {
 
       {isOpen && (
         <div
-          className={`fixed inset-0 z-40 transition-opacity duration-200 ${
+          className={`fixed inset-0 z-[65] transition-opacity duration-200 ${
             isClosing ? 'opacity-0' : 'opacity-100'
           }`}
           onClick={handleClose}
