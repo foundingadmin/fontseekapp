@@ -94,7 +94,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport, onSh
         
         <div className="max-w-[515px] mx-auto">
           <h2 className="text-xl font-semibold text-white mb-2 text-center">
-            Love your font match? Let's bring your brand to life online.
+            Ready to bring your brand font to life?
           </h2>
           <p className="text-white/60 text-center mb-8 text-base">
             Let's explore how to bring your brand's unique personality to life through a strategic, conversion-focused website design.
