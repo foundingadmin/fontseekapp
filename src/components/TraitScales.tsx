@@ -107,11 +107,6 @@ export const TraitScales: React.FC<TraitScalesProps> = ({ scores }) => {
                     }}
                   />
                 </div>
-
-                {/* Add numerical indicator */}
-                <div className="absolute -right-6 top-1/2 -translate-y-1/2 text-xs text-white/40">
-                  {score}
-                </div>
               </div>
             </div>
           );
