@@ -9,6 +9,7 @@ import { Heart } from 'lucide-react';
 
 function App() {
   const { currentQuestion, answers, skipToResults, hasStarted } = useQuizStore();
+  const [showInfoPopup, setShowInfoPopup] = React.useState(false);
   const isComplete = Object.keys(answers).length === 10;
 
   useEffect(() => {
@@ -41,36 +42,43 @@ function App() {
 
       {/* Scrollable content layer */}
       <div className="relative z-10">
-        <InfoPopup />
-        
         <main className="min-h-screen pb-24">
           {!hasStarted ? (
             <IntroScreen />
           ) : (
-            <div className="pt-24">
+            <div className={isComplete ? '' : 'pt-24'}>
               <div className="container mx-auto px-4">
                 {!isComplete && <QuizProgress />}
-                {isComplete ? <QuizResults /> : <QuizQuestion />}
+                {isComplete ? (
+                  <QuizResults onShowInfo={() => setShowInfoPopup(true)} />
+                ) : (
+                  <QuizQuestion />
+                )}
               </div>
             </div>
           )}
         </main>
 
         {/* Fixed footer */}
-        <footer className="fixed bottom-0 left-0 right-0 z-30 py-6 px-4 bg-gradient-to-t from-black via-black/95 to-transparent">
-          <div className="container mx-auto flex items-center justify-center text-sm text-white/60">
-            Designed & Built with <Heart className="w-4 h-4 mx-2 text-emerald-500" /> by{' '}
-            <a 
-              href="https://foundingcreative.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="ml-2 text-white hover:text-emerald-400 transition-colors"
-            >
-              Founding Creative
-            </a>
+        <footer className="fixed bottom-0 left-0 right-0 z-30">
+          <div className="bg-black/95 backdrop-blur-sm border-t border-white/10">
+            <div className="container mx-auto flex items-center justify-center py-6 px-4 text-sm text-white/60">
+              Designed & Built with <Heart className="w-4 h-4 mx-2 text-emerald-500" /> by{' '}
+              <a 
+                href="https://foundingcreative.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="ml-2 text-white hover:text-emerald-400 transition-colors"
+              >
+                Founding Creative
+              </a>
+            </div>
           </div>
         </footer>
       </div>
+
+      {/* Info Popup */}
+      {showInfoPopup && <InfoPopup onClose={() => setShowInfoPopup(false)} />}
     </div>
   );
 }

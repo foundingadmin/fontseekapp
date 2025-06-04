@@ -1,48 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuizStore } from '../store/quizStore';
 import { quizQuestions } from '../data/quiz';
-import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon } from 'lucide-react';
+import { RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon, ArrowRight } from 'lucide-react';
 import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
 import { ContactForm } from './ContactForm';
 import { getDisplayName } from '../utils/aestheticStyles';
+import { aestheticDescriptions } from '../utils/aestheticStyles';
 import clsx from 'clsx';
-
-const aestheticDescriptions: Record<string, { emoji: string; description: string }> = {
-  'Bold & Expressive': {
-    emoji: '🧃',
-    description: "Your brand match reflects a personality that's bold, expressive, and packed with energy. This aesthetic thrives on making statements—ideal for brands that want to stand out, charm audiences, or inject a sense of fun into their communications."
-  },
-  'Warm & Approachable': {
-    emoji: '🧠',
-    description: 'This match reflects a balanced tone—friendly, professional, and adaptable. These fonts work beautifully for approachable brands that still need to be taken seriously. Think clarity with a touch of warmth.'
-  },
-  'Modern & Minimal': {
-    emoji: '🛰',
-    description: 'Your brand values precision, clarity, and modernity. These fonts are minimalist, clean, and calculated—ideal for tech-forward, future-facing, or design-savvy organizations.'
-  },
-  'Friendly & Playful': {
-    emoji: '🫧',
-    description: 'Friendly, casual, and fresh. These fonts are approachable and informal without being childish. This is the right pick for brands that want to feel helpful, human, and easygoing.'
-  },
-  'Universal & Neutral': {
-    emoji: '🧰',
-    description: 'Your brand values simplicity, speed, or versatility across platforms. This approach means no-frills performance and familiarity—ideal for internal apps, OS-native tools, or lightweight branding.'
-  },
-  'Classic & Credible': {
-    emoji: '📚',
-    description: 'A modern classic. This match tells us your brand appreciates structure and elegance but isn\'t stuck in the past. These fonts blend sharpness with sophistication—great for editorial, education, or premium service brands.'
-  },
-  'Elegant & Literary': {
-    emoji: '📖',
-    description: 'You lean into tradition, trust, and storytelling. This style fits brands with heritage, depth, and a classic sense of professionalism. Ideal for long-form content and legacy vibes.'
-  },
-  'Structured & Professional': {
-    emoji: '🗂',
-    description: 'You favor practicality and structure with just enough personality to keep things interesting. This timeless style is perfect for brands that want to feel grounded, neutral, and built to last.'
-  }
-};
 
 const traitLabels = {
   tone: { low: "Formal", high: "Casual" },
@@ -52,21 +18,16 @@ const traitLabels = {
   structure: { low: "Organic", high: "Geometric" }
 };
 
-function loadGoogleFont(fontName: string) {
-  const formatted = fontName.replace(/ /g, '+');
-  const link = document.createElement('link');
-  link.href = `https://fonts.googleapis.com/css2?family=${formatted}:wght@400;500;700&display=swap`;
-  link.rel = 'stylesheet';
-  document.head.appendChild(link);
+interface QuizResultsProps {
+  onShowInfo: () => void;
 }
 
-export const QuizResults: React.FC = () => {
+export const QuizResults: React.FC<QuizResultsProps> = ({ onShowInfo }) => {
   const { scores, visualScores, recommendations, calculateResults, resetQuiz } = useQuizStore();
   const [showLabels, setShowLabels] = useState(false);
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true); // Default to dark mode
   const [showFallbackMessage, setShowFallbackMessage] = useState(false);
-  const [showDebug, setShowDebug] = useState(false);
 
   useEffect(() => {
     if (!scores && !recommendations) {
@@ -76,6 +37,14 @@ export const QuizResults: React.FC = () => {
 
   useEffect(() => {
     if (recommendations) {
+      const loadGoogleFont = (fontName: string) => {
+        const formatted = fontName.replace(/ /g, '+');
+        const link = document.createElement('link');
+        link.href = `https://fonts.googleapis.com/css2?family=${formatted}:wght@400;500;700&display=swap`;
+        link.rel = 'stylesheet';
+        document.head.appendChild(link);
+      };
+
       loadGoogleFont(recommendations.primary.name);
       loadGoogleFont(recommendations.secondary.name);
       loadGoogleFont(recommendations.tertiary.name);
@@ -145,7 +114,7 @@ export const QuizResults: React.FC = () => {
     font: typeof recommendations.primary;
     index: number;
   }) => {
-    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [isDarkMode, setIsDarkMode] = useState(true); // Default to dark mode
     const [showLabels, setShowLabels] = useState(false);
     const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
 
@@ -169,8 +138,8 @@ export const QuizResults: React.FC = () => {
     );
 
     return (
-      <div className="mb-8 bg-[#1C1F26] rounded-xl overflow-hidden shadow-xl">
-        <div className="px-6 py-5 border-b border-[#2A2D36]">
+      <div className="mb-8 glass-card rounded-xl overflow-hidden shadow-xl">
+        <div className="px-6 py-5 border-b border-white/10">
           <div>
             <p className="text-2xl font-bold text-white tracking-[-0.02em]">{font.name}</p>
             <p className="text-sm text-white/60 mt-2 max-w-xl tracking-[-0.02em]">
@@ -182,7 +151,7 @@ export const QuizResults: React.FC = () => {
         <div className="p-4 md:p-8">
           <div className={clsx(
             'rounded-lg shadow-lg p-4 md:p-8 transition-colors duration-300',
-            isDarkMode ? 'bg-neutral-900' : 'bg-white'
+            isDarkMode ? 'bg-black' : 'bg-white'
           )}>
             <div className="flex flex-col">
               <div className="flex items-center gap-2 mb-8">
@@ -191,7 +160,7 @@ export const QuizResults: React.FC = () => {
                   className={clsx(
                     'flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-sm',
                     isDarkMode 
-                      ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                      ? 'bg-white/5 text-white hover:bg-white/10' 
                       : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
                   )}
                 >
@@ -203,7 +172,7 @@ export const QuizResults: React.FC = () => {
                   className={clsx(
                     'flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-sm',
                     isDarkMode 
-                      ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                      ? 'bg-white/5 text-white hover:bg-white/10' 
                       : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
                   )}
                 >
@@ -215,7 +184,7 @@ export const QuizResults: React.FC = () => {
                   className={clsx(
                     'flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-sm',
                     isDarkMode 
-                      ? 'bg-neutral-800 text-white hover:bg-neutral-700' 
+                      ? 'bg-white/5 text-white hover:bg-white/10' 
                       : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
                   )}
                 >
@@ -296,7 +265,7 @@ export const QuizResults: React.FC = () => {
           </div>
         </div>
 
-        <div className="px-6 py-5 border-t border-[#2A2D36]">
+        <div className="px-6 py-5 border-t border-white/10">
           <h3 className="text-lg font-semibold mb-2 text-white tracking-[-0.02em]">Get this free font</h3>
           <p className="text-white/80 text-sm mb-4 tracking-[-0.02em]">
             Install it to your computer or embed it on your website in seconds.
@@ -314,30 +283,6 @@ export const QuizResults: React.FC = () => {
     );
   };
 
-  const DebugInfo = () => {
-    if (!scores || !visualScores) return null;
-    
-    return (
-      <div className="mb-8 p-4 bg-white/5 rounded-lg text-sm font-mono">
-        <h3 className="text-emerald-400 mb-2">Debug Information</h3>
-        <div className="space-y-4">
-          <div>
-            <h4 className="text-white/60 mb-1">Aesthetic Matching Scores:</h4>
-            <pre className="text-white/80 overflow-x-auto">
-              {JSON.stringify(scores, null, 2)}
-            </pre>
-          </div>
-          <div>
-            <h4 className="text-white/60 mb-1">Visual Graph Scores:</h4>
-            <pre className="text-white/80 overflow-x-auto">
-              {JSON.stringify(visualScores, null, 2)}
-            </pre>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   if (!recommendations || !scores) {
     return (
       <div className="flex items-center justify-center">
@@ -349,30 +294,28 @@ export const QuizResults: React.FC = () => {
   const displayName = getDisplayName(recommendations.aestheticStyle);
 
   return (
-    <div className="w-full max-w-3xl mx-auto">
-      {showDebug && <DebugInfo />}
-
+    <div className="w-full max-w-3xl mx-auto pt-6">
       {showFallbackMessage && (
         <div className="mb-8 px-4 py-3 bg-white/5 rounded-lg text-white/60 text-sm text-center">
           We had a little trouble finding a perfect match for your font style, so we've shown the closest match instead.
         </div>
       )}
       
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4 mb-8">
+      <div className="flex flex-row items-center justify-between gap-4 mb-8">
         <button
           onClick={resetQuiz}
-          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 text-black font-medium hover:bg-emerald-400 transition-colors w-full md:w-auto"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full glass-card text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/10 transition-all duration-300 group whitespace-nowrap"
         >
-          <RefreshCw className="w-4 h-4" />
-          Retake Quiz
+          <RefreshCw className="w-4 h-4 text-emerald-400 transition-transform group-hover:rotate-180 duration-500" />
+          <span className="text-sm">Retake</span>
         </button>
         
         <button
           onClick={handleDownloadReport}
-          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors w-full md:w-auto"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full glass-card text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/10 transition-all duration-300 group whitespace-nowrap"
         >
-          <Share2 className="w-4 h-4" />
-          Download Report
+          <Share2 className="w-4 h-4 text-emerald-400 transition-transform group-hover:translate-x-1 duration-300" />
+          <span className="text-sm">Download</span>
         </button>
       </div>
 
@@ -400,7 +343,7 @@ export const QuizResults: React.FC = () => {
       <FontPreviewCard font={recommendations.secondary} index={1} />
       <FontPreviewCard font={recommendations.tertiary} index={2} />
 
-      <ContactForm onDownloadReport={handleDownloadReport} />
+      <ContactForm onDownloadReport={handleDownloadReport} onShowInfo={onShowInfo} />
     </div>
   );
 };
