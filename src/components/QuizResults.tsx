@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useQuizStore } from '../store/quizStore';
 import { quizQuestions } from '../data/quiz';
-import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon } from 'lucide-react';
+import { ArrowRight, RefreshCw, Share2, Eye, EyeOff, Shuffle, Sun, Moon, Bug } from 'lucide-react';
 import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
@@ -66,6 +66,7 @@ export const QuizResults: React.FC = () => {
   const [currentCopyPack, setCurrentCopyPack] = useState<CopyPack>(copyPacks[0]);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showFallbackMessage, setShowFallbackMessage] = useState(false);
+  const [showDebug, setShowDebug] = useState(false);
 
   useEffect(() => {
     if (!scores && !recommendations) {
@@ -313,6 +314,19 @@ export const QuizResults: React.FC = () => {
     );
   };
 
+  const DebugInfo = () => {
+    if (!scores) return null;
+    
+    return (
+      <div className="mb-8 p-4 bg-white/5 rounded-lg text-sm font-mono">
+        <h3 className="text-emerald-400 mb-2">Debug Information</h3>
+        <pre className="text-white/80 overflow-x-auto">
+          {JSON.stringify(scores, null, 2)}
+        </pre>
+      </div>
+    );
+  };
+
   if (!recommendations || !scores) {
     return (
       <div className="flex items-center justify-center">
@@ -325,6 +339,18 @@ export const QuizResults: React.FC = () => {
 
   return (
     <div className="w-full max-w-3xl mx-auto">
+      <div className="relative">
+        <button
+          onClick={() => setShowDebug(!showDebug)}
+          className="absolute -left-12 top-0 p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+          aria-label="Toggle debug info"
+        >
+          <Bug className="w-5 h-5 text-white/60" />
+        </button>
+      </div>
+
+      {showDebug && <DebugInfo />}
+
       {showFallbackMessage && (
         <div className="mb-8 px-4 py-3 bg-white/5 rounded-lg text-white/60 text-sm text-center">
           We had a little trouble finding a perfect match for your font style, so we've shown the closest match instead.
