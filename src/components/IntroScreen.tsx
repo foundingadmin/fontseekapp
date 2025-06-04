@@ -100,11 +100,11 @@ export const IntroScreen: React.FC = () => {
             </a>
             
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Choose fonts on what they say. Not how they look.
+              Discover the right font for your brand in 3 minutes
             </h1>
             
             <p className="text-xl text-white/80 mb-12">
-              FontSeek helps you find the perfect free and ready-to-use modern font to bring your brand's personality to life on your website and beyond. In under 3 minutes, get strategic recommendations, live web previews, and dev-ready code to elevate your site's design with intention.
+              Answer a few quick questions to uncover fonts that match your brand's personality. No design degree required.
             </p>
 
             <form onSubmit={handleSubmit} className="max-w-[400px] mx-auto">
