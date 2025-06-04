@@ -71,13 +71,23 @@ export const IntroScreen: React.FC = () => {
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
       <div 
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900 animate-gradient"
         style={{
-          backgroundImage: 'url(/Mograph-BG-C-1920x1080-optimized.gif)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundSize: '400% 400%',
+          animation: 'gradient 15s ease infinite',
         }}
       />
+      
+      <div className="absolute inset-0 opacity-20">
+        <img 
+          src="/Wave-Black.svg" 
+          alt="" 
+          className="w-full h-full object-cover animate-wave"
+          style={{
+            animation: 'wave 20s linear infinite',
+          }}
+        />
+      </div>
       
       <div className="relative z-10 min-h-screen flex items-center justify-center">
         <div className="max-w-3xl mx-auto px-4 py-16 text-center">
