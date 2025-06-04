@@ -44,7 +44,7 @@ export const InfoPopup: React.FC<InfoPopupProps> = ({ onClose }) => {
         </div>
 
         <div className="h-[80vh] overflow-y-auto custom-scrollbar">
-          <div className="p-12">
+          <div className="p-8">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 tracking-[-0.02em]">
               Why we built FontSeek
             </h2>
