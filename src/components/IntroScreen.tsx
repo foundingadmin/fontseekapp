@@ -70,9 +70,7 @@ export const IntroScreen: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
-      <div className="absolute inset-0 animate-gradient">
-        <span></span>
-      </div>
+      <div className="absolute inset-0 animate-gradient" />
       
       <div className="relative z-10 min-h-screen flex items-center justify-center">
         <div className="max-w-3xl mx-auto px-4 py-16 text-center">
