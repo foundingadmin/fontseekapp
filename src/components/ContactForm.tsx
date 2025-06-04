@@ -69,7 +69,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
 
   return (
     <div className="mt-24 mb-16 glass-card rounded-xl overflow-hidden">
-      <div className="px-8 py-12 max-w-3xl mx-auto">
+      <div className="px-12 py-16 max-w-3xl mx-auto">
         <div 
           ref={logoRef}
           className={`transition-all duration-700 transform ${
