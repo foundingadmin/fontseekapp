@@ -94,7 +94,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onDownloadReport }) =>
         </div>
         
         <h2 className="text-3xl font-bold text-white mb-4 text-center">
-          Love your font match? Let's bring your brand to life online.
+          Ready to bring your brand font to life?
         </h2>
         <p className="text-white/60 text-center mb-12 text-lg">
           Let's explore how to bring your brand's unique personality to life through a strategic, conversion-focused website design. Our team specializes in crafting digital experiences that turn visitors into loyal customers.
