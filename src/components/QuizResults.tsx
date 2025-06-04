@@ -8,8 +8,31 @@ import { TraitScales } from './TraitScales';
 import { copyPacks, type CopyPack } from '../data/copyPacks';
 import { generateFontReport } from '../utils/pdfGenerator';
 import { ContactForm } from './ContactForm';
-import { getDisplayName } from '../utils/aestheticStyles';
+import { getDisplayName, aestheticDescriptions } from '../utils/aestheticStyles';
 import clsx from 'clsx';
+
+const traitLabels = {
+  tone: {
+    high: 'Professional & Formal',
+    low: 'Casual & Relaxed'
+  },
+  energy: {
+    high: 'Dynamic & Bold',
+    low: 'Calm & Subtle'
+  },
+  design: {
+    high: 'Modern & Progressive',
+    low: 'Classic & Traditional'
+  },
+  era: {
+    high: 'Contemporary',
+    low: 'Timeless'
+  },
+  structure: {
+    high: 'Structured & Organized',
+    low: 'Organic & Fluid'
+  }
+};
 
 export const QuizResults: React.FC = () => {
   const { scores, visualScores, recommendations, calculateResults, resetQuiz } = useQuizStore();
